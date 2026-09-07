@@ -130,13 +130,47 @@ describe('absence observations', () => {
     expect(codes(validateReview(review).errors)).toContain('observation.absence_without_scope');
   });
 
+  it('rejects a multi-page absence that does not name the sources scanned', () => {
+    // An absence found by checking five pages, attributed to whichever page
+    // happened to be first, credits one source with work done across all of
+    // them and makes the evidence look thinner than it is. Surfaced by the
+    // first real run against a live site.
+    const review = makeValidReview({
+      observations: [
+        makeObservation({
+          observation_type: 'absence',
+          statement: 'No named endorsement appears anywhere.',
+          search_scope: ['/', '/about', '/writing'],
+        }),
+      ],
+    });
+    expect(codes(validateReview(review).errors)).toContain(
+      'observation.absence_without_scanned_sources',
+    );
+  });
+
+  it('accepts a multi-page absence that names them', () => {
+    const review = makeValidReview({
+      sources: [makeSource(), makeSource({ id: 'S-0002', url: 'https://example.com/about' })],
+      observations: [
+        makeObservation({
+          observation_type: 'absence',
+          statement: 'No named endorsement appears anywhere.',
+          search_scope: ['/', '/about'],
+          scanned_source_ids: ['S-0001', 'S-0002'],
+        }),
+      ],
+    });
+    expect(validateReview(review).errors).toEqual([]);
+  });
+
   it('accepts an absence observation carrying its search scope', () => {
     const review = makeValidReview({
       observations: [
         makeObservation({
           observation_type: 'absence',
           statement: 'No pricing information found.',
-          search_scope: ['/pricing', '/product', '/faq'],
+          search_scope: ['/pricing'],
         }),
       ],
     });

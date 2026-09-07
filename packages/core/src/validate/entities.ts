@@ -266,6 +266,7 @@ export function validateObservation(value: unknown, issues: Issue[]): void {
   // "No pricing found" is only defensible if we say where we looked. Without
   // the scope it collapses into "they do not publish pricing", which is a claim
   // the observation cannot support.
+  optionalStringArray(ctx, obs, 'scanned_source_ids');
   if (obs.observation_type === 'absence') {
     const scope = obs.search_scope;
     if (!Array.isArray(scope) || scope.length === 0) {
@@ -275,6 +276,18 @@ export function validateObservation(value: unknown, issues: Issue[]): void {
         'search_scope',
         'An absence observation must record where it looked',
       );
+    } else if (scope.length > 1) {
+      // An absence found across several pages must say which sources those
+      // were, or it credits one page with work done across all of them.
+      const scanned = obs.scanned_source_ids;
+      if (!Array.isArray(scanned) || scanned.length < 2) {
+        error(
+          ctx,
+          'observation.absence_without_scanned_sources',
+          'scanned_source_ids',
+          'An absence searched across more than one place must name the sources scanned',
+        );
+      }
     }
   }
 }

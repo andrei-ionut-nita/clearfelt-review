@@ -383,6 +383,7 @@ export function makeWorkedExample(): Review {
       {
         id: 'OBS-0003',
         source_id: 'S-0001',
+        scanned_source_ids: ['S-0001', 'S-0002', 'S-0003'],
         observation_type: 'absence',
         statement: 'No quantified commercial outcome appears anywhere on the site.',
         search_scope: [
@@ -415,6 +416,7 @@ export function makeWorkedExample(): Review {
       {
         id: 'OBS-0006',
         source_id: 'S-0002',
+        scanned_source_ids: ['S-0001', 'S-0002', 'S-0003'],
         observation_type: 'absence',
         statement: 'No named client, case study or testimonial appears on the site.',
         search_scope: ['/', '/about', '/writing'],
@@ -459,7 +461,7 @@ export function makeWorkedExample(): Review {
       {
         id: 'E-0002',
         observation_ids: ['OBS-0003'],
-        source_ids: ['S-0001'],
+        source_ids: ['S-0001', 'S-0002', 'S-0003'],
         claim: 'No quantified commercial outcome is published, across every page searched.',
         research_question_ids: ['RQ-0001', 'RQ-0003'],
         user_assertion_ids: [],
@@ -488,7 +490,7 @@ export function makeWorkedExample(): Review {
       {
         id: 'E-0004',
         observation_ids: ['OBS-0006'],
-        source_ids: ['S-0002'],
+        source_ids: ['S-0001', 'S-0002', 'S-0003'],
         claim: 'No third-party proof of impact is published.',
         research_question_ids: ['RQ-0003'],
         user_assertion_ids: [],

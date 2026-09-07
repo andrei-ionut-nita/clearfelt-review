@@ -143,6 +143,7 @@ function checkReferences(review: Review, index: Index, issues: Issue[]): void {
   for (const obs of review.observations) {
     const ctx = ctxFor('observations', obs.id, issues);
     ref(ctx, index, obs.source_id, 'source_id', 'sources');
+    refs(ctx, index, obs.scanned_source_ids, 'scanned_source_ids', 'sources');
   }
 
   for (const evidence of review.evidence) {

@@ -18,6 +18,11 @@
   {
     "id": "OBS-0003",
     "source_id": "S-0001",
+    "scanned_source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
     "observation_type": "absence",
     "statement": "No quantified commercial outcome appears anywhere on the site.",
     "search_scope": [
@@ -48,6 +53,11 @@
   {
     "id": "OBS-0006",
     "source_id": "S-0002",
+    "scanned_source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
     "observation_type": "absence",
     "statement": "No named client, case study or testimonial appears on the site.",
     "search_scope": [

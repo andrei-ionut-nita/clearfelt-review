@@ -96,6 +96,16 @@ export interface Observation extends Identified {
   statement: string;
   /** Required when observation_type is 'absence'. Where we actually looked. */
   search_scope?: string[];
+  /**
+   * Every source scanned, for an absence established across more than one.
+   *
+   * source_id names one source, which is right for a positive observation and
+   * wrong for an absence found by checking five pages: attributing it to
+   * whichever page happened to be first misstates where the work was done, and
+   * makes the evidence look thinner than it is. Surfaced by the first real run
+   * against a live site, which is what that run is for.
+   */
+  scanned_source_ids?: string[];
   /** Selector, quote anchor, page path or timestamp. Makes it checkable. */
   locator: string;
   observed_at: IsoDateTime;

@@ -16,6 +16,20 @@ Work deliberately not built, recorded with the reasoning so it is not re-litigat
 
 **Token and cost accounting.** `RunObservability` records wall time, sources, retrievals, failures and search iterations, and deliberately omits tokens and money. A Claude Code skill cannot read its own spend, and a field holding a guessed number is worse than an absent one because it would be reported as though it were measured. This becomes buildable if a real measurement path appears, not before.
 
+## What the first real run taught us
+
+Run against a live site on 2026-09-07. Recorded here because the point of a dogfood run is to fix the general system, not the specific analysis.
+
+**The system declined to reproduce the specification's own example.** Specification section 74 sketches a finding that the subject's positioning leads on technical capability and should be reframed around technology economics. The real site was already economics-led throughout, and the review said so. That the illustrative conclusion did not survive contact with evidence is the single most reassuring result available.
+
+**Two of the reviewer's own hypotheses were falsified mid-run**, and the research log records both. An initial keyword scan suggested testimonials were present; they were CSS rules for a blockquote style. A working assumption that third-party proof was missing was wrong: vendor-published case studies exist and the homepage links to them twice.
+
+**No P0 emerged, correctly.** A site that is already strong should not produce an urgent recommendation, and the computed bands did not invent one.
+
+**The ontology gap it surfaced** is recorded in `decisions/notes/0003-multi-source-absence.md`.
+
+**Still open.** There is no way to record that a recommendation from a previous run has since been implemented, which is what makes the specification's example look stale rather than wrong. That belongs with the diff engine in Phase 5.
+
 ## Known limitations, stated rather than papered over
 
 **Fabricated sources cannot be prevented.** Requiring a snapshot and content hash for every fetched source makes fabrication visible on inspection: someone can open the snapshot and see whether it is real. Nothing in code can prove a page was actually visited. This is a mitigation, not a solution, and the docs should keep saying so.

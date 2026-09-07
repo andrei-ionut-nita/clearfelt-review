@@ -31,7 +31,9 @@
       "OBS-0003"
     ],
     "source_ids": [
-      "S-0001"
+      "S-0001",
+      "S-0002",
+      "S-0003"
     ],
     "claim": "No quantified commercial outcome is published, across every page searched.",
     "research_question_ids": [
@@ -81,7 +83,9 @@
       "OBS-0006"
     ],
     "source_ids": [
-      "S-0002"
+      "S-0001",
+      "S-0002",
+      "S-0003"
     ],
     "claim": "No third-party proof of impact is published.",
     "research_question_ids": [

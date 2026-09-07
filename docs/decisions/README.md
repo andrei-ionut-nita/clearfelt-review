@@ -24,3 +24,4 @@ Not everything needs one. Bug fixes, refactors that change no external contract,
 
 - [0001: One package rather than a core and cli split](notes/0001-one-package.md)
 - [0002: Falsifier folded into Measurement](notes/0002-falsifier-in-measurement.md)
+- [0003: Absence observations name every source scanned](notes/0003-multi-source-absence.md)

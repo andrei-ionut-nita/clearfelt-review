@@ -44,7 +44,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **`fixtures/personal-brand`**, a committed run that deliberately exercises the awkward cases: an absence observation, contradicting evidence, an inferred finding on an unvalidated assumption, a user assertion the research contradicted, a question that ran out of evidence and one that was blocked. A test asserts it still matches the source that generated it, so a stale fixture cannot quietly make other tests meaningless.
 
+- **`Observation.scanned_source_ids`**, so an absence established across several pages names all of them. Surfaced by the first real run against a live site, and recorded in `docs/decisions/notes/0003-multi-source-absence.md`. Validation now requires it when `search_scope` names more than one place, and adding the rule immediately caught two existing fixtures doing exactly what it forbids.
+
 ### Fixed
+
+- An absence observation attributed to one source when it was established across five credited one page with work done across all of them, and made the finding built on it report as resting on a single source when it rested on five. A positive observation has one natural source and an absence does not; the model had quietly assumed every observation was the first kind. No fixture caught it, because the fixtures were written by the same reasoning that wrote the model.
 
 - `research_question.stop_detail` was in the model and reached no output, so a reader saw "insufficient evidence" as a bare label with nothing to act on or disagree with. It now travels through coverage into every renderer. Found by a renderer test looking for the wrong string.
 
