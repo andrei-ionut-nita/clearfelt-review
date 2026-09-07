@@ -1,10 +1,14 @@
 # Clearfelt Review
 
+[![CI](https://github.com/andrei-ionut-nita/clearfelt-review/actions/workflows/ci.yml/badge.svg)](https://github.com/andrei-ionut-nita/clearfelt-review/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D22.12-brightgreen)](package.json)
+
 Evidence-backed strategic intelligence.
 
 An entity plus a strategic objective goes in. A change plan comes out where every recommendation traces back to a finding, to evidence, to an observation, to a source you can open.
 
-Part of the clearfelt family, alongside [clearfelt-diagram](../clearfelt-diagram), [clearfelt-slide](../clearfelt-slide) and [clearfelt-writing](../clearfelt-writing).
+Part of the clearfelt family, alongside [clearfelt-diagram](https://github.com/andrei-ionut-nita/clearfelt-diagram), [clearfelt-slide](https://github.com/andrei-ionut-nita/clearfelt-slide) and [clearfelt-writing](https://github.com/andrei-ionut-nita/clearfelt-writing).
 
 ## Why
 
