@@ -158,6 +158,10 @@ async function coverageCommand(args: string[]): Promise<void> {
   const coverage = computeCoverage(review);
   console.log('Research coverage');
   console.log('');
+  if (coverage.modules.length === 0) {
+    console.log('  No research questions yet. The review-onboard skill generates them.');
+    console.log('');
+  }
   for (const module of coverage.modules) {
     const states = Object.entries(module.by_state)
       .filter(([, count]) => count > 0)
