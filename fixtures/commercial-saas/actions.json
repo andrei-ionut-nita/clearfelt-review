@@ -1,0 +1,36 @@
+[
+  {
+    "id": "A-0001",
+    "recommendation_id": "R-0001",
+    "description": "Add a per-seat-versus-usage comparison module to the pricing page.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "operation": "edit",
+        "target": "pricing-comparison-module"
+      }
+    ],
+    "effort": "low",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "A finance approver reading the page can state why the cost is predictable.",
+    "horizon": "now"
+  },
+  {
+    "id": "A-0002",
+    "recommendation_id": "R-0002",
+    "description": "Remove the card-number requirement from the trial signup form.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0002",
+        "operation": "edit",
+        "target": "card-requirement"
+      }
+    ],
+    "effort": "medium",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "A trial account can be created with no payment field submitted.",
+    "horizon": "next"
+  }
+]

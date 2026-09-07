@@ -2,6 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { COLLECTIONS, type Review } from '../model/index.ts';
 import { ADVERSARIAL_CASES } from './adversarial.ts';
+import { makeCommercialSaasExample } from './worked-example-saas.ts';
 import { makeWorkedExample } from './worked-example.ts';
 
 /**
@@ -33,6 +34,10 @@ export async function writeFixtures(root: string = ROOT): Promise<string[]> {
   const personalBrand = join(root, 'personal-brand');
   await writeReview(personalBrand, makeWorkedExample());
   written.push(personalBrand);
+
+  const commercialSaas = join(root, 'commercial-saas');
+  await writeReview(commercialSaas, makeCommercialSaasExample());
+  written.push(commercialSaas);
 
   for (const testCase of ADVERSARIAL_CASES) {
     const dir = join(root, 'adversarial', testCase.name);

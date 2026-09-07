@@ -1,0 +1,66 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Name predictable per-seat cost as a deliberate choice on the pricing page",
+    "problem": "The pricing page states the per-seat model without explaining why, next to comparisons that price by usage.",
+    "why_it_matters": "A finance approver comparing three tools sees one with a cost that cannot vary and no stated reason for it.",
+    "finding_ids": [
+      "F-0001"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "Unoccupied among the qualified comparisons, and already true rather than aspirational.",
+    "recommended_change": "Add a short comparison module to /pricing naming the predictability of per-seat cost against usage-based billing, addressed to whoever approves the budget line.",
+    "expected_outcome": "A finance approver can state why the cost is predictable within one screen.",
+    "impact": "high",
+    "effort": "low",
+    "confidence": "high",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Naming per-seat predictability as a deliberate choice reduces approval hesitation.",
+      "success_metric": "Pricing-page-to-signup rate for sessions that view the comparison module.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare signup rate for sessions exposed to the module against sessions that were not, over six weeks.",
+      "falsifier": "Signup rate is indistinguishable between sessions that saw the module and sessions that did not, after six weeks of comparable traffic.",
+      "review_period": "6 weeks"
+    }
+  },
+  {
+    "id": "R-0002",
+    "title": "Let the trial start without a card",
+    "problem": "A prospective user must provide payment details before the product can be tried at all.",
+    "why_it_matters": "The team lead who starts an evaluation is not yet the person authorised to commit spend, and is asked for a card before knowing if the product fits.",
+    "finding_ids": [
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0002"
+    ],
+    "strategic_rationale": "Removes a procurement-shaped step from what is still an evaluation step.",
+    "recommended_change": "Allow the trial to start without a card, and ask for payment details only when converting to a paid plan.",
+    "expected_outcome": "A team lead can reach the product itself before any payment conversation.",
+    "impact": "high",
+    "effort": "medium",
+    "confidence": "medium",
+    "urgency": "high",
+    "dependencies": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Removing the card requirement increases trial starts without a proportional drop in paid conversion.",
+      "success_metric": "Trial starts per 100 pricing-page visits, and trial-to-paid conversion rate.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then hold trial-to-paid steady or better while trial starts increase.",
+      "validation_method": "Run for one full sales cycle and compare the two cohorts.",
+      "falsifier": "Trial starts increase but trial-to-paid conversion falls enough that net paid customers are flat or lower after one cycle.",
+      "review_period": "One quarter"
+    }
+  }
+]

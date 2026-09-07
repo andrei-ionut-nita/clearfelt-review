@@ -15,5 +15,6 @@ export * from './quality/index.ts';
 export * from './prioritise.ts';
 export * from './change-tree.ts';
 export * from './comparison-synthesis.ts';
+export * from './modules/registry.ts';
 export * from './coverage.ts';
 export * from './trace.ts';

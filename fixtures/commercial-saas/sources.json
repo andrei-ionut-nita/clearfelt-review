@@ -1,0 +1,50 @@
+[
+  {
+    "id": "S-0001",
+    "url": "https://lighthouse-metrics.example/pricing",
+    "title": "Pricing",
+    "publisher": "Lighthouse Metrics",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0001.html",
+    "content_hash": "s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0001"
+  },
+  {
+    "id": "S-0002",
+    "url": "https://comparable-a.example/pricing",
+    "title": "Pricing",
+    "publisher": "Comparable analytics tool A",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0002.html",
+    "content_hash": "s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2s2",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0002"
+  },
+  {
+    "id": "S-0003",
+    "url": "https://comparable-b.example/pricing",
+    "title": "Pricing",
+    "publisher": "Comparable analytics tool B",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0003.html",
+    "content_hash": "s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3s3",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0003"
+  }
+]

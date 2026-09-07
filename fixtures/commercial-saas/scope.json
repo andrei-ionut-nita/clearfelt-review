@@ -1,0 +1,58 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Increase paid subscription conversion on the pricing page.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001",
+    "AST-0002",
+    "AST-0003"
+  ],
+  "decision": {
+    "statement": "Which pricing page and trial signup change would most improve paid subscription conversion this quarter?",
+    "decision_maker": "Head of growth",
+    "horizon": "One quarter",
+    "evidence_required": [
+      "How the pricing page compares against the qualified comparison set",
+      "What friction exists in the trial signup flow"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "Team leads evaluating tools before a trial",
+      "priority": 1,
+      "decision_role": "Initiator"
+    },
+    {
+      "name": "Finance approvers confirming the annual spend",
+      "priority": 2,
+      "decision_role": "Budget approver"
+    }
+  ],
+  "geography": [
+    "United States",
+    "United Kingdom"
+  ],
+  "languages": [
+    "en"
+  ],
+  "channels": [
+    "website"
+  ],
+  "exclusions": [
+    "Enterprise sales-assisted pricing, which is negotiated off-page"
+  ],
+  "depth": "standard",
+  "comparison_applicable": true,
+  "budget": {
+    "max_sources": 20,
+    "max_search_iterations": 8,
+    "max_depth": 2,
+    "min_evidence_per_question": 1,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": [
+      "RQ-0001"
+    ]
+  }
+}

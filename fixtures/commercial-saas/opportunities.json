@@ -1,0 +1,34 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Predictable per-seat cost is unoccupied territory in this comparison set",
+    "description": "Both qualified comparisons priced by usage. Naming per-seat predictability as a deliberate choice, rather than leaving it unexplained, turns the odd-one-out position into a stated advantage for a budget-conscious approver.",
+    "supporting_finding_ids": [
+      "F-0001"
+    ],
+    "supporting_evidence_ids": [
+      "E-0001"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "medium",
+    "white_space": {
+      "territory": "Predictable per-seat pricing for finance approval",
+      "current_position": "high"
+    }
+  },
+  {
+    "id": "O-0002",
+    "title": "A card-free trial removes a procurement step from evaluation",
+    "description": "Team leads evaluating tools before involving finance would not need a payment conversation to start looking.",
+    "supporting_finding_ids": [
+      "F-0002"
+    ],
+    "supporting_evidence_ids": [
+      "E-0002"
+    ],
+    "strategic_value": "medium",
+    "audience_value": "medium",
+    "confidence": "medium"
+  }
+]

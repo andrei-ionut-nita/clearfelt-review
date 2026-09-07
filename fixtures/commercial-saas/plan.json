@@ -1,0 +1,104 @@
+{
+  "id": "PLAN-0001",
+  "created_at": "2026-09-07T09:00:00.000Z",
+  "objective_interpretation": "The review treats the pricing page and trial signup as a conversion decision for a budget-conscious evaluator, not as a general product review.",
+  "activated_modules": [
+    {
+      "key": "positioning",
+      "reason": "How the pricing model is framed is itself a positioning choice.",
+      "research_question_ids": []
+    },
+    {
+      "key": "audience",
+      "reason": "A team lead and a finance approver weigh the same pricing page differently.",
+      "research_question_ids": []
+    },
+    {
+      "key": "messaging",
+      "reason": "The pricing page has to justify the model, not just state it.",
+      "research_question_ids": []
+    },
+    {
+      "key": "competitive_landscape",
+      "reason": "Pricing only reads as a choice against what comparable tools charge.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "offer",
+      "reason": "The subscription itself, and how it is packaged, is the subject of the decision.",
+      "research_question_ids": []
+    },
+    {
+      "key": "pricing",
+      "reason": "The decision is explicitly about the pricing page.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "acquisition",
+      "reason": "Trial signup is the acquisition mechanism this review is asked to improve.",
+      "research_question_ids": []
+    },
+    {
+      "key": "conversion",
+      "reason": "Signup friction is the second half of the stated decision.",
+      "research_question_ids": [
+        "RQ-0002"
+      ]
+    },
+    {
+      "key": "digital_experience",
+      "reason": "The pricing page and signup flow are both web pages.",
+      "research_question_ids": []
+    }
+  ],
+  "dormant_modules": [
+    {
+      "key": "content",
+      "reason": "No blog or writing corpus bears on a pricing and signup decision."
+    },
+    {
+      "key": "credibility",
+      "reason": "Not raised in the objective; a separate review would need to establish this before it belonged here."
+    },
+    {
+      "key": "accessibility",
+      "reason": "No compliance driver was raised, and the pages are simple checkout-style forms."
+    },
+    {
+      "key": "discoverability",
+      "reason": "The decision is about visitors who already arrived, not about being found."
+    },
+    {
+      "key": "market",
+      "reason": "The analytics tooling market's trends are not what this decision turns on."
+    },
+    {
+      "key": "reputation",
+      "reason": "No press or third-party sentiment signal was anticipated going in."
+    },
+    {
+      "key": "trust",
+      "reason": "No security or compliance concern was raised for this audience or this decision."
+    },
+    {
+      "key": "operations",
+      "reason": "Out of scope for a pricing and conversion review."
+    },
+    {
+      "key": "external_environment",
+      "reason": "No regulatory or macro-economic driver bears on this decision."
+    }
+  ],
+  "comparison_plan": {
+    "supplied_count": 0,
+    "to_discover": true,
+    "rationale": "No comparisons were supplied, so the qualified set had to be discovered by category."
+  },
+  "anticipated_gaps": [
+    "No analytics access, so the actual drop-off point in signup cannot be observed directly."
+  ]
+}

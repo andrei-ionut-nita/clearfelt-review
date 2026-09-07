@@ -1,5 +1,6 @@
 import { parseId } from '../ids.ts';
 import { COLLECTIONS, type Review } from '../model/index.ts';
+import { MODULE_KEYS } from '../modules/registry.ts';
 import { type Ctx, type Issue, ctxFor, error, warn } from './fields.ts';
 
 /**
@@ -82,6 +83,7 @@ export function checkIntegrity(review: Review): Issue[] {
   checkEvidenceDiscipline(review, index, issues);
   checkAssertionDiscipline(review, index, issues);
   checkLifecycleConsistency(review, issues);
+  checkModuleSelection(review, issues);
 
   return issues;
 }
@@ -405,6 +407,61 @@ function checkLifecycleConsistency(review: Review, issues: Issue[]): void {
       'lifecycle.evidence_before_scope',
       'approved_gates.scope',
       'evidence exists but the scope gate was never approved',
+    );
+  }
+}
+
+/**
+ * plan.json's activated and dormant modules, checked against the registry.
+ *
+ * Three things this cannot let through: a module key the registry does not
+ * define, which would mean the reasoning layer invented a section that has no
+ * renderer semantics behind it; a module classified as both activated and
+ * dormant, which is a contradiction rather than a nuance; and a registry
+ * module the plan never mentions at all, which is the case this rule mostly
+ * exists for. "Dormant modules matter: a reader should see what you chose not
+ * to look at" only holds if every module gets a verdict, not just the ones the
+ * reasoning layer happened to think of.
+ */
+function checkModuleSelection(review: Review, issues: Issue[]): void {
+  if (!review.plan) return;
+  const ctx = ctxFor('plan', review.plan.id, issues);
+  const known = new Set(MODULE_KEYS);
+
+  const activatedKeys = (review.plan.activated_modules ?? []).map((m) => m.key);
+  const dormantKeys = (review.plan.dormant_modules ?? []).map((m) => m.key);
+
+  for (const key of [...activatedKeys, ...dormantKeys]) {
+    if (!known.has(key)) {
+      error(
+        ctx,
+        'plan.unknown_module',
+        'activated_modules',
+        `'${key}' is not a module the registry defines`,
+      );
+    }
+  }
+
+  const activatedSet = new Set(activatedKeys);
+  for (const key of dormantKeys) {
+    if (activatedSet.has(key)) {
+      error(
+        ctx,
+        'plan.module_both_activated_and_dormant',
+        'dormant_modules',
+        `'${key}' is listed as both activated and dormant`,
+      );
+    }
+  }
+
+  const decided = new Set([...activatedKeys, ...dormantKeys]);
+  const missing = MODULE_KEYS.filter((key) => !decided.has(key));
+  if (missing.length > 0) {
+    error(
+      ctx,
+      'plan.module_undecided',
+      'activated_modules',
+      `no verdict recorded for: ${missing.join(', ')}`,
     );
   }
 }

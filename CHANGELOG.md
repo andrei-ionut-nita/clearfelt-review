@@ -66,6 +66,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **The saturation table in every renderer.** `plan.ts` and the HTML report both print positioning territories with saturation, current position, computed opportunity and a one-line rationale naming which comparisons produced the count, alongside the existing comparison landscape table.
 
+- **The module registry** (`modules/registry.ts`), specified in Phase 1's plan but not built until now. Eighteen `ModuleSpec` rows, each with a `key`, a `label`, what it analyses from specification section 21, and an `activates(signals)` predicate. `deriveSignals` reads only `scope.objective`, `scope.decision`, audience text, `scope.channels`, `scope.comparison_applicable` and captured asset types and paths, never `Entity.type`. Three modules (`positioning`, `audience`, `messaging`) activate unconditionally; `competitive_landscape` reads `comparison_applicable` directly; the rest read keyword and asset-type signals. See `docs/decisions/0010-signal-based-module-activation.md`.
+
+- **`clearfelt-review modules <run>`**, printing the deterministic suggestion for `review-onboard` to consult and argue with before writing `plan.json`.
+
+- **Module selection validated for completeness, not just shape.** `checkModuleSelection` in `validate/integrity.ts` rejects a plan using a key the registry does not define, a key listed as both activated and dormant, or a registry module the plan never classifies at all. That last rule does the most work: "a reader should see what you chose not to look at" only holds if every module gets a verdict.
+
+- **`invariant-19.test.ts`**, a grep-shaped test over production source rather than a semantic one: no file may compare or switch on an entity type field, and no file may string-compare against a fixed archetype vocabulary. Verified to actually fire by introducing a real violation and watching it fail before removing it.
+
+- **`fixtures/commercial-saas`**, a second complete run, generated from `packages/core/src/testing/worked-example-saas.ts`, deliberately lighter than personal-brand rather than matching its depth. Proves the registry adapts rather than defaulting to one shape: it activates `pricing`, `offer` and `acquisition` where personal-brand leaves them dormant and vice versa for `content`, `credibility` and `discoverability`, checked directly by `fixtures.test.ts`. Its comparison landscape is deliberately crowded (two qualified comparisons contesting one territory) next to an uncontested white-space territory, the other half of the saturation table personal-brand alone only shows one side of. Its change tree roots on `signup_flow` alongside `website_page`, proving a non-website asset type renders correctly outside a unit test fixture.
+
 ### Fixed
 
 - An absence observation attributed to one source when it was established across five credited one page with work done across all of them, and made the finding built on it report as resting on a single source when it rested on five. A positive observation has one natural source and an absence does not; the model had quietly assumed every observation was the first kind. No fixture caught it, because the fixtures were written by the same reasoning that wrote the model.
@@ -82,7 +92,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The circular-falsifier check treated "outcome X does not happen" as circular against "outcome X happens" only when the negation itself was the sole difference; a falsifier phrased as a null result ("indistinguishable from the preceding quarter") was not recognised as a failure condition because the shortfall-word list did not contain it. Widened the list; the underlying lesson is that a hand-written word list calibrated against invented fixtures will always be missing real phrasing.
 
-- The andreinita.co run's one comparison predated `positioning_territories` and failed validation once the field became required. Named the territory it actually contests and removed the now-computed `saturation` from its opportunity's white-space block; the saturation table for that run now shows one contested-but-unassessed territory and the original run's flagship white-space claim, unchanged in substance.
+- The dogfood run's one comparison predated `positioning_territories` and failed validation once the field became required. Named the territory it actually contests and removed the now-computed `saturation` from its opportunity's white-space block; the saturation table for that run now shows one contested-but-unassessed territory and the original run's flagship white-space claim, unchanged in substance.
+
+- The dogfood run's `plan.json`, and the personal-brand fixture's, both predated the module registry and classified fewer than half of the eighteen modules. Both failed validation once `checkModuleSelection` required a verdict for every module. Completed both with real reasoning per module rather than a placeholder; the additions to the personal-brand fixture surface a small inconsistency worth naming: `conversion` stayed activated in the real run on grounds the deterministic suggestion did not offer (a keyword match on "contact" that the coarse text signal missed), which is exactly the "suggestion, not a verdict" design point working as intended rather than a bug.
 
 ### Notes
 

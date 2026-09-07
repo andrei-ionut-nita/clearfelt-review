@@ -1,0 +1,36 @@
+[
+  {
+    "id": "RQ-0001",
+    "question": "How does the pricing model compare against the qualified comparison set?",
+    "module": "pricing",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "Both qualified comparisons publish their pricing model directly.",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
+    "confidence": "high",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0002",
+    "question": "What friction exists in the trial signup flow?",
+    "module": "conversion",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "The signup form itself states the requirement directly; no interpretation was needed.",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "confidence": "medium",
+    "priority": 1
+  }
+]

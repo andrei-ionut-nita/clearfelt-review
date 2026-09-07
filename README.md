@@ -46,7 +46,7 @@ $ clearfelt-review trace reviews/acme/r-20260907-001 S-0001 --reverse
 
 ## Status
 
-Phases 0 through 3 complete. 272 tests.
+Phases 0 through 4 complete. 293 tests.
 
 The deterministic layer: canonical model, id allocation, run lifecycle, stage-gated storage, validation and integrity, priority computation, change tree derivation, coverage, traceability, and four renderers over one shared view.
 
@@ -56,7 +56,9 @@ The reasoning layer: four Claude Code skills under `.claude/skills/`, one per st
 
 **Comparison depth.** `comparison-synthesis.ts` computes specification section 19's saturation table from the comparison landscape rather than from a reasoning stage's impression: how crowded a positioning territory is comes from a weighted count of the qualified comparisons contesting it, so a claim that a territory is open has to survive the same count a reader can run themselves. See `docs/decisions/0009-computed-saturation.md`.
 
-Phase 4 next: generalisation across archetypes.
+**Generalisation, checked rather than assumed.** `modules/registry.ts` did not exist before Phase 4; module selection was a free-form key and reason the reasoning layer wrote from nothing. It is now eighteen predicates over signals derived from the objective, decision, audience text and captured assets, never from `Entity.type`. `validate` now rejects a plan that leaves any registry module undecided, uses an unknown key, or lists one as both activated and dormant. A second fixture, `fixtures/commercial-saas`, proves the registry actually adapts: it activates `pricing`, `offer` and `acquisition` where the personal-brand fixture leaves them dormant, and vice versa for `content`, `credibility` and `discoverability`, checked directly by a test rather than asserted in prose. `invariant-19.test.ts` greps production source for the entity-type branch the whole design exists to forbid. See `docs/decisions/0010-signal-based-module-activation.md`.
+
+Phase 5 next: iteration, diffing a run against its predecessor.
 
 ## Getting started
 
@@ -76,6 +78,7 @@ clearfelt-review stage <run> <stage>
 clearfelt-review approve <run> scope|research-plan|findings
 clearfelt-review validate <run>
 clearfelt-review quality <run>
+clearfelt-review modules <run>
 clearfelt-review coverage <run>
 clearfelt-review prioritise <run>
 clearfelt-review change-tree <run> [--json]

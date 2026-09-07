@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ASM-0001",
+    "statement": "Removing the card requirement will increase trial starts without materially increasing low-quality signups.",
+    "why_assumed": "No historical no-card trial data exists for this product to check against.",
+    "status": "unvalidated",
+    "validation_method": "Run a no-card trial for one cohort and compare trial-to-paid conversion against the existing card-required cohort.",
+    "evidence_ids": []
+  }
+]

@@ -18,7 +18,7 @@ Work deliberately not built, recorded with the reasoning so it is not re-litigat
 
 ## What the first real run taught us
 
-Run against a live site on 2026-09-07. Recorded here because the point of a dogfood run is to fix the general system, not the specific analysis.
+Run against a real, live site on 2026-09-07 (identifying detail deliberately omitted from this document). Recorded here because the point of a dogfood run is to fix the general system, not the specific analysis.
 
 **The system declined to reproduce the specification's own example.** Specification section 74 sketches a finding that the subject's positioning leads on technical capability and should be reframed around technology economics. The real site was already economics-led throughout, and the review said so. That the illustrative conclusion did not survive contact with evidence is the single most reassuring result available.
 
@@ -32,7 +32,7 @@ Run against a live site on 2026-09-07. Recorded here because the point of a dogf
 
 ## What Phase 2 found in the same run
 
-Ran `clearfelt-review quality` against the same andreinita.co run once it shipped. It surfaced four categories of real issue, not tool noise:
+Ran `clearfelt-review quality` against the same dogfood run once it shipped. It surfaced four categories of real issue, not tool noise:
 
 **Two recommendations had dropped the audience.** `R-0001` and `R-0002` rested on findings that never stated `audience_relevance`, so the output contract's "who or what is affected?" question went unanswered even though the recommendations themselves clearly had an audience in mind. The uncertainty had not survived the trip from finding to recommendation. Fixed by adding the field to the findings; the underlying analysis did not change, only what it declared.
 
@@ -53,3 +53,13 @@ Net result: zero defects in the run once its own real gaps were fixed, five hone
 **Two of section 19's own categories are not classified.** "Emerging threats" and "benchmark strengths" both need trend or benchmark-relationship evidence the model does not yet carry: a comparison marked `type: 'benchmark'` exists, but nothing distinguishes one pulling ahead from one standing still. A classification that pretended to detect either from a single saturation-and-position snapshot would be manufacturing a signal, not computing one. Left unclassified rather than faked; see `decisions/0009-computed-saturation.md`.
 
 **Positioning territories are free text, not a controlled vocabulary.** Two comparisons naming close variants of the same territory will not be recognised as the same row in the saturation table, and the model has no mechanism to catch it. A fixed taxonomy was considered and rejected, because the territories that matter for one entity's positioning are not the ones that matter for another's, and a fixed list would reintroduce the entity-type branching invariant 19 bans. This is left to discipline in qualification: `review-research`'s guidance is to reuse a territory name exactly, and there is currently no check that it did.
+
+## What Phase 4 built and found
+
+The module registry did not exist before this phase. `Plan.activated_modules` and `Plan.dormant_modules` were free-form key-and-reason pairs the reasoning layer wrote from nothing, with no table to check the keys against. `modules/registry.ts` closes that: eighteen predicates over signals from the objective, decision, audience text and captured assets, and a validation rule requiring every module to get a verdict, not only the ones the reasoning layer happened to think of.
+
+Fixing both fixtures to satisfy that completeness rule surfaced a real, small design point rather than a bug: the dogfood run kept `conversion` activated on grounds ("the site has an explicit contact and advisory path") the deterministic suggestion did not itself offer, because the coarse keyword match missed "contact" in the way it appeared. That is the "suggestion, not a verdict" design working as intended, recorded so a future session does not read the divergence as drift.
+
+`fixtures/commercial-saas` is the one new fixture this phase built, deliberately lighter than personal-brand, chosen to prove two things at once: the registry genuinely activates a different module set for a different decision, and the change tree genuinely roots on more than one asset type (`signup_flow` alongside `website_page`) outside a unit test. Both are checked directly by tests rather than asserted in prose.
+
+**Five archetypes remain unbuilt: charity, NGO, government, product, professional services.** Considered and deliberately deferred rather than rushed to fill out the list from the original plan. Two archetypes already prove the mechanism adapts; a third, fourth and fifth fixture would mostly add breadth to a claim already checked, not test a new failure mode. `modules/registry.test.ts` covers signal profiles for all four of the remaining archetypes at the unit level (a charity-shaped donor decision and a government-shaped compliance decision among them), which is where the real coverage risk lived; a full run directory for each is lower-value work than it looks; picking it up later is tracked here rather than treated as done.

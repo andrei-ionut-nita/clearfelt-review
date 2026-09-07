@@ -1,0 +1,34 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The pricing page lists three tiers, each a flat monthly price per seat.",
+    "locator": "section.pricing-tiers",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0002",
+    "observation_type": "positive",
+    "statement": "Pricing is calculated per tracked event per month, with no flat per-seat tier.",
+    "locator": "section.pricing-calculator",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0003",
+    "source_id": "S-0003",
+    "observation_type": "positive",
+    "statement": "Pricing scales with monthly active users tracked, with no flat per-seat tier.",
+    "locator": "section.usage-pricing",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0004",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The trial signup form requires a card number before the trial account is created.",
+    "locator": "form#trial-signup input[name=card_number]",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  }
+]

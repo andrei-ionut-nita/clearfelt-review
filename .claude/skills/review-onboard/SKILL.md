@@ -69,6 +69,10 @@ clearfelt-review approve <run> scope
 
 Module selection is driven by objective, audience, decision and available evidence. Never by entity type. There is no branch on "is this a personal website".
 
+Run `clearfelt-review modules <run>` once `scope.json` is written, before writing `plan.json`. It prints the eighteen registry modules and a deterministic suggestion, computed from the objective, decision, audience text and the assets captured so far, not from what kind of thing the entity is. Treat it as a starting point to argue with, not an answer to copy: the suggestion is keyword-based and coarse, and a real reason grounded in this specific objective always outranks it.
+
+Every one of the eighteen registry modules (`positioning`, `audience`, `messaging`, `competitive_landscape`, `market`, `offer`, `content`, `credibility`, `acquisition`, `conversion`, `pricing`, `digital_experience`, `accessibility`, `discoverability`, `reputation`, `trust`, `operations`, `external_environment`) must end up in either `activated_modules` or `dormant_modules`, never omitted. `validate` rejects a plan that leaves any module undecided, an unknown key, or a key listed in both.
+
 ## Gate 2: research plan
 
 Show:

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "company",
+    "role": "subject",
+    "name": "Lighthouse Metrics",
+    "description": "A team analytics dashboard sold as a monthly subscription.",
+    "canonical_url": "https://lighthouse-metrics.example",
+    "industry": "Analytics software",
+    "asset_ids": [
+      "AST-0001",
+      "AST-0002",
+      "AST-0003"
+    ]
+  },
+  {
+    "id": "ENT-0002",
+    "type": "company",
+    "role": "comparison",
+    "name": "Comparable analytics tool A",
+    "canonical_url": "https://comparable-a.example",
+    "asset_ids": []
+  },
+  {
+    "id": "ENT-0003",
+    "type": "company",
+    "role": "comparison",
+    "name": "Comparable analytics tool B",
+    "canonical_url": "https://comparable-b.example",
+    "asset_ids": []
+  }
+]

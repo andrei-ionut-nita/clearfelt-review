@@ -1,0 +1,38 @@
+[
+  {
+    "id": "F-0001",
+    "category": "pricing",
+    "title": "Per-seat pricing is the odd model out in this comparison set",
+    "statement": "The subject prices per seat while both qualified comparisons price by usage, making it the only flat, predictable option among the three.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "confidence": "high",
+    "importance": "high",
+    "implication": "A finance approver comparing the three has one option whose monthly cost cannot vary with usage.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [],
+    "audience_relevance": "Finance approvers who need a predictable line item weigh this directly."
+  },
+  {
+    "id": "F-0002",
+    "category": "conversion",
+    "title": "A card is required before any trial usage",
+    "statement": "The trial signup form requires a card number before the trial account is created.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "confidence": "high",
+    "importance": "medium",
+    "implication": "A team lead cannot evaluate the product before entering payment details.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "audience_relevance": "Team leads initiating an evaluation are the ones who hit this step first."
+  }
+]

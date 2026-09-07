@@ -90,9 +90,25 @@ export function makeWorkedExample(): Review {
           research_question_ids: ['RQ-0001'],
         },
         {
+          key: 'audience',
+          reason: 'Who has to be convinced is exactly who the recommendations must address.',
+          research_question_ids: [],
+        },
+        {
+          key: 'messaging',
+          reason: "The site's own language is what a reader tests any recommended change against.",
+          research_question_ids: [],
+        },
+        {
           key: 'competitive_landscape',
           reason: 'A hiring audience compares candidates by definition.',
           research_question_ids: ['RQ-0002'],
+        },
+        {
+          key: 'content',
+          reason:
+            'The writing archive is large enough to shape a conclusion independent of the stated positioning.',
+          research_question_ids: [],
         },
         {
           key: 'credibility',
@@ -105,18 +121,46 @@ export function makeWorkedExample(): Review {
           research_question_ids: ['RQ-0004'],
         },
         {
+          key: 'digital_experience',
+          reason: "The subject's presence is a website, so its structure is directly assessable.",
+          research_question_ids: [],
+        },
+        {
           key: 'discoverability',
           reason: 'Recruiters search before they browse.',
           research_question_ids: ['RQ-0005'],
         },
       ],
       dormant_modules: [
+        { key: 'market', reason: 'Hiring-market trends are not what this decision turns on.' },
+        {
+          key: 'offer',
+          reason:
+            'Nothing is sold or provided as a package; this is a hiring decision, not a commercial one.',
+        },
+        {
+          key: 'acquisition',
+          reason:
+            'How traffic arrives cannot be established from public material and is not the decision at hand.',
+        },
         { key: 'pricing', reason: 'No commercial offer is being sold through the site.' },
         {
           key: 'accessibility',
           reason: 'Not raised in the objective and no evidence of a compliance driver.',
         },
+        {
+          key: 'reputation',
+          reason: 'No press or third-party sentiment signal was anticipated going in.',
+        },
+        {
+          key: 'trust',
+          reason: 'No security, privacy or compliance driver applies to a personal site.',
+        },
         { key: 'operations', reason: 'Out of scope for a personal positioning review.' },
+        {
+          key: 'external_environment',
+          reason: 'No regulatory or macro-economic driver bears on this decision.',
+        },
       ],
       comparison_plan: {
         supplied_count: 1,

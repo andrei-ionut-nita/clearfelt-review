@@ -2,8 +2,10 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { COLLECTIONS, type Review } from './model/index.ts';
+import { MODULE_KEYS } from './modules/registry.ts';
 import { evaluateQuality } from './quality/index.ts';
 import { ADVERSARIAL_CASES } from './testing/adversarial.ts';
+import { makeCommercialSaasExample } from './testing/worked-example-saas.ts';
 import { makeWorkedExample } from './testing/worked-example.ts';
 import { formatIssues, validateReview } from './validate/index.ts';
 
@@ -39,6 +41,51 @@ describe('fixtures/personal-brand', () => {
     // If these diverge, the fixture is stale and every test reading it is
     // testing something the code no longer produces.
     expect(loadFixture('personal-brand')).toEqual(makeWorkedExample());
+  });
+});
+
+describe('fixtures/commercial-saas', () => {
+  it('exists as a real run directory', () => {
+    expect(existsSync(join(FIXTURES, 'commercial-saas', 'run.json'))).toBe(true);
+  });
+
+  it('validates, like any real run must', () => {
+    expect(formatIssues(validateReview(loadFixture('commercial-saas')).errors)).toBe('');
+  });
+
+  it('matches the source it was generated from', () => {
+    expect(loadFixture('commercial-saas')).toEqual(makeCommercialSaasExample());
+  });
+
+  it('activates a genuinely different module set than personal-brand', () => {
+    // The point of a second archetype: not a second demo, proof the registry
+    // actually tracks the review rather than defaulting to one shape.
+    const saas = loadFixture('commercial-saas').plan?.activated_modules.map((m) => m.key) ?? [];
+    const brand = loadFixture('personal-brand').plan?.activated_modules.map((m) => m.key) ?? [];
+    expect(saas).toEqual(expect.arrayContaining(['pricing', 'acquisition', 'offer']));
+    expect(brand).not.toEqual(expect.arrayContaining(['pricing', 'acquisition', 'offer']));
+    expect(brand).toEqual(expect.arrayContaining(['content', 'credibility', 'discoverability']));
+    expect(saas).not.toEqual(expect.arrayContaining(['content', 'credibility', 'discoverability']));
+  });
+
+  it('classifies every registry module, same as every other fixture must', () => {
+    const plan = loadFixture('commercial-saas').plan;
+    const decided = new Set([
+      ...(plan?.activated_modules.map((m) => m.key) ?? []),
+      ...(plan?.dormant_modules.map((m) => m.key) ?? []),
+    ]);
+    expect([...decided].sort()).toEqual([...MODULE_KEYS].sort());
+  });
+
+  it('produces a different saturation reading than personal-brand for the same mechanism', () => {
+    // personal-brand's flagship territory is uncontested; this fixture's is
+    // deliberately crowded by two qualified comparisons, which is the other
+    // half of proving comparison-synthesis.ts is not producing one fixed shape.
+    const saas = loadFixture('commercial-saas');
+    const crowded = saas.comparisons.filter((c) =>
+      c.positioning_territories.includes('Usage-based pricing for scaling teams'),
+    );
+    expect(crowded.length).toBe(2);
   });
 });
 

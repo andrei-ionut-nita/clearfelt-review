@@ -7,6 +7,7 @@ import { computeCoverage } from './coverage.ts';
 import { assertTransition, gateForStage, stageForGate } from './lifecycle.ts';
 import { GATE_NAMES, REVIEW_DEPTHS, RUN_STAGES } from './model/index.ts';
 import type { GateName, ReviewDepth, RunStage } from './model/index.ts';
+import { selectModules } from './modules/registry.ts';
 import { prioritise } from './prioritise.ts';
 import { evaluateQuality, formatQualityReport } from './quality/index.ts';
 import { renderBrief } from './render/brief.ts';
@@ -43,6 +44,7 @@ const USAGE = [
   '  clearfelt-review approve <run> <gate>         scope | research-plan | findings',
   '  clearfelt-review validate <run>               schema, integrity and lifecycle',
   '  clearfelt-review quality <run>                output contract and quality checks',
+  '  clearfelt-review modules <run>                suggested module activation from scope',
   '  clearfelt-review coverage <run>               question states, gaps, budget',
   '  clearfelt-review prioritise <run>             computed P0..P3 with reasoning',
   '  clearfelt-review change-tree <run> [--json]   derived from actions and assets',
@@ -175,6 +177,29 @@ async function qualityCommand(args: string[]): Promise<void> {
   const report = evaluateQuality(review);
   console.log(formatQualityReport(report));
   if (report.defects.length > 0) process.exit(1);
+}
+
+/**
+ * The deterministic suggestion only. review-onboard reads scope.json, decides
+ * for real and writes its own reason for every module into plan.json; this
+ * command exists so that decision can be checked against something rather than
+ * made from nothing, and so a reader can see the module registry actually
+ * changes its answer for a different objective.
+ */
+async function modulesCommand(args: string[]): Promise<void> {
+  const review = await loadReview(requireRunDir(args[0]));
+  const { activated, dormant } = selectModules(review);
+  console.log('Suggested activation, from scope.json and assets.json alone:');
+  console.log('');
+  console.log('Activate:');
+  for (const m of activated) console.log(`  ${m.key.padEnd(22)} ${m.analyses}`);
+  console.log('');
+  console.log('Leave dormant:');
+  for (const m of dormant) console.log(`  ${m.key.padEnd(22)} ${m.analyses}`);
+  console.log('');
+  console.log(
+    'This is a suggestion, not a verdict: write plan.json with your own reasoning, one entry per module, in either activated_modules or dormant_modules. validate rejects a plan that leaves any module undecided.',
+  );
 }
 
 async function coverageCommand(args: string[]): Promise<void> {
@@ -311,6 +336,9 @@ async function main(): Promise<void> {
       break;
     case 'quality':
       await qualityCommand(rest);
+      break;
+    case 'modules':
+      await modulesCommand(rest);
       break;
     case 'coverage':
       await coverageCommand(rest);

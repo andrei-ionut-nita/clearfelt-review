@@ -1,0 +1,9 @@
+[
+  {
+    "id": "UNK-0001",
+    "statement": "Where in the signup flow prospective users actually abandon is not established.",
+    "why_unknown": "No analytics access; only the stated requirement on the form is observable from outside.",
+    "how_to_resolve": "Instrument the flow and compare abandonment before and after the card requirement is removed.",
+    "blocks_finding_ids": []
+  }
+]

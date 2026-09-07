@@ -128,3 +128,7 @@ Separate from `validate/` on purpose: `contract.ts` asks whether every recommend
 ### `comparison-synthesis.ts`
 
 Section 19's saturation table, computed from the comparison landscape rather than authored by the reasoning stage that has the most reason to see a territory as open. Saturation is a weighted count of qualified comparisons naming a territory; opportunity is a fixed lookup from saturation and the subject's own stated position. See `decisions/0009-computed-saturation.md`.
+
+### `modules/registry.ts`
+
+Eighteen predicates over signals derived from the objective, decision, audience text and captured assets, never from `Entity.type`. Three modules activate unconditionally; the rest read keyword and asset-type matches. Only suggests: `review-onboard` decides for real and `validate` checks the result is complete. See `decisions/0010-signal-based-module-activation.md`.
