@@ -206,10 +206,13 @@ export function validateResearchQuestion(value: unknown, issues: Issue[]): void 
   requireStringArray(ctx, question, 'evidence_ids');
   requireStringArray(ctx, question, 'source_ids');
   requireNumber(ctx, question, 'priority');
-  // A closed question must say why it closed. "Researched sufficiently" and
-  // "could not obtain evidence" produce identical silence in a report unless
-  // the model insists on the difference.
-  const closed = ['ANSWERED', 'INSUFFICIENT_EVIDENCE', 'BLOCKED'];
+  // A question that stopped must say why. "Researched sufficiently" and "could
+  // not obtain evidence" produce identical silence in a report unless the model
+  // insists on the difference. PARTIALLY_ANSWERED is included because it is the
+  // easiest state to leave a question in and walk away from: something was
+  // found, the question is not closed, and without a reason the report cannot
+  // tell a reader whether more was available.
+  const closed = ['ANSWERED', 'PARTIALLY_ANSWERED', 'INSUFFICIENT_EVIDENCE', 'BLOCKED'];
   if (typeof question.state === 'string' && closed.includes(question.state)) {
     requireEnum(ctx, question, 'stop_reason', STOP_REASONS);
   }

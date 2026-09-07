@@ -1,0 +1,20 @@
+[
+  {
+    "id": "F-0001",
+    "category": "positioning",
+    "title": "Proposition leads on outcomes",
+    "statement": "The homepage proposition leads on commercial outcomes rather than capability.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0001",
+      "E-0002"
+    ],
+    "confidence": "high",
+    "importance": "high",
+    "implication": "A reader learns what the work is worth before learning how it is done.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [],
+    "audience_relevance": "Founders and CEOs judge the work on commercial consequence."
+  }
+]

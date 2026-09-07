@@ -8,6 +8,7 @@ import { assertTransition, gateForStage, stageForGate } from './lifecycle.ts';
 import { GATE_NAMES, REVIEW_DEPTHS, RUN_STAGES } from './model/index.ts';
 import type { GateName, ReviewDepth, RunStage } from './model/index.ts';
 import { prioritise } from './prioritise.ts';
+import { evaluateQuality, formatQualityReport } from './quality/index.ts';
 import { renderBrief } from './render/brief.ts';
 import { renderHtml } from './render/html/index.ts';
 import { renderJson } from './render/json.ts';
@@ -41,6 +42,7 @@ const USAGE = [
   '  clearfelt-review stage <run> <stage>          advance a non-gate transition',
   '  clearfelt-review approve <run> <gate>         scope | research-plan | findings',
   '  clearfelt-review validate <run>               schema, integrity and lifecycle',
+  '  clearfelt-review quality <run>                output contract and quality checks',
   '  clearfelt-review coverage <run>               question states, gaps, budget',
   '  clearfelt-review prioritise <run>             computed P0..P3 with reasoning',
   '  clearfelt-review change-tree <run> [--json]   derived from actions and assets',
@@ -158,6 +160,21 @@ async function validateCommand(args: string[]): Promise<void> {
   // report whose traceability silently does not resolve.
   console.error(`\nFAILED. ${result.errors.length} error(s), ${warnings} warning(s).`);
   process.exit(1);
+}
+
+/**
+ * Evaluation, not validation.
+ *
+ * Exits 1 on a defect and 0 on cautions alone, because a caution is sometimes
+ * the honest answer: a single source really can be the only source that exists.
+ * Making every finding fatal would teach a user to pass --force and stop
+ * reading, which is how a quality gate becomes decoration.
+ */
+async function qualityCommand(args: string[]): Promise<void> {
+  const review = await loadReview(requireRunDir(args[0]));
+  const report = evaluateQuality(review);
+  console.log(formatQualityReport(report));
+  if (report.defects.length > 0) process.exit(1);
 }
 
 async function coverageCommand(args: string[]): Promise<void> {
@@ -291,6 +308,9 @@ async function main(): Promise<void> {
       break;
     case 'validate':
       await validateCommand(rest);
+      break;
+    case 'quality':
+      await qualityCommand(rest);
       break;
     case 'coverage':
       await coverageCommand(rest);

@@ -13,6 +13,7 @@ import type {
   Source,
 } from '../model/index.ts';
 import { type PriorityResult, prioritise } from '../prioritise.ts';
+import { type QualityReport, evaluateQuality } from '../quality/index.ts';
 
 /**
  * The single derived view every renderer reads.
@@ -29,6 +30,12 @@ export interface ReviewView {
   priorities: PriorityResult[];
   changeTree: ChangeTree;
   coverage: CoverageReport;
+  /**
+   * The review's own assessment of itself. Carried on the view so a renderer
+   * cannot show a confident plan while the quality report says the
+   * recommendations are untestable: both come off the same object.
+   */
+  quality: QualityReport;
 
   priorityOf(id: string): PriorityResult | undefined;
   findingOf(id: string): Finding | undefined;
@@ -67,6 +74,7 @@ export function buildView(review: Review): ReviewView {
     priorities,
     changeTree: buildChangeTree(review),
     coverage: computeCoverage(review),
+    quality: evaluateQuality(review),
 
     priorityOf: (id) => priorityIndex.get(id),
     findingOf: (id) => findings.get(id),

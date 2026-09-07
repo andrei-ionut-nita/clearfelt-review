@@ -1,0 +1,31 @@
+[
+  {
+    "id": "S-0001",
+    "url": "https://example.com/",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T12:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0001.html",
+    "content_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "authority": "high",
+    "independence": {
+      "type": "republished",
+      "of_source_id": "S-0001"
+    }
+  },
+  {
+    "id": "S-0002",
+    "url": "https://directory.example.org/profile",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T12:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0002.html",
+    "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "authority": "high",
+    "independence": {
+      "type": "republished",
+      "of_source_id": "S-0001"
+    },
+    "publisher": "Example Directory"
+  }
+]

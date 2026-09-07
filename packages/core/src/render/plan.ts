@@ -45,6 +45,7 @@ export function renderPlan(view: ReviewView): string {
   out.push(...recommendations(view));
   out.push(...comparisonLandscape(view));
   out.push(...limitations(view));
+  out.push(...qualityReview(view));
   out.push(...evidenceRoom(view));
 
   return `${out.join('\n')}\n`;
@@ -400,6 +401,57 @@ function limitations(view: ReviewView): string[] {
     out.push('');
   }
 
+  return out;
+}
+
+/**
+ * The report carrying its own critique.
+ *
+ * Unusual, and deliberate. A plan that prints its own unanswered contract
+ * questions and its own mechanical defects is harder to read as an oracle,
+ * which is the failure mode specification section 77 names. Hiding this section
+ * when it is empty would make its appearance a signal that something went
+ * wrong; printing it always makes a clean run a claim the reader can check.
+ */
+function qualityReview(view: ReviewView): string[] {
+  const { quality } = view;
+  const out = ['## How this review checks out', ''];
+
+  if (quality.contract.total === 0) {
+    out.push('No recommendations yet, so the output contract has nothing to test.', '');
+  } else {
+    out.push(
+      `${quality.contract.complete_count} of ${quality.contract.total} recommendation(s) answer all ten questions the output contract asks.`,
+      '',
+    );
+    for (const rec of quality.contract.recommendations) {
+      if (rec.complete) continue;
+      out.push(`- ${rec.recommendation_id} does not answer:`);
+      for (const answer of rec.answers) {
+        if (answer.answered) continue;
+        out.push(`  - ${answer.question} ${answer.detail}`);
+      }
+    }
+    if (quality.contract.complete_count < quality.contract.total) out.push('');
+  }
+
+  if (quality.findings.length === 0) {
+    out.push('No mechanical quality issue was detected.', '');
+  } else {
+    for (const [category, findings] of Object.entries(quality.by_category)) {
+      out.push(`### ${category}`, '');
+      for (const finding of findings ?? []) {
+        out.push(`- ${finding.severity}: ${finding.id}. ${finding.message}`);
+        out.push(`  ${finding.remedy}`);
+      }
+      out.push('');
+    }
+  }
+
+  out.push(
+    'These are mechanical checks. They say nothing about whether the analysis is any good: whether the comparison set is the one this audience actually considers, whether an inference is warranted, and whether any of this bears on the decision are judgments only a reader can make.',
+    '',
+  );
   return out;
 }
 

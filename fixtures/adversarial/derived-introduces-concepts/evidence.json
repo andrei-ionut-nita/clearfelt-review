@@ -1,0 +1,48 @@
+[
+  {
+    "id": "E-0001",
+    "observation_ids": [
+      "OBS-0001"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "claim": "The stated proposition leads on commercial outcomes.",
+    "research_question_ids": [
+      "RQ-0001"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [
+      "F-0001"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0002",
+    "observation_ids": [
+      "OBS-0002"
+    ],
+    "source_ids": [
+      "S-0002"
+    ],
+    "claim": "A third-party listing describes the work in the same commercial terms.",
+    "research_question_ids": [
+      "RQ-0001"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [
+      "E-0001"
+    ],
+    "supports": [
+      "F-0001"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Generate CTO opportunities.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001"
+  ],
+  "decision": {
+    "statement": "What should change on the site over the next 90 days?",
+    "evidence_required": [
+      "How the site is currently positioned"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "Founders and CEOs"
+    }
+  ],
+  "exclusions": [
+    "Paid advertising performance"
+  ],
+  "depth": "standard",
+  "comparison_applicable": true,
+  "budget": {
+    "max_sources": 40,
+    "max_search_iterations": 12,
+    "max_depth": 2,
+    "min_evidence_per_question": 2,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": []
+  }
+}

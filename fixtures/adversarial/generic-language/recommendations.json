@@ -1,0 +1,33 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Lead the homepage with the economics framing",
+    "problem": "Capability is clearer than commercial consequence.",
+    "why_it_matters": "The audience decides on consequence, not on stack.",
+    "finding_ids": [
+      "F-0001"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "The territory is unoccupied across the comparison set.",
+    "recommended_change": "Improve messaging across the site and build trust with the audience.",
+    "expected_outcome": "A reader can state what the work is worth within one screen.",
+    "impact": "high",
+    "effort": "medium",
+    "confidence": "high",
+    "urgency": "high",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Outcome-led framing raises qualified enquiry rate.",
+      "success_metric": "Qualified enquiries per 100 sessions",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare enquiry quality over eight weeks.",
+      "falsifier": "No change in qualified enquiry rate after eight weeks of comparable traffic.",
+      "review_period": "8 weeks"
+    }
+  }
+]

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { buildAdversarial } from '../testing/adversarial.ts';
 import { makeValidReview } from '../testing/factory.ts';
 import { makeWorkedExample } from '../testing/worked-example.ts';
 import { renderBrief } from './brief.ts';
@@ -280,5 +281,39 @@ describe('renderHtml', () => {
   it('keeps a rejected comparison visible with its reason', () => {
     expect(html).toContain('COMP-0003');
     expect(html).toContain('was rejected');
+  });
+});
+
+describe('the report criticising itself', () => {
+  const bad = buildView(buildAdversarial('generic-language'));
+
+  it('prints the section even when the run is clean', () => {
+    // If this section only appeared on a bad run, its presence would be the
+    // warning and its absence would be unverifiable. A clean run has to make
+    // the claim out loud so a reader can check it.
+    expect(renderPlan(view)).toContain('## How this review checks out');
+    expect(renderHtml(view)).toContain('id="quality"');
+  });
+
+  it('names the defect in the plan rather than rendering a confident change', () => {
+    const output = renderPlan(bad);
+    expect(output).toContain('recommendation_generic');
+    expect(output).toContain('R-0001');
+  });
+
+  it('names the defect in the HTML report too', () => {
+    const output = renderHtml(bad);
+    expect(output).toContain('recommendation generic');
+    expect(output).toContain('generic advice');
+  });
+
+  it('carries the quality report in the JSON, so no consumer has to recompute it', () => {
+    const parsed = JSON.parse(renderJson(bad));
+    expect(parsed.derived.quality.findings[0].code).toBe('recommendation.generic_language');
+  });
+
+  it('says what only a reader can judge, rather than implying the checks suffice', () => {
+    expect(renderPlan(view)).toContain('judgments only a reader can make');
+    expect(renderHtml(view)).toContain('judgments only a reader can make');
   });
 });

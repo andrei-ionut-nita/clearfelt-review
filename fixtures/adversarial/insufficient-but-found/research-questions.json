@@ -1,0 +1,20 @@
+[
+  {
+    "id": "RQ-0001",
+    "question": "How is the proposition currently framed?",
+    "module": "positioning",
+    "state": "INSUFFICIENT_EVIDENCE",
+    "stop_reason": "no_evidence_available",
+    "stop_detail": "Two independent sources agree and further search repeated them.",
+    "evidence_ids": [
+      "E-0001",
+      "E-0002"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002"
+    ],
+    "confidence": "low",
+    "priority": 1
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "organisation",
+    "role": "subject",
+    "name": "Acme",
+    "asset_ids": []
+  }
+]

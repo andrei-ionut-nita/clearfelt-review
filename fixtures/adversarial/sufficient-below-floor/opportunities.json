@@ -1,0 +1,16 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Technology economics is underoccupied",
+    "description": "No comparison entity leads on the cost of engineering decisions.",
+    "supporting_finding_ids": [
+      "F-0001"
+    ],
+    "supporting_evidence_ids": [
+      "E-0001"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "medium"
+  }
+]

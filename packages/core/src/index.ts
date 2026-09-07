@@ -11,6 +11,7 @@ export * from './ids.ts';
 export * from './lifecycle.ts';
 export * from './store.ts';
 export * from './validate/index.ts';
+export * from './quality/index.ts';
 export * from './prioritise.ts';
 export * from './change-tree.ts';
 export * from './coverage.ts';

@@ -17,6 +17,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "typecheck": "pnpm --filter @clearfelt-review/core exec tsc --noEmit",
+    "fixtures:write": "node --experimental-strip-types packages/core/src/testing/write-fixtures.ts",
     "check:em-dash": "! grep -rnP \"\\x{2014}\" --include='*.md' --include='*.ts' --include='*.json' --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git .",
     "preflight": "pnpm run lint && pnpm run check:em-dash && pnpm run typecheck && pnpm run test"
   },

@@ -38,6 +38,7 @@ export function renderJson(view: ReviewView): string {
         priorities: view.priorities,
         change_tree: view.changeTree,
         coverage: view.coverage,
+        quality: view.quality,
       },
     },
     null,

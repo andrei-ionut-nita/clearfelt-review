@@ -30,6 +30,20 @@ Run against a live site on 2026-09-07. Recorded here because the point of a dogf
 
 **Still open.** There is no way to record that a recommendation from a previous run has since been implemented, which is what makes the specification's example look stale rather than wrong. That belongs with the diff engine in Phase 5.
 
+## What Phase 2 found in the same run
+
+Ran `clearfelt-review quality` against the same andreinita.co run once it shipped. It surfaced four categories of real issue, not tool noise:
+
+**Two recommendations had dropped the audience.** `R-0001` and `R-0002` rested on findings that never stated `audience_relevance`, so the output contract's "who or what is affected?" question went unanswered even though the recommendations themselves clearly had an audience in mind. The uncertainty had not survived the trip from finding to recommendation. Fixed by adding the field to the findings; the underlying analysis did not change, only what it declared.
+
+**Two research questions had stopped without a formal reason.** Both carried a `stop_detail` explaining exactly why in prose, and both were missing the `stop_reason` enum value the model actually checks. This is a stronger finding than it looks: the reasoning layer knew why it stopped and simply did not fill in the structured field, which is precisely the gap between "an audit trail exists" and "the process is auditable" that the research ledger is supposed to close. Promoted from a Phase 2 quality caution into a validation error once found, because a question that stopped without a machine-readable reason is a well-formedness problem, not a judgement call: see `decisions/0008-validation-is-not-evaluation.md`.
+
+**The novel-concept check needed calibrating against real prose, not just fixtures.** Adversarial fixtures write findings by hand and can make the leap from evidence to conclusion as blatant or as subtle as the test needs. Real findings paraphrase constantly: "the site" for "the homepage and the advisory page", "consequences" for "business-critical", both legitimate summarising rather than unjustified inference. At the fixture-tuned threshold, the check fired on every derived finding in the run, which teaches a reader to stop reading it. Raised `NOVEL_TERM_LIMIT` from 3 to 5 against this run's actual novel-term counts, which left the two genuinely borderline findings flagged (one enumerating categories of endorsement the evidence did not itself list; one inferring audience search behaviour from a claim about discoverable results) and cleared the two that were paraphrase. The adversarial fixture that exercises this check introduces enough new vocabulary to trip either threshold, so raising it did not weaken the regression test.
+
+**A falsifier phrased as a null result was not recognised as one.** `R-0001`'s falsifier said outcome would be "indistinguishable from" the prior state, a legitimate failure condition the shortfall-word list did not contain. Added `indistinguishable`, `unaffected`, `unmoved`, `identical` and `same` to the list. The lesson generalises: a hand-written word list calibrated against invented fixtures will always be missing real phrasing, and the fix each time is to widen the list against a real run rather than assume the check is complete.
+
+Net result: zero defects in the run once its own real gaps were fixed, five honest cautions left standing, and one rule moved from evaluation to validation because a live run showed it belonged there. This is what "quality evaluation decides whether the product is worth broadening" was supposed to produce: not a score, but a specific list of what to go and fix, some of it in the run and some of it in the checker.
+
 ## Known limitations, stated rather than papered over
 
 **Fabricated sources cannot be prevented.** Requiring a snapshot and content hash for every fetched source makes fabrication visible on inspection: someone can open the snapshot and see whether it is real. Nothing in code can prove a page was actually visited. This is a mitigation, not a solution, and the docs should keep saying so.

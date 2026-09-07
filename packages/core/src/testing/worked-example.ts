@@ -251,6 +251,9 @@ export function makeWorkedExample(): Review {
         question: 'What proof of commercial impact is publicly visible?',
         module: 'credibility',
         state: 'PARTIALLY_ANSWERED',
+        stop_reason: 'diminishing_returns',
+        stop_detail:
+          'Third-party proof exists on the vendor site; further search returned the same two pages.',
         evidence_ids: ['E-0004'],
         source_ids: ['S-0001', 'S-0002'],
         confidence: 'medium',

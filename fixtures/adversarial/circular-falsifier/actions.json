@@ -1,0 +1,19 @@
+[
+  {
+    "id": "A-0001",
+    "recommendation_id": "R-0001",
+    "description": "Rewrite the homepage hero headline and supporting sentence.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "target": "hero",
+        "operation": "edit"
+      }
+    ],
+    "effort": "medium",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "A reader can state the proposition after one screen.",
+    "horizon": "now"
+  }
+]

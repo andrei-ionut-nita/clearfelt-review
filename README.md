@@ -46,13 +46,15 @@ $ clearfelt-review trace reviews/acme/r-20260907-001 S-0001 --reverse
 
 ## Status
 
-Phases 0 and 1 complete. 166 tests.
+Phases 0 through 2 complete. 260 tests.
 
 The deterministic layer: canonical model, id allocation, run lifecycle, stage-gated storage, validation and integrity, priority computation, change tree derivation, coverage, traceability, and four renderers over one shared view.
 
 The reasoning layer: four Claude Code skills under `.claude/skills/`, one per stage, gated by the lifecycle rather than by their own good intentions.
 
-Phase 2 next, and deliberately before breadth: quality evaluation. Six archetypes producing consistently mediocre reviews would be worse than one producing a defensible one.
+**Quality evaluation, separate from validation.** `quality/contract.ts` checks that every recommendation answers ten fixed questions, from what evidence proves it to what would prove it wrong. `quality/checks.ts` runs nine mechanical checks, from a recommendation restating its own finding to a falsifier that cannot fail, against named failure categories in `quality/rubric.md` rather than a score. Run against a real site, it found real gaps in the run, not in the tool: two recommendations that had dropped which audience they served, and two research questions that stopped without saying why. See `docs/ROADMAP.md`, "What Phase 2 found in the same run".
+
+Phase 3 next: comparison depth.
 
 ## Getting started
 
@@ -71,10 +73,12 @@ clearfelt-review init <slug> [--depth quick|standard|deep] [--root <dir>]
 clearfelt-review stage <run> <stage>
 clearfelt-review approve <run> scope|research-plan|findings
 clearfelt-review validate <run>
+clearfelt-review quality <run>
 clearfelt-review coverage <run>
 clearfelt-review prioritise <run>
 clearfelt-review change-tree <run> [--json]
 clearfelt-review trace <run> <id> [--reverse]
+clearfelt-review render <run> --format brief|plan|html|json [--out <path>]
 ```
 
 ## Documentation

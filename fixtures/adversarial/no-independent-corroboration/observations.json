@@ -1,0 +1,18 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The homepage headline states \"Engineering that pays for itself\".",
+    "locator": "main h1",
+    "observed_at": "2026-09-07T12:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0002",
+    "observation_type": "positive",
+    "statement": "The directory listing describes the work in cost-of-delivery terms.",
+    "locator": "section.summary",
+    "observed_at": "2026-09-07T12:00:00.000Z"
+  }
+]

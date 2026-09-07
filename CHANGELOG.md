@@ -46,6 +46,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **`Observation.scanned_source_ids`**, so an absence established across several pages names all of them. Surfaced by the first real run against a live site, and recorded in `docs/decisions/notes/0003-multi-source-absence.md`. Validation now requires it when `search_scope` names more than one place, and adding the rule immediately caught two existing fixtures doing exactly what it forbids.
 
+- **The output contract** (`quality/contract.ts`). Ten fixed questions every recommendation must answer, checked against real fields and real reference chains rather than prose length: a recommendation citing an evidence chain that stops before reaching a source, or naming no asset to change, fails the same way a recommendation with an empty field does.
+
+- **Mechanical quality checks** (`quality/checks.ts`), nine of them: a recommendation restating its own finding, a falsifier that adds no observable condition beyond its own hypothesis, a falsifier phrased as a success rather than a failure, specification section 78's generic-phrase list, near-duplicate recommendations, a recommendation whose supporting findings declared an assumption it does not carry, a finding whose evidence has no independently corroborating source, a `derived` finding whose statement introduces vocabulary absent from its evidence, and a finding stated as current resting entirely on historical evidence. Each is a named `QualityCategory`, not a score, per `docs/decisions/0008-validation-is-not-evaluation.md`.
+
+- **`quality/rubric.md`.** Named failure categories under structural, analytical and actionable tiers, each marked mechanical (a check owns it) or judged (only a reader can tell), so the rubric and the checker speak the same vocabulary and a reader knows which half of the promise code can actually keep.
+
+- **`fixtures/adversarial/`**, thirteen generated run directories, one per mechanical check, each a run that passes `validate` completely and trips exactly one quality finding. Written from the same case table the tests run against, so a fixture and its test cannot drift the way hand-maintained ones do; `pnpm run fixtures:write` regenerates every committed fixture from the code that defines it.
+
+- **The `quality` command**, exiting 1 on a defect and 0 on cautions alone. A caution can be the honest answer, so making every finding fatal would teach a user to stop reading the report; only a defect blocks.
+
+- **Every renderer carries the run's own quality report.** `ReviewView.quality` is computed once and read by json, plan and html alongside priorities, the change tree and coverage, so no renderer can show a confident plan while the quality report says a recommendation is untestable. The plan and the HTML report both print the section even on a clean run, so its absence is never itself a signal.
+
 ### Fixed
 
 - An absence observation attributed to one source when it was established across five credited one page with work done across all of them, and made the finding built on it report as resting on a single source when it rested on five. A positive observation has one natural source and an absence does not; the model had quietly assumed every observation was the first kind. No fixture caught it, because the fixtures were written by the same reasoning that wrote the model.
@@ -55,6 +67,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The HTML report scrolled sideways at 390px while every unit test passed. `max-width` plus `justify-self` on `<main>` switched the grid item to fit-content sizing, so it sized to its content instead of its column. Content is now centred by an inner wrapper, with `min-width: 0` on the grid item so a wide table cannot blow the column out. Found by opening the page in a browser at that width, which is why `docs/DEVELOP.md` lists that as a pre-PR step rather than trusting the suite.
 
 - Opening an evidence item built on an absence showed the absence but not the scope searched, leaving it one click deeper on the observation. An absence must not read as a bare claim anywhere it surfaces, so the scope now travels into that panel too.
+
+- Research questions closed as `PARTIALLY_ANSWERED` could carry no `stop_reason`, which meant a question with real findings on it and real evidence still unresolved could look the same as one deliberately left open. Found while building the quality checks, where it first showed up as a defect in this project's own worked example and its own dogfood run. Moved from a Phase 2 quality caution into a validation rule (`entities.ts`), because a question that stopped without a machine-readable reason is a well-formedness problem, not a judgement call.
+
+- The `derived`-finding-introduces-concepts check fired on every derived finding in the one real run available to test it against, because real analytical prose paraphrases constantly and the threshold was tuned against hand-written fixtures rather than real writing. Raised `NOVEL_TERM_LIMIT` from 3 to 5 against the real run's own novel-term counts, which cleared the paraphrase and kept the two genuinely borderline findings flagged.
+
+- The circular-falsifier check treated "outcome X does not happen" as circular against "outcome X happens" only when the negation itself was the sole difference; a falsifier phrased as a null result ("indistinguishable from the preceding quarter") was not recognised as a failure condition because the shortfall-word list did not contain it. Widened the list; the underlying lesson is that a hand-written word list calibrated against invented fixtures will always be missing real phrasing.
 
 ### Notes
 

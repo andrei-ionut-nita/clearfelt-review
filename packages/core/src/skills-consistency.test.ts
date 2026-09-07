@@ -53,10 +53,10 @@ describe('skills', () => {
           (m) => m[1] as string,
         );
         const unknown = [...new Set(referenced)].filter((c) => !IMPLEMENTED.has(c));
-        // 'quality' is referenced by review-recommend as a Phase 2 command and
-        // is explicitly marked as not yet shipping, so it is allowed to be
-        // absent. Anything else being absent is drift.
-        expect(unknown.filter((c) => c !== 'quality')).toEqual([]);
+        // No exemptions. A skill telling the reasoning layer to run a command
+        // that does not exist is drift, and the exemption that used to live
+        // here for 'quality' is gone now that the command ships.
+        expect(unknown).toEqual([]);
       });
 
       it('references only real stages, gates and depths', () => {

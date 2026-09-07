@@ -1,0 +1,9 @@
+[
+  {
+    "id": "ASM-0001",
+    "statement": "Recruiters read the homepage before the writing archive.",
+    "why_assumed": "No analytics access, so entry-point order is inferred from navigation.",
+    "status": "unvalidated",
+    "evidence_ids": []
+  }
+]

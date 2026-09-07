@@ -49,12 +49,33 @@ Set `horizon` (`now`, `next`, `later`) by dependency, not by calendar. Set `vali
 clearfelt-review validate     <run>
 clearfelt-review prioritise   <run>
 clearfelt-review change-tree  <run>
-clearfelt-review quality      <run>   # once Phase 2 ships
+clearfelt-review quality      <run>
 ```
 
 Read the change tree. If it does not describe what you meant, the actions are wrong, not the tree. Fix the actions.
 
 Read the priorities. If the computed band surprises you, either your dimension ratings were wrong or your intuition was. Both are worth a moment.
+
+## Read the quality report, and take it personally
+
+`quality` asks two things `validate` cannot.
+
+The **output contract** asks whether each recommendation answers all ten questions: what is wrong, why it matters, what evidence proves it, what uncertainty remains, what should change, where, who is affected, what success looks like, how we will know, and what would prove it wrong. An unanswered question is a gap in the recommendation, not a gap in the report.
+
+The **quality checks** name failure categories. Every defect is yours to fix:
+
+- `recommendation.restates_finding`: you wrote the finding again with an imperative verb. Say what specifically changes.
+- `recommendation.circular_falsifier`: your falsifier adds no observable condition the hypothesis did not already contain. Name the measurement, the threshold and the window.
+- `recommendation.generic_language`: consultant theatre. The advice would fit any entity at all.
+- `recommendation.near_duplicate`: one intervention split into two.
+- `recommendation.drops_assumption`: a finding declared an assumption and your recommendation did not carry it. Uncertainty is supposed to travel.
+- `finding.derived_introduces_concepts`: the finding claims to be derived and went past its evidence. Reword it, or set `claim_type` to `inferred`.
+- `finding.current_from_historical_evidence`: a claim about now resting entirely on evidence about then.
+- `question.insufficient_but_produced_findings`: research judged the evidence inadequate, and a finding rests on it anyway.
+
+Cautions are different. A single non-independent source really can be the only source that exists, and an unvalidated assumption declared honestly is the system working. Read each one and decide; do not clear them by editing the model until it stops complaining.
+
+Nothing here says the analysis is good. `packages/core/src/quality/rubric.md` names what only a reader can judge, and the last category in it, whether any of this bears on the decision the review exists to support, is the one that matters most.
 
 ## Render
 

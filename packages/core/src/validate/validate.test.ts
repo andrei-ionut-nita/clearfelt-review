@@ -286,4 +286,42 @@ describe('research questions', () => {
     });
     expect(codes(validateReview(review).errors)).toContain('field.enum');
   });
+
+  it('requires a partially answered question to say why research stopped', () => {
+    // The easiest state to walk away from: something was found, the question is
+    // not closed, and with no reason a reader cannot tell whether more was
+    // available. Found while building the quality checks, where it first showed
+    // up as a defect in this project's own worked example.
+    const review = makeValidReview({
+      research_questions: [
+        {
+          id: 'RQ-0001',
+          question: 'What proof of impact is publicly visible?',
+          module: 'credibility',
+          state: 'PARTIALLY_ANSWERED',
+          evidence_ids: [],
+          source_ids: [],
+          priority: 1,
+        },
+      ],
+    });
+    expect(codes(validateReview(review).errors)).toContain('field.enum');
+  });
+
+  it('accepts a question still in progress with no stop reason', () => {
+    const review = makeValidReview({
+      research_questions: [
+        {
+          id: 'RQ-0001',
+          question: 'What proof of impact is publicly visible?',
+          module: 'credibility',
+          state: 'SEARCHING',
+          evidence_ids: [],
+          source_ids: [],
+          priority: 1,
+        },
+      ],
+    });
+    expect(codes(validateReview(review).errors)).not.toContain('field.enum');
+  });
 });

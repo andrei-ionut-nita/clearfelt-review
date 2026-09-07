@@ -55,6 +55,7 @@ const NAV = [
   ['changes', 'Change tree'],
   ['evidence', 'Evidence'],
   ['limits', 'What we do not know'],
+  ['quality', 'How this checks out'],
 ] as const;
 
 export function renderHtml(view: ReviewView): string {
@@ -110,6 +111,7 @@ ${roadmap(view)}
 ${changes(view)}
 ${evidence(view)}
 ${limits(view)}
+${quality(view)}
 </div>
 </main>
 </div>
@@ -528,5 +530,62 @@ ${
     ? `<div class="callout">These findings rest on fewer than two independent sources: ${chips(coverage.uncorroborated_findings)}</div>`
     : ''
 }
+</section>`;
+}
+
+/**
+ * The report's own critique of itself, rendered last.
+ *
+ * A report that shows its unanswered contract questions and its mechanical
+ * defects is harder to read as an oracle, and that is the point: specification
+ * section 77's failure is a document that looks authoritative and has quietly
+ * stopped being a view of the evidence. Rendered even when clean, so its
+ * presence is never itself a warning sign.
+ */
+function quality(view: ReviewView): string {
+  const { quality: report } = view;
+  const contract = report.contract;
+
+  const incomplete = contract.recommendations.filter((r) => !r.complete);
+  const contractBlock =
+    contract.total === 0
+      ? '<p>No recommendations yet, so the output contract has nothing to test.</p>'
+      : `<p>${contract.complete_count} of ${contract.total} recommendation${contract.total === 1 ? '' : 's'} answer all ten questions.</p>${
+          incomplete.length > 0
+            ? incomplete
+                .map(
+                  (rec) =>
+                    `<div class="card"><h4>${chip(rec.recommendation_id)} ${esc(rec.title)}</h4><ul>${rec.answers
+                      .filter((a) => !a.answered)
+                      .map((a) => `<li><strong>${esc(a.question)}</strong> ${esc(a.detail)}</li>`)
+                      .join('')}</ul></div>`,
+                )
+                .join('')
+            : ''
+        }`;
+
+  const checkBlock =
+    report.findings.length === 0
+      ? '<p>No mechanical quality issue was detected.</p>'
+      : Object.entries(report.by_category)
+          .map(
+            ([category, findings]) =>
+              `<h3>${esc(category.replace(/_/g, ' '))}</h3>${(findings ?? [])
+                .map(
+                  (f) =>
+                    `<div class="card"><h4>${tag(f.severity, f.severity === 'defect' ? 'warn' : '')} ${chip(f.id)}</h4><p>${esc(f.message)}</p><p class="meta">${esc(f.remedy)}</p></div>`,
+                )
+                .join('')}`,
+          )
+          .join('');
+
+  return `<section id="quality">
+<h2>How this checks out</h2>
+<p class="lede">The ten questions every recommendation has to answer, and the checks this review runs against itself.</p>
+<h3>Output contract</h3>
+${contractBlock}
+<h3>Quality checks</h3>
+${checkBlock}
+<div class="callout">These are mechanical checks, and passing them is not a claim that the analysis is good. Whether the comparison set is the one this audience actually considers, whether an inference is warranted, and whether any of this bears on the decision are judgments only a reader can make.</div>
 </section>`;
 }
