@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ASM-0001",
+    "statement": "A hiring audience weighs quantified outcomes more heavily than described capability.",
+    "why_assumed": "Consistent with how the comparison set presents itself, but not established for this audience by direct evidence.",
+    "status": "unvalidated",
+    "validation_method": "Ask three recruiters what they shortlist on.",
+    "evidence_ids": []
+  }
+]

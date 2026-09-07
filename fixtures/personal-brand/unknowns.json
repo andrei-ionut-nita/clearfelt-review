@@ -1,0 +1,18 @@
+[
+  {
+    "id": "UNK-0001",
+    "statement": "How visitors actually behave on the site.",
+    "why_unknown": "No analytics access was available during the review.",
+    "how_to_resolve": "Grant read access to analytics, or run a short moderated test with five people from the target audience.",
+    "blocks_finding_ids": [
+      "F-0003"
+    ]
+  },
+  {
+    "id": "UNK-0002",
+    "statement": "Which searches the hiring audience actually runs.",
+    "why_unknown": "Search result pages could not be retrieved programmatically.",
+    "how_to_resolve": "Ask two recruiters to describe their search process.",
+    "blocks_finding_ids": []
+  }
+]

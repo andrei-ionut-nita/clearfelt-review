@@ -1,0 +1,23 @@
+[
+  {
+    "id": "UA-0001",
+    "statement": "My main competition is large consultancies.",
+    "about_id": "ENT-0004",
+    "status": "contradicted",
+    "research_question_ids": [
+      "RQ-0002"
+    ],
+    "evidence_ids": [
+      "E-0003"
+    ],
+    "created_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "UA-0002",
+    "statement": "Recruiters are the most important audience.",
+    "status": "accepted_untested",
+    "research_question_ids": [],
+    "evidence_ids": [],
+    "created_at": "2026-09-07T09:00:00.000Z"
+  }
+]

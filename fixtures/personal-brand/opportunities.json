@@ -1,0 +1,40 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Technology economics is an unoccupied territory",
+    "description": "No entity in the qualified comparison set addresses the cost consequences of technical decisions, and the subject already writes about it.",
+    "supporting_finding_ids": [
+      "F-0001",
+      "F-0002"
+    ],
+    "supporting_evidence_ids": [
+      "E-0003",
+      "E-0005"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "competitive_context": "Unoccupied across both qualified comparisons.",
+    "confidence": "medium",
+    "white_space": {
+      "territory": "Technology economics",
+      "saturation": "low",
+      "current_position": "medium"
+    }
+  },
+  {
+    "id": "O-0002",
+    "title": "Existing work can be converted into proof",
+    "description": "The writing archive already contains the reasoning that a proof page would need, so the gap is presentation rather than substance.",
+    "supporting_finding_ids": [
+      "F-0003",
+      "F-0004"
+    ],
+    "supporting_evidence_ids": [
+      "E-0004",
+      "E-0005"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "medium"
+  }
+]

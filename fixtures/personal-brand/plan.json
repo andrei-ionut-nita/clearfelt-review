@@ -1,0 +1,65 @@
+{
+  "id": "PLAN-0001",
+  "created_at": "2026-09-07T09:00:00.000Z",
+  "objective_interpretation": "The subject wants to be considered for senior technology leadership roles, so the review treats the site as a decision aid for a hiring audience rather than as a portfolio.",
+  "activated_modules": [
+    {
+      "key": "positioning",
+      "reason": "The objective turns on how the subject is understood.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "competitive_landscape",
+      "reason": "A hiring audience compares candidates by definition.",
+      "research_question_ids": [
+        "RQ-0002"
+      ]
+    },
+    {
+      "key": "credibility",
+      "reason": "Seniority claims need visible proof.",
+      "research_question_ids": [
+        "RQ-0003"
+      ]
+    },
+    {
+      "key": "conversion",
+      "reason": "The site has a contact path worth assessing.",
+      "research_question_ids": [
+        "RQ-0004"
+      ]
+    },
+    {
+      "key": "discoverability",
+      "reason": "Recruiters search before they browse.",
+      "research_question_ids": [
+        "RQ-0005"
+      ]
+    }
+  ],
+  "dormant_modules": [
+    {
+      "key": "pricing",
+      "reason": "No commercial offer is being sold through the site."
+    },
+    {
+      "key": "accessibility",
+      "reason": "Not raised in the objective and no evidence of a compliance driver."
+    },
+    {
+      "key": "operations",
+      "reason": "Out of scope for a personal positioning review."
+    }
+  ],
+  "comparison_plan": {
+    "supplied_count": 1,
+    "to_discover": true,
+    "rationale": "One comparison was supplied by the subject. The audience compares against a wider set than the subject named, so further candidates were discovered and qualified."
+  },
+  "anticipated_gaps": [
+    "No analytics access, so actual conversion behaviour cannot be observed.",
+    "Recruiter decision criteria are inferred from public material rather than interviews."
+  ]
+}

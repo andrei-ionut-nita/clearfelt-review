@@ -1,0 +1,91 @@
+{
+  "actions": [
+    {
+      "id": "RA-0001",
+      "research_question_id": "RQ-0001",
+      "action": "retrieve",
+      "rationale": "The homepage and About page carry the stated proposition, so they are the primary source for how the subject positions themselves.",
+      "target": "https://jordan-ellis.example/",
+      "result_event_ids": [
+        "RE-0001"
+      ]
+    },
+    {
+      "id": "RA-0002",
+      "research_question_id": "RQ-0002",
+      "action": "search",
+      "rationale": "The subject named one comparison. The hiring audience compares more widely, so further candidates were needed before the landscape could be described.",
+      "target": "comparable technology leadership profiles",
+      "result_event_ids": [
+        "RE-0002"
+      ]
+    },
+    {
+      "id": "RA-0003",
+      "research_question_id": "RQ-0001",
+      "action": "verify",
+      "rationale": "The writing archive appeared to contradict the proposition, which needed checking before the finding could be stated.",
+      "target": "https://jordan-ellis.example/writing",
+      "result_event_ids": [
+        "RE-0003"
+      ]
+    },
+    {
+      "id": "RA-0004",
+      "research_question_id": "RQ-0005",
+      "action": "retrieve",
+      "rationale": "Recruiters search before they browse, so search visibility bears directly on the objective.",
+      "target": "search result pages",
+      "result_event_ids": [
+        "RE-0004"
+      ]
+    },
+    {
+      "id": "RA-0005",
+      "research_question_id": "RQ-0004",
+      "action": "inspect",
+      "rationale": "Conversion behaviour would materially change the priority of the proof recommendation.",
+      "target": "analytics",
+      "result_event_ids": [
+        "RE-0005"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "RE-0001",
+      "action_id": "RA-0001",
+      "outcome": "succeeded",
+      "detail": "Retrieved and snapshotted three pages.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0002",
+      "action_id": "RA-0002",
+      "outcome": "succeeded",
+      "detail": "Fourteen candidates found, two qualified after applying audience and decision overlap.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0003",
+      "action_id": "RA-0003",
+      "outcome": "contradicted",
+      "detail": "The writing archive does address economics, which cuts against the positioning finding and is recorded as contradicting evidence rather than resolved away.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0004",
+      "action_id": "RA-0004",
+      "outcome": "blocked",
+      "detail": "Search result pages could not be retrieved programmatically.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0005",
+      "action_id": "RA-0005",
+      "outcome": "insufficient",
+      "detail": "No analytics access was available, so conversion could not be assessed at all.",
+      "at": "2026-09-07T09:00:00.000Z"
+    }
+  ]
+}

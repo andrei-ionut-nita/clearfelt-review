@@ -1,0 +1,78 @@
+[
+  {
+    "id": "RQ-0001",
+    "question": "How does the subject currently position themselves?",
+    "module": "positioning",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "Two independent pages state the same proposition consistently.",
+    "evidence_ids": [
+      "E-0001",
+      "E-0002",
+      "E-0005"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
+    "confidence": "high",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0002",
+    "question": "How do comparable profiles position themselves, and which territories are crowded?",
+    "module": "competitive_landscape",
+    "state": "ANSWERED",
+    "stop_reason": "diminishing_returns",
+    "stop_detail": "Additional profiles repeated territories already recorded.",
+    "evidence_ids": [
+      "E-0003"
+    ],
+    "source_ids": [
+      "S-0004",
+      "S-0005"
+    ],
+    "confidence": "medium",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0003",
+    "question": "What proof of commercial impact is publicly visible?",
+    "module": "credibility",
+    "state": "PARTIALLY_ANSWERED",
+    "evidence_ids": [
+      "E-0004"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002"
+    ],
+    "confidence": "medium",
+    "priority": 2
+  },
+  {
+    "id": "RQ-0004",
+    "question": "How well does the site convert an interested visitor into a conversation?",
+    "module": "conversion",
+    "state": "INSUFFICIENT_EVIDENCE",
+    "stop_reason": "no_evidence_available",
+    "stop_detail": "No analytics access, and behaviour cannot be inferred from public material.",
+    "evidence_ids": [],
+    "source_ids": [],
+    "confidence": "low",
+    "priority": 2
+  },
+  {
+    "id": "RQ-0005",
+    "question": "How discoverable is the subject for the searches the audience actually runs?",
+    "module": "discoverability",
+    "state": "BLOCKED",
+    "stop_reason": "blocked",
+    "stop_detail": "Search result pages could not be retrieved programmatically.",
+    "evidence_ids": [],
+    "source_ids": [],
+    "confidence": "low",
+    "priority": 3
+  }
+]

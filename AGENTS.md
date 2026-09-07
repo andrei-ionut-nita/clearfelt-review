@@ -36,9 +36,26 @@ packages/core/src/
   coverage.ts     question states, stop reasons, gaps, budget spend
   trace.ts        forward and reverse traceability walks
   testing/        fixture builders used by tests
+  render/         one shared ReviewView, then json, brief, plan and html
+.claude/skills/            the reasoning layer, one per stage
 reviews/<slug>/<run-id>/   canonical state, gitignored
-fixtures/                  committed fixture runs, including adversarial ones
+fixtures/                  committed fixture runs
 ```
+
+## The four reasoning stages
+
+Each has a bounded responsibility and an explicit contract, and hands off
+through the run directory rather than through conversation state:
+
+1. `review-onboard` scope, decision, entities, assets, assertions, questions. Gates 1 and 2.
+2. `review-research` sources, snapshots, observations, evidence, comparisons, the ledger.
+3. `review-analyse` findings, opportunities, assumptions, unknowns. Gate 3.
+4. `review-recommend` recommendations, actions, then the deterministic steps and the renderers.
+
+Four skills is the current implementation of that invariant, not a rule about
+the number four. `skills-consistency.test.ts` keeps them honest about the CLI:
+a skill referencing a command that does not exist fails there rather than
+halfway through a real review.
 
 ## Commands
 

@@ -46,9 +46,13 @@ $ clearfelt-review trace reviews/acme/r-20260907-001 S-0001 --reverse
 
 ## Status
 
-Phase 0 complete: canonical model, id allocation, run lifecycle, stage-gated storage, validation and integrity, priority computation, change tree derivation, coverage, and traceability. 96 tests.
+Phases 0 and 1 complete. 166 tests.
 
-Phase 1 next: the four reasoning skills and the renderers (executive brief, detailed plan, interactive HTML, JSON).
+The deterministic layer: canonical model, id allocation, run lifecycle, stage-gated storage, validation and integrity, priority computation, change tree derivation, coverage, traceability, and four renderers over one shared view.
+
+The reasoning layer: four Claude Code skills under `.claude/skills/`, one per stage, gated by the lifecycle rather than by their own good intentions.
+
+Phase 2 next, and deliberately before breadth: quality evaluation. Six archetypes producing consistently mediocre reviews would be worse than one producing a defensible one.
 
 ## Getting started
 

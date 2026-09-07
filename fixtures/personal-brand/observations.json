@@ -1,0 +1,77 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The homepage headline reads \"Building resilient engineering organisations\".",
+    "locator": "main h1",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0002",
+    "observation_type": "positive",
+    "statement": "The About page lists platform migration, team scaling and architecture as the three areas of focus.",
+    "locator": "section#focus ul",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0003",
+    "source_id": "S-0001",
+    "observation_type": "absence",
+    "statement": "No quantified commercial outcome appears anywhere on the site.",
+    "search_scope": [
+      "/",
+      "/about",
+      "/writing",
+      "site search for \"cost\", \"revenue\", \"saved\", \"%\""
+    ],
+    "locator": "full-site text scan",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0004",
+    "source_id": "S-0004",
+    "observation_type": "positive",
+    "statement": "The first comparable profile leads with \"digital transformation at enterprise scale\".",
+    "locator": "main h1",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0005",
+    "source_id": "S-0005",
+    "observation_type": "positive",
+    "statement": "The second comparable profile leads with \"AI transformation for regulated industries\".",
+    "locator": "main h1",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0006",
+    "source_id": "S-0002",
+    "observation_type": "absence",
+    "statement": "No named client, case study or testimonial appears on the site.",
+    "search_scope": [
+      "/",
+      "/about",
+      "/writing"
+    ],
+    "locator": "full-site text scan",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0007",
+    "source_id": "S-0003",
+    "observation_type": "positive",
+    "statement": "Three of the eleven published articles discuss the cost consequences of architectural decisions.",
+    "locator": "article list, items 2, 5 and 9",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0008",
+    "source_id": "S-0006",
+    "observation_type": "positive",
+    "statement": "The subject stated that large consultancies are their main competition.",
+    "locator": "onboarding step 3",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  }
+]

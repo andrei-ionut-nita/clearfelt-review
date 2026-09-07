@@ -1,0 +1,67 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Generate senior technology leadership opportunities.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001",
+    "AST-0002",
+    "AST-0003",
+    "AST-0004"
+  ],
+  "decision": {
+    "statement": "What should change on the site and its positioning over the next 90 days?",
+    "decision_maker": "The subject",
+    "horizon": "90 days",
+    "evidence_required": [
+      "How the subject is currently positioned in their own words",
+      "How comparable profiles position themselves",
+      "What proof of commercial impact is publicly visible"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "Founders and CEOs at scale-up companies",
+      "priority": 1,
+      "decision_role": "Hiring decision maker"
+    },
+    {
+      "name": "Executive recruiters",
+      "priority": 2,
+      "decision_role": "Gatekeeper and shortlister"
+    },
+    {
+      "name": "Investors and board members",
+      "priority": 3,
+      "decision_role": "Referrer"
+    }
+  ],
+  "geography": [
+    "United Kingdom"
+  ],
+  "languages": [
+    "en"
+  ],
+  "channels": [
+    "website",
+    "long-form writing"
+  ],
+  "exclusions": [
+    "Paid advertising performance, since none is running",
+    "Social media cadence, which the subject has explicitly deprioritised"
+  ],
+  "depth": "standard",
+  "comparison_applicable": true,
+  "budget": {
+    "max_sources": 40,
+    "max_search_iterations": 12,
+    "max_depth": 2,
+    "min_evidence_per_question": 2,
+    "min_independent_corroboration": 2,
+    "priority_question_ids": [
+      "RQ-0001",
+      "RQ-0002"
+    ]
+  }
+}

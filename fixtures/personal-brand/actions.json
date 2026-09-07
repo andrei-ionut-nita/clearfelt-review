@@ -1,0 +1,98 @@
+[
+  {
+    "id": "A-0001",
+    "recommendation_id": "R-0001",
+    "description": "Rewrite the homepage hero headline and supporting sentence to lead with commercial consequence.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "target": "hero",
+        "operation": "edit"
+      }
+    ],
+    "effort": "medium",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "A reader can state a commercial consequence after reading one screen.",
+    "horizon": "now"
+  },
+  {
+    "id": "A-0002",
+    "recommendation_id": "R-0001",
+    "description": "Rewrite the executive narrative so capability supports the economics claim rather than leading it.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0004",
+        "operation": "edit"
+      }
+    ],
+    "effort": "medium",
+    "dependencies": [
+      "A-0001"
+    ],
+    "status": "todo",
+    "validation": "The narrative states a consequence before it states a capability.",
+    "horizon": "now"
+  },
+  {
+    "id": "A-0003",
+    "recommendation_id": "R-0001",
+    "description": "Rewrite the About page opening to match the revised proposition.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0002",
+        "target": "intro",
+        "operation": "edit"
+      }
+    ],
+    "effort": "low",
+    "dependencies": [
+      "A-0001"
+    ],
+    "status": "todo",
+    "validation": "The About opening and the homepage hero make the same claim.",
+    "horizon": "next"
+  },
+  {
+    "id": "A-0004",
+    "recommendation_id": "R-0002",
+    "description": "Create a proof page carrying three quantified outcomes.",
+    "affected_assets": [
+      {
+        "operation": "new",
+        "proposed": {
+          "type": "website_page",
+          "path": "/proof",
+          "title": "Proof"
+        }
+      }
+    ],
+    "effort": "high",
+    "dependencies": [
+      "A-0001"
+    ],
+    "status": "todo",
+    "validation": "Three outcomes are published, each with a figure and a verifiable referent.",
+    "horizon": "next"
+  },
+  {
+    "id": "A-0005",
+    "recommendation_id": "R-0003",
+    "description": "Add an economics pillar page collecting the relevant articles.",
+    "affected_assets": [
+      {
+        "operation": "new",
+        "proposed": {
+          "type": "website_page",
+          "path": "/writing/economics",
+          "title": "Technology economics"
+        }
+      }
+    ],
+    "effort": "low",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "The pillar page lists at least three articles and is linked from the writing index.",
+    "horizon": "later"
+  }
+]

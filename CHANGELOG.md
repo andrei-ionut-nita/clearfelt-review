@@ -36,6 +36,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - 96 tests, including exhaustive property tests over the priority caps rather than single examples, so a later weight change that silently makes a band reachable fails rather than ships.
 
+- **Four renderers over one shared view** (`render/`). `ReviewView` is the single derived object every renderer reads, so none computes its own priorities or builds its own change tree. A test scans every rendered output for canonical ids and fails on any the model does not contain. Rendering refuses to run on a run that fails validation, because a report built on a broken model looks checkable and is not.
+
+- **The interactive HTML report.** A single self-contained file with no CDN and no external stylesheet, so it keeps working emailed, offline or from a USB stick. Sections render server-side; the model travels as a JSON island for the two-directional drill-down. Uncertainty is in the visual language rather than described in prose: an inferred finding is tagged distinctly from a derived one, a contested finding shows what contradicts it, an absence carries the scope searched, and an unvalidated assumption appears on the card of the recommendation that rests on it.
+
+- **Four Claude Code skills** under `.claude/skills/`, one per reasoning stage, handing off through the run directory rather than through conversation state. `skills-consistency.test.ts` fails if a skill references a CLI command, stage, gate or depth that does not exist, since Markdown and TypeScript otherwise drift silently and the failure surfaces halfway through a real review.
+
+- **`fixtures/personal-brand`**, a committed run that deliberately exercises the awkward cases: an absence observation, contradicting evidence, an inferred finding on an unvalidated assumption, a user assertion the research contradicted, a question that ran out of evidence and one that was blocked. A test asserts it still matches the source that generated it, so a stale fixture cannot quietly make other tests meaningless.
+
+### Fixed
+
+- `research_question.stop_detail` was in the model and reached no output, so a reader saw "insufficient evidence" as a bare label with nothing to act on or disagree with. It now travels through coverage into every renderer. Found by a renderer test looking for the wrong string.
+
+- The HTML report scrolled sideways at 390px while every unit test passed. `max-width` plus `justify-self` on `<main>` switched the grid item to fit-content sizing, so it sized to its content instead of its column. Content is now centred by an inner wrapper, with `min-width: 0` on the grid item so a wide table cannot blow the column out. Found by opening the page in a browser at that width, which is why `docs/DEVELOP.md` lists that as a pre-PR step rather than trusting the suite.
+
+- Opening an evidence item built on an absence showed the absence but not the scope searched, leaving it one click deeper on the observation. An absence must not read as a bare claim anywhere it surfaces, so the scope now travels into that panel too.
+
 ### Notes
 
 `prioritise.ts`'s low-confidence cap is currently unreachable: with the present weights, low confidence cannot score into the P0 band anyway. It is kept as a guarantee that survives a weight change, and the exhaustive test asserts the property rather than the mechanism.

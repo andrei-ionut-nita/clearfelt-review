@@ -1,0 +1,123 @@
+[
+  {
+    "id": "E-0001",
+    "observation_ids": [
+      "OBS-0001",
+      "OBS-0002"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002"
+    ],
+    "claim": "The stated proposition is organised around engineering capability rather than commercial consequence.",
+    "research_question_ids": [
+      "RQ-0001"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [
+      "E-0002"
+    ],
+    "supports": [
+      "F-0001"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0002",
+    "observation_ids": [
+      "OBS-0003"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "claim": "No quantified commercial outcome is published, across every page searched.",
+    "research_question_ids": [
+      "RQ-0001",
+      "RQ-0003"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [
+      "F-0001",
+      "F-0003"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0003",
+    "observation_ids": [
+      "OBS-0004",
+      "OBS-0005"
+    ],
+    "source_ids": [
+      "S-0004",
+      "S-0005"
+    ],
+    "claim": "Comparable profiles concentrate on transformation language, leaving cost and economics unoccupied.",
+    "research_question_ids": [
+      "RQ-0002"
+    ],
+    "user_assertion_ids": [
+      "UA-0001"
+    ],
+    "relevance": "high",
+    "reliability": "medium",
+    "corroborated_by": [],
+    "supports": [
+      "F-0002"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0004",
+    "observation_ids": [
+      "OBS-0006"
+    ],
+    "source_ids": [
+      "S-0002"
+    ],
+    "claim": "No third-party proof of impact is published.",
+    "research_question_ids": [
+      "RQ-0003"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [
+      "F-0003",
+      "F-0004"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0005",
+    "observation_ids": [
+      "OBS-0007"
+    ],
+    "source_ids": [
+      "S-0003"
+    ],
+    "claim": "The writing archive does engage with cost consequences, unlike the site proposition.",
+    "research_question_ids": [
+      "RQ-0001"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "medium",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [],
+    "contradicts": [
+      "F-0001"
+    ],
+    "temporal_scope": "current"
+  }
+]

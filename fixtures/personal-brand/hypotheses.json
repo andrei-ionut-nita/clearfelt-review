@@ -1,0 +1,12 @@
+[
+  {
+    "id": "HYP-0001",
+    "statement": "An economics-led proposition would be recalled more accurately than a capability-led one by the same audience.",
+    "based_on_evidence_ids": [
+      "E-0003",
+      "E-0005"
+    ],
+    "validation_method": "Show both propositions to five people in the target audience and ask what the subject does and what it is worth.",
+    "confidence": "low"
+  }
+]

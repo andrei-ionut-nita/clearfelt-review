@@ -1,0 +1,102 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Reframe the proposition around the economics of engineering decisions",
+    "problem": "The proposition states capability and leaves its commercial consequence unstated.",
+    "why_it_matters": "The primary audience decides on consequence, and the comparison set has left that territory unoccupied.",
+    "finding_ids": [
+      "F-0001",
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "This is the one repositioning available that is both supported by existing work and uncontested by the qualified comparisons.",
+    "recommended_change": "Rewrite the homepage hero and the executive narrative to lead with the cost consequences of engineering decisions, keeping capability as supporting detail.",
+    "expected_outcome": "A reader can state what the subject does and what it is worth within one screen.",
+    "impact": "high",
+    "effort": "medium",
+    "confidence": "high",
+    "urgency": "high",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "qualitative",
+      "hypothesis": "Leading with economics makes the proposition repeatable by a reader.",
+      "success_metric": "Whether five readers from the target audience can restate the proposition unprompted after thirty seconds.",
+      "baseline": "unknown",
+      "target": "Four of five restate it including a commercial consequence.",
+      "validation_method": "A thirty-second recall test with five people in the target audience, before and after.",
+      "falsifier": "Fewer readers restate the proposition correctly after the change than before.",
+      "review_period": "6 weeks"
+    }
+  },
+  {
+    "id": "R-0002",
+    "title": "Publish quantified proof drawn from existing work",
+    "problem": "Every claim on the site is self-asserted, with no quantified outcome or third-party evidence.",
+    "why_it_matters": "Recruiters shortlist on evidence they can repeat to a client, and currently have none to repeat.",
+    "finding_ids": [
+      "F-0003",
+      "F-0004"
+    ],
+    "opportunity_ids": [
+      "O-0002"
+    ],
+    "strategic_rationale": "The substance already exists in the writing archive; the gap is that it is never presented as proof.",
+    "recommended_change": "Add a proof page carrying three outcomes with figures, and reference it from the homepage.",
+    "expected_outcome": "At least three claims on the site become externally checkable.",
+    "impact": "high",
+    "effort": "high",
+    "confidence": "medium",
+    "urgency": "medium",
+    "dependencies": [
+      "R-0001"
+    ],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "measurement": {
+      "kind": "binary",
+      "hypothesis": "Published quantified outcomes give a recruiter something to repeat.",
+      "success_metric": "Number of published outcomes carrying a figure and a verifiable referent.",
+      "baseline": "0",
+      "target": "3",
+      "validation_method": "Count published outcomes that name a figure and something a third party could confirm.",
+      "falsifier": "Three outcomes are published and no enquiry references any of them within the review period.",
+      "review_period": "12 weeks"
+    }
+  },
+  {
+    "id": "R-0003",
+    "title": "Group the writing archive into a named economics pillar",
+    "problem": "The articles that already address economics are scattered through a reverse-chronological list.",
+    "why_it_matters": "A territory claim is more credible when the supporting work is visibly organised around it.",
+    "finding_ids": [
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "Low-cost reinforcement of the repositioning, using work that already exists.",
+    "recommended_change": "Introduce a named pillar page collecting the economics articles, and link it from the writing index.",
+    "expected_outcome": "The territory claim has visible supporting work behind it.",
+    "impact": "medium",
+    "effort": "low",
+    "confidence": "medium",
+    "urgency": "low",
+    "dependencies": [
+      "R-0001"
+    ],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "proxy",
+      "hypothesis": "A grouped pillar makes the territory claim legible at a glance.",
+      "success_metric": "Whether a reader can find three economics articles in under fifteen seconds.",
+      "target": "Three of five readers succeed.",
+      "validation_method": "A timed findability task with five readers.",
+      "falsifier": "Readers take no less time to find the articles than with the ungrouped list.",
+      "review_period": "6 weeks"
+    }
+  }
+]

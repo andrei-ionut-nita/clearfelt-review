@@ -1,0 +1,75 @@
+[
+  {
+    "id": "F-0001",
+    "category": "positioning",
+    "title": "The proposition leads on capability, not consequence",
+    "statement": "The public proposition is organised around engineering capability, and states no commercial consequence of that capability.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0001",
+      "E-0002"
+    ],
+    "confidence": "high",
+    "importance": "high",
+    "implication": "A hiring audience can tell what the subject does, and cannot tell what it is worth.",
+    "temporal_scope": "current",
+    "contradicted_by": [
+      "E-0005"
+    ],
+    "assumption_ids": [],
+    "competitive_relevance": "Both qualified comparisons make the same omission, so this is a shared weakness rather than a disadvantage.",
+    "audience_relevance": "Directly relevant to the founder and CEO audience, who decide on consequence."
+  },
+  {
+    "id": "F-0002",
+    "category": "competitive_landscape",
+    "title": "Transformation language is crowded; economics is not",
+    "statement": "Both qualified comparisons lead on transformation language, and none addresses the cost consequences of technical decisions.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0003"
+    ],
+    "confidence": "medium",
+    "importance": "high",
+    "implication": "A position built on economics would not compete for attention with the language the comparison set already occupies.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": []
+  },
+  {
+    "id": "F-0003",
+    "category": "credibility",
+    "title": "Seniority is claimed but not evidenced",
+    "statement": "Seniority claims appear without quantified outcomes or third-party proof, which a hiring audience is likely to weigh heavily.",
+    "claim_type": "inferred",
+    "evidence_ids": [
+      "E-0002",
+      "E-0004"
+    ],
+    "confidence": "medium",
+    "importance": "high",
+    "implication": "The claim may be discounted by exactly the audience it is aimed at.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "audience_relevance": "Recruiters shortlist on evidence they can repeat to a client."
+  },
+  {
+    "id": "F-0004",
+    "category": "credibility",
+    "title": "No third-party proof is published",
+    "statement": "The site publishes no named client, case study or testimonial.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0004"
+    ],
+    "confidence": "high",
+    "importance": "medium",
+    "implication": "Every claim on the site is self-asserted.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": []
+  }
+]

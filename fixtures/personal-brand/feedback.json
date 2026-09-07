@@ -1,0 +1,9 @@
+[
+  {
+    "id": "FB-0001",
+    "target_id": "COMP-0003",
+    "type": "reject",
+    "reason": "Confirmed by the subject that consultancies compete for budget, not for the role.",
+    "at": "2026-09-07T10:20:00.000Z"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "person",
+    "role": "subject",
+    "name": "Jordan Ellis",
+    "description": "Technology leader publishing under their own name.",
+    "canonical_url": "https://jordan-ellis.example",
+    "geography": [
+      "United Kingdom"
+    ],
+    "asset_ids": [
+      "AST-0001",
+      "AST-0002",
+      "AST-0003",
+      "AST-0004"
+    ]
+  },
+  {
+    "id": "ENT-0002",
+    "type": "person",
+    "role": "comparison",
+    "name": "Comparable profile: transformation lead",
+    "canonical_url": "https://comparable-one.example",
+    "asset_ids": []
+  },
+  {
+    "id": "ENT-0003",
+    "type": "person",
+    "role": "comparison",
+    "name": "Comparable profile: platform lead",
+    "canonical_url": "https://comparable-two.example",
+    "asset_ids": []
+  },
+  {
+    "id": "ENT-0004",
+    "type": "organisation",
+    "role": "referenced",
+    "name": "A large consultancy",
+    "asset_ids": []
+  }
+]

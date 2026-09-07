@@ -1,0 +1,55 @@
+[
+  {
+    "id": "COMP-0001",
+    "entity_id": "ENT-0002",
+    "name": "Comparable profile: transformation lead",
+    "type": "direct_competitor",
+    "status": "qualified",
+    "proposed_by": "system",
+    "why_included": "Targets the same hiring audience with an overlapping seniority claim.",
+    "audience_overlap": "high",
+    "objective_overlap": "high",
+    "decision_overlap": "high",
+    "relevance": "high",
+    "confidence": "high",
+    "source_ids": [
+      "S-0004"
+    ]
+  },
+  {
+    "id": "COMP-0002",
+    "entity_id": "ENT-0003",
+    "name": "Comparable profile: platform lead",
+    "type": "direct_competitor",
+    "status": "qualified",
+    "proposed_by": "system",
+    "why_included": "Appears in the same shortlists and addresses the same decision.",
+    "audience_overlap": "high",
+    "objective_overlap": "medium",
+    "decision_overlap": "high",
+    "relevance": "high",
+    "confidence": "medium",
+    "source_ids": [
+      "S-0005"
+    ]
+  },
+  {
+    "id": "COMP-0003",
+    "entity_id": "ENT-0004",
+    "name": "A large consultancy",
+    "type": "substitute",
+    "status": "rejected",
+    "proposed_by": "user",
+    "user_assertion_id": "UA-0001",
+    "why_included": "Named by the subject during onboarding as their main competition.",
+    "why_rejected": "A consultancy is bought instead of a hire in a different decision, by a different buyer, on a different budget. It is a substitute for the work, not a competitor for the role, so comparing positioning against it would mislead.",
+    "audience_overlap": "low",
+    "objective_overlap": "low",
+    "decision_overlap": "low",
+    "relevance": "low",
+    "confidence": "medium",
+    "source_ids": [
+      "S-0006"
+    ]
+  }
+]
