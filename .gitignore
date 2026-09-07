@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+
+# Real review runs are local working state, not repository content. Fixture runs
+# under fixtures/ are committed deliberately and are not covered by this rule.
+reviews/

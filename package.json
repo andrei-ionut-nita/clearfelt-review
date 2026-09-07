@@ -1,0 +1,29 @@
+{
+  "name": "clearfelt-review",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Evidence-backed strategic intelligence. One canonical model, multiple renderers.",
+  "license": "MIT",
+  "author": "Andrei Nita",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@11.5.0",
+  "scripts": {
+    "build": "pnpm -r --filter=./packages/* run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "pnpm --filter @clearfelt-review/core exec tsc --noEmit",
+    "check:em-dash": "! grep -rnP \"\\x{2014}\" --include='*.md' --include='*.ts' --include='*.json' --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git .",
+    "preflight": "pnpm run lint && pnpm run check:em-dash && pnpm run typecheck && pnpm run test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.10.0"
+  }
+}

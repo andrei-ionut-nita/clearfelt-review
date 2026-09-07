@@ -1,0 +1,19 @@
+{
+  "name": "@clearfelt-review/core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Canonical intelligence model, validation, deterministic derivations and renderers for Clearfelt Review.",
+  "license": "MIT",
+  "author": "Andrei Nita",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
+  },
+  "bin": { "clearfelt-review": "./dist/cli.js" },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  }
+}

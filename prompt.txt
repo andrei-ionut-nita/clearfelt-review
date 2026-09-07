@@ -1,0 +1,3336 @@
+# Strategic Intelligence Platform
+
+## Master Implementation Specification for Claude Code
+
+---
+
+# 0. ROLE AND OPERATING MODE
+
+You are the principal engineer, product architect, UX architect, research-systems designer, and implementation lead for this project.
+The project is called Clearfelt Review, use this name everywhere
+
+It is part of the clearfelt family: 
+/home/nolan/Documents/Projects/clearfelt-diagram
+/home/nolan/Documents/Projects/clearfelt-slide
+/home/nolan/Documents/Projects/clearfelt-writing
+
+Approach this as a combination of:
+
+* senior product architect
+* senior staff/principal engineer
+* research-intelligence architect
+* information architect
+* UX designer
+* data-model designer
+* QA/evaluation engineer
+
+Use the engineering instincts associated with Boris Cherny:
+
+* strong conventions
+* small composable primitives
+* explicit interfaces
+* incremental implementation
+* excellent developer ergonomics
+* inspect before modifying
+* avoid unnecessary abstraction
+* use automation where it removes repetitive work
+* maintain clear project state
+* keep changes reversible
+* make the system easy for another engineer to understand
+
+Use the research/ML/product instincts associated with Andrej Karpathy:
+
+* data before presentation
+* simple primitives before elaborate infrastructure
+* distinguish data from interpretation
+* evaluation over subjective impressions
+* iterate empirically
+* keep the core model understandable
+* do not build an unnecessarily complex agent architecture
+* treat structured data as the canonical state
+* make the system improve through better data, evidence and evaluation
+
+Do not imitate either person's writing style or claim to literally be either person. Apply the relevant engineering principles.
+
+---
+
+# 1. NON-NEGOTIABLE PRODUCT THESIS
+
+The product is NOT:
+
+* a generic AI report generator
+* a website SEO auditor
+* a competitor scraper
+* a chatbot
+* a collection of disconnected audits
+* an LLM prompt that produces a polished PDF
+* a website crawler with an AI summary bolted onto it
+
+The product IS:
+
+> An evidence-backed strategic intelligence system that takes an entity, a strategic objective, an audience and a relevant comparison landscape, researches the environment, constructs an evidence graph, identifies findings and opportunities, produces recommendations, and translates those recommendations into an actionable change plan.
+
+The central pipeline is:
+
+ENTITY
++
+OBJECTIVE
++
+AUDIENCE
++
+DECISION / DESIRED OUTCOME
++
+COMPARISON LANDSCAPE
+↓
+RESEARCH PLAN
+↓
+SOURCES
+↓
+OBSERVATIONS
+↓
+EVIDENCE
+↓
+ANALYSIS
+↓
+FINDINGS
+↓
+OPPORTUNITIES
+↓
+RECOMMENDATIONS
+↓
+ACTIONS
+↓
+CHANGE TREE
+↓
+EXECUTIVE BRIEF
++
+DETAILED PLAN
++
+INTERACTIVE HTML REPORT
+
+The key architectural principle is:
+
+> One canonical intelligence model → multiple output renderers.
+
+Do NOT independently generate the Markdown plan and HTML report with separate LLM prompts.
+
+The Markdown plan, executive summary and HTML report must all be rendered from the same canonical structured intelligence model.
+
+---
+
+# 2. GENERALISABILITY IS A FIRST-CLASS REQUIREMENT
+
+The system must work across:
+
+* commercial companies
+* SaaS companies
+* products
+* professional services
+* individual professionals
+* personal brands
+* executives
+* consultants
+* charities
+* NGOs
+* government organisations
+* government services
+* public-sector initiatives
+* educational organisations
+* campaigns
+* programmes
+* other organisations/initiatives
+
+Do NOT create separate hard-coded product architectures for each.
+
+Instead, model the common underlying concepts.
+
+The system should be able to determine which analytical modules are relevant based on:
+
+* entity type
+* objective
+* audience
+* decision
+* context
+* available evidence
+
+For example:
+
+A personal website might need:
+
+* positioning
+* audience
+* credibility
+* proof
+* competitive positioning
+* content authority
+* discoverability
+* digital experience
+
+A SaaS company might additionally need:
+
+* ICP
+* use cases
+* pricing
+* product differentiation
+* market positioning
+* competitors
+* substitutes
+* integrations
+* customer proof
+* category dynamics
+
+A charity might need:
+
+* beneficiary positioning
+* donor audience
+* fundraising proposition
+* trust
+* impact evidence
+* comparable organisations
+* messaging
+* digital experience
+
+A government service might need:
+
+* service users
+* eligibility
+* journey
+* accessibility
+* communication
+* comparable services
+* policy context
+* service friction
+* trust
+
+The underlying model remains the same.
+
+---
+
+# 3. CORE PRODUCT MODEL
+
+The canonical conceptual model is:
+
+ENTITY
+↓
+OBJECTIVE
+↓
+AUDIENCE
+↓
+DECISION
+↓
+COMPARISON LANDSCAPE
+↓
+RESEARCH QUESTIONS
+↓
+SOURCES
+↓
+OBSERVATIONS
+↓
+EVIDENCE
+↓
+FINDINGS
+↓
+OPPORTUNITIES
+↓
+RECOMMENDATIONS
+↓
+ACTIONS
+↓
+CHANGE TREE
+↓
+EXPECTED OUTCOMES
+
+Every important output must be traceable backwards through this chain.
+
+For example:
+
+Recommendation R-014
+↓
+Finding F-023
+↓
+Evidence E-104, E-117, E-129
+↓
+Sources S-021, S-037
+
+And:
+
+Action A-007
+↓
+Recommendation R-014
+↓
+Affected asset:
+WEBSITE → HOMEPAGE → HERO
+
+This traceability is a core product feature, not internal implementation detail.
+
+---
+
+# 4. THE PRODUCT MUST HAVE TWO DIFFERENT CONCEPTUAL LAYERS
+
+## Layer A — Intelligence
+
+What is true / observed / inferred?
+
+* sources
+* observations
+* evidence
+* claims
+* findings
+* opportunities
+* comparisons
+* hypotheses
+* confidence
+* unknowns
+
+## Layer B — Action
+
+What should change?
+
+* recommendations
+* priorities
+* actions
+* affected assets
+* change tree
+* dependencies
+* owners
+* expected impact
+* implementation effort
+* validation criteria
+
+Never collapse these layers.
+
+An observation is not a finding.
+
+A finding is not a recommendation.
+
+A recommendation is not an action.
+
+---
+
+# 5. THE EVIDENCE DISCIPLINE
+
+This is one of the most important requirements.
+
+The system must distinguish:
+
+## Observation
+
+Something directly observed.
+
+Example:
+
+"The homepage headline states X."
+
+## Evidence
+
+An observation with provenance that supports a claim.
+
+Example:
+
+"X appears in the homepage hero and About page."
+
+## Interpretation
+
+What the evidence suggests.
+
+Example:
+
+"This positions the entity primarily around technical capability."
+
+## Finding
+
+A meaningful conclusion derived from multiple observations/evidence.
+
+Example:
+
+"Business-outcome differentiation is underdeveloped relative to the comparison set."
+
+## Opportunity
+
+A strategically useful gap or potential advantage.
+
+Example:
+
+"Technology economics is a relatively underoccupied positioning territory."
+
+## Recommendation
+
+What should be done.
+
+Example:
+
+"Reframe the primary proposition around technology outcomes."
+
+## Action
+
+A concrete implementation change.
+
+Example:
+
+"Rewrite homepage hero headline and supporting proposition."
+
+Do not allow the LLM to silently collapse these levels.
+
+---
+
+# 6. EVIDENCE MUST HAVE PROVENANCE
+
+Every evidence item must have:
+
+* unique ID
+* source
+* source type
+* source URL/path/reference where applicable
+* observation
+* extracted claim if applicable
+* date observed
+* relevance
+* reliability/confidence
+* supporting context
+* entities involved
+* research question(s) supported
+
+Example:
+
+```json
+{
+  "id": "E-104",
+  "source_id": "S-021",
+  "source_type": "website",
+  "observation": "The homepage headline focuses on technical capability.",
+  "claim": "The current positioning emphasises technical capability.",
+  "date_observed": "2026-09-07",
+  "relevance": "high",
+  "reliability": "high",
+  "supports": ["F-023"]
+}
+```
+
+Never fabricate evidence.
+
+Never create a source that was not actually observed.
+
+Never cite an inference as though it were a direct observation.
+
+---
+
+# 7. CORE ONTOLOGY
+
+The underlying ontology should support at minimum:
+
+## Content / structural
+
+* site
+* page
+* section
+* heading
+* paragraph
+* CTA
+* navigation item
+* asset
+* document
+* image
+* video
+* form
+* link
+* claim
+
+## Semantic
+
+* entity
+* organisation
+* person
+* product
+* service
+* concept
+* topic
+* technology
+* capability
+* feature
+* category
+
+## Strategic/business
+
+* audience
+* persona
+* customer
+* beneficiary
+* donor
+* stakeholder
+* industry
+* use case
+* problem
+* need
+* outcome
+* decision
+* objective
+* value proposition
+* positioning
+* differentiator
+* proof point
+
+## Commercial
+
+* pricing
+* package
+* integration
+* partnership
+* customer
+* case study
+* testimonial
+* proof point
+* acquisition
+* market segment
+
+## External/research
+
+* source
+* research question
+* competitor
+* alternative
+* substitute
+* benchmark
+* comparison
+* market signal
+* trend
+* SERP/query
+* external entity
+* external page
+
+## Intelligence
+
+* observation
+* evidence
+* claim
+* hypothesis
+* finding
+* gap
+* opportunity
+* risk
+* recommendation
+* action
+* dependency
+* assumption
+* unknown
+
+## Relationships
+
+Support at minimum:
+
+* contains
+* links_to
+* mentions
+* describes
+* targets
+* serves
+* solves
+* produces
+* enables
+* competes_with
+* comparable_to
+* alternative_to
+* substitutes_for
+* differentiates_from
+* supported_by
+* contradicts
+* inferred_from
+* recommends
+* affects
+* implements
+* depends_on
+* validates
+* derived_from
+
+Relationships must distinguish their origin.
+
+At minimum:
+
+1. structural
+2. extracted
+3. inferential
+4. external evidence
+
+Do not treat all relationships as equally authoritative.
+
+---
+
+# 8. WEBSITE GRAPH
+
+When a website is supplied, construct a deterministic structural representation first.
+
+Do not start with semantic interpretation.
+
+The structural website graph should capture:
+
+* domain
+* pages
+* URL
+* title
+* meta description
+* headings
+* sections
+* text
+* links
+* navigation
+* CTAs
+* forms
+* assets
+* structured data
+* canonical URLs
+* robots.txt
+* sitemap
+* relevant technical metadata
+
+Then build semantic/business relationships over the structural graph.
+
+The product's original website-graph concept should therefore have multiple layers:
+
+## Structural graph
+
+"What exists?"
+
+## Semantic/business graph
+
+"What does it mean?"
+
+## Opportunity graph
+
+"Where are the gaps and opportunities?"
+
+## Evidence graph
+
+"What supports our conclusions?"
+
+These layers should remain conceptually separate.
+
+---
+
+# 9. DO NOT OVERENGINEER V1
+
+For V1, do NOT introduce infrastructure merely because it sounds sophisticated.
+
+Do not assume the need for:
+
+* Neo4j
+* Graphiti
+* Pinecone
+* Qdrant
+* Milvus
+* pgvector
+* embeddings
+* Ollama
+* an LLM API
+* a vector database
+* a graph database
+* a complex multi-agent framework
+
+unless the existing codebase or an explicit requirement genuinely requires it.
+
+The preferred initial architecture is:
+
+> Claude Code / the coding agent is the reasoning and implementation layer; local structured website snapshots, research artifacts, graph data and evidence files are the canonical state.
+
+Use simple files/data structures where they are sufficient.
+
+Only introduce infrastructure when there is a demonstrated requirement.
+
+---
+
+# 10. THE SYSTEM MUST BE DATA-FIRST
+
+Avoid:
+
+Website
+→ LLM
+→ beautiful report
+
+Instead:
+
+Sources
+→ observations
+→ evidence
+→ structured analysis
+→ findings
+→ opportunities
+→ recommendations
+→ actions
+→ renderers
+
+The UI must not become the canonical representation of intelligence.
+
+The data model is canonical.
+
+---
+
+# 11. ONBOARDING
+
+The onboarding should feel extremely simple.
+
+Do not make users fill in a giant consultancy questionnaire.
+
+Ask only for the information that materially improves analysis.
+
+Initial onboarding should capture:
+
+## Entity
+
+What are we analysing?
+
+Options should support:
+
+* organisation
+* person
+* product
+* service
+* initiative
+* website
+* other
+
+Allow free-form description.
+
+## Objective
+
+What are they trying to achieve?
+
+Possible examples:
+
+* acquire customers
+* grow
+* launch
+* reposition
+* improve conversion
+* improve reputation
+* win work
+* raise funding
+* improve fundraising
+* improve service delivery
+* understand market
+* benchmark competitors
+* understand audience
+* improve digital presence
+* identify opportunities
+* strategic planning
+* other
+
+Do not constrain users to these categories.
+
+## Audience
+
+Who matters?
+
+Allow:
+
+* known audiences
+* multiple audiences
+* free text
+
+## Decision
+
+What decision will this research support?
+
+Examples:
+
+* how should we position?
+* what should we build?
+* where should we compete?
+* what should we change?
+* who should we target?
+* how should we communicate?
+
+## Known comparisons
+
+Allow users to provide competitors, alternatives, benchmarks or comparable entities.
+
+But also offer:
+
+> Identify relevant comparisons automatically.
+
+This is critical.
+
+Users should not be required to know their own competitive landscape.
+
+---
+
+# 12. OBJECTIVE IS MORE IMPORTANT THAN ENTITY TYPE
+
+Do not make the onboarding primarily:
+
+"What type of organisation are you?"
+
+The strategic objective should drive the analysis.
+
+For example:
+
+Two companies may both be SaaS companies but require radically different research.
+
+Two individuals may both have personal websites but one may want:
+
+* executive recruitment
+
+while another wants:
+
+* consulting clients
+
+The analysis should adapt accordingly.
+
+---
+
+# 13. RESEARCH PLAN GENERATION
+
+After onboarding, do not immediately dump the user into a research process.
+
+First generate a transparent research plan.
+
+Example:
+
+```text
+Objective:
+Win CTO opportunities.
+
+We will investigate:
+
+✓ Executive positioning
+✓ Audience alignment
+✓ Competitive positioning
+✓ Credibility and proof
+✓ Content authority
+✓ Digital experience
+✓ Discoverability
+✓ Relevant comparison landscape
+
+Comparison landscape:
+3 supplied
+8 discovered
+
+Research gaps:
+2 areas may require additional validation
+```
+
+Allow the user to review the interpretation.
+
+The system should infer as much as possible while giving the user a chance to correct the framing.
+
+---
+
+# 14. RESEARCH QUESTIONS
+
+Generate explicit research questions.
+
+Example:
+
+```text
+RQ-001
+How is the entity currently positioned?
+
+RQ-002
+Which audiences appear to be prioritised?
+
+RQ-003
+What evidence supports the current positioning?
+
+RQ-004
+How do comparable entities position themselves?
+
+RQ-005
+Which positioning territories are crowded?
+
+RQ-006
+Which relevant territories are underoccupied?
+
+RQ-007
+What evidence differentiates the entity?
+
+RQ-008
+What credibility gaps exist?
+
+RQ-009
+What changes would most improve the stated objective?
+```
+
+Each research question has state:
+
+* OPEN
+* SEARCHING
+* PARTIALLY_ANSWERED
+* ANSWERED
+* INSUFFICIENT_EVIDENCE
+* BLOCKED
+
+The research system must know what it is trying to answer.
+
+---
+
+# 15. RESEARCH SHOULD BE ITERATIVE
+
+Do not run one giant research prompt.
+
+Use a loop:
+
+```text
+Research Question
+↓
+Find Sources
+↓
+Extract Evidence
+↓
+Assess Coverage
+↓
+Enough evidence?
+├── YES → Analyse
+└── NO  → Research again
+```
+
+Research should have stopping criteria.
+
+Do not continue researching indefinitely.
+
+Stop when:
+
+* the research question is sufficiently answered
+* additional sources are producing diminishing returns
+* evidence is sufficiently triangulated
+* remaining uncertainty is explicitly recorded
+
+---
+
+# 16. RESEARCH COVERAGE
+
+For every major analytical area, maintain:
+
+* questions asked
+* sources found
+* evidence collected
+* evidence quality
+* unanswered questions
+* confidence
+
+This enables the final report to say:
+
+> We have high confidence in positioning analysis but insufficient evidence to assess actual conversion performance.
+
+That is preferable to inventing certainty.
+
+---
+
+# 17. COMPETITIVE / COMPARISON ANALYSIS
+
+This is a core product capability.
+
+Do not model everything as "competitors".
+
+The comparison landscape may contain:
+
+## Direct competitors
+
+Entities pursuing the same audience/objective.
+
+## Indirect competitors
+
+Entities competing for the same decision.
+
+## Alternatives
+
+Different approaches to solving the same problem.
+
+## Substitutes
+
+Different products/services/actions that satisfy the underlying need.
+
+## Benchmarks
+
+Entities that are not competitors but provide useful standards.
+
+## Aspirational comparisons
+
+Entities whose positioning or execution provides useful lessons.
+
+The system should explicitly classify the relationship.
+
+---
+
+# 18. COMPARISON DISCOVERY
+
+The system should:
+
+1. accept known comparisons
+2. discover additional candidates
+3. explain why each candidate is relevant
+4. qualify candidates
+5. remove weakly relevant candidates
+6. build a comparison landscape
+
+Each comparison should have:
+
+* ID
+* name
+* type
+* why included
+* audience overlap
+* objective overlap
+* decision overlap
+* relevance
+* confidence
+* sources
+
+Example:
+
+```text
+COMP-007
+
+Name:
+Example CTO
+
+Type:
+Comparable professional
+
+Why included:
+Targets same audience
++
+similar seniority
++
+similar objective
+
+Confidence:
+High
+```
+
+Do not silently add arbitrary competitors.
+
+---
+
+# 19. COMPETITIVE SYNTHESIS
+
+Do not stop at individual competitor summaries.
+
+Identify patterns across the landscape.
+
+For example:
+
+```text
+Positioning territory     Saturation    Current position    Opportunity
+AI transformation         High         Medium             Low
+Digital transformation   Very high    Medium             Low
+Technical leadership     High         High               Medium
+Technology economics     Low          High               VERY HIGH
+Board-level strategy     Medium       Medium             High
+```
+
+The product should identify:
+
+* crowded territories
+* underoccupied territories
+* differentiation opportunities
+* table-stakes expectations
+* emerging threats
+* benchmark strengths
+* weak spots
+* strategic white space
+
+---
+
+# 20. WHITE SPACE
+
+Make white-space identification a first-class analytical capability.
+
+Ask:
+
+> What valuable territory is insufficiently occupied?
+
+Depending on context this could mean:
+
+* customer segment
+* audience
+* positioning territory
+* messaging territory
+* product capability
+* geographic market
+* pricing position
+* service experience
+* fundraising proposition
+* content territory
+* expertise intersection
+
+The output must explain the evidence supporting the white-space claim.
+
+---
+
+# 21. ANALYSIS MODULES
+
+Implement analysis as modular capabilities.
+
+Potential modules include:
+
+## Positioning
+
+* current positioning
+* stated proposition
+* implied proposition
+* differentiation
+* category
+* claims
+* proof
+
+## Audience
+
+* target audience
+* decision makers
+* beneficiaries
+* customers
+* objections
+* needs
+* decision criteria
+
+## Competition
+
+* competitors
+* alternatives
+* substitutes
+* benchmarks
+* positioning comparison
+* feature/capability comparison where relevant
+
+## Market
+
+* market structure
+* trends
+* growth signals
+* external forces
+* emerging opportunities
+
+## Messaging
+
+* headline
+* narrative
+* claims
+* proof
+* calls to action
+* consistency
+
+## Digital experience
+
+* information architecture
+* usability
+* conversion
+* accessibility
+* trust
+* content discoverability
+
+## Content
+
+* topics
+* authority
+* gaps
+* content themes
+* differentiation
+* audience alignment
+
+## Discoverability
+
+* search
+* AI discovery
+* external references
+* structured data
+* content footprint
+
+## Credibility / proof
+
+* case studies
+* customer evidence
+* credentials
+* outcomes
+* testimonials
+* third-party validation
+
+Only activate relevant modules.
+
+Do not generate meaningless sections simply because a template contains them.
+
+---
+
+# 22. FINDINGS
+
+Every finding must be structured.
+
+Minimum fields:
+
+```text
+id
+category
+title
+statement
+evidence_ids
+source_ids
+confidence
+importance
+competitive_relevance
+audience_relevance
+implication
+```
+
+Example:
+
+```text
+F-023
+
+Category:
+Positioning
+
+Statement:
+The proposition strongly communicates technical depth but does not consistently differentiate around business outcomes.
+
+Confidence:
+High
+
+Importance:
+High
+
+Implication:
+A decision maker may understand technical capability without understanding why this entity is preferable to comparable alternatives.
+```
+
+Do not allow vague findings such as:
+
+"Messaging could be improved."
+
+---
+
+# 23. OPPORTUNITIES
+
+An opportunity is not merely a weakness.
+
+It should represent a strategically useful possibility.
+
+Fields:
+
+```text
+id
+title
+description
+supporting_findings
+supporting_evidence
+strategic_value
+audience_value
+competitive_context
+confidence
+```
+
+Examples:
+
+* positioning white space
+* underserved audience
+* content territory
+* product gap
+* proof gap
+* conversion opportunity
+* market opportunity
+* service improvement
+* differentiation opportunity
+
+---
+
+# 24. RECOMMENDATIONS
+
+Every recommendation must have:
+
+```text
+id
+title
+problem
+why_it_matters
+supporting_findings
+supporting_evidence
+strategic_rationale
+recommended_change
+expected_outcome
+impact
+effort
+confidence
+urgency
+priority
+dependencies
+affected_assets
+validation_method
+```
+
+Example:
+
+```text
+R-014
+
+Title:
+Reposition the primary executive proposition.
+
+Problem:
+Technical capability is clearer than business differentiation.
+
+Why it matters:
+The target audience needs to understand why this particular executive is valuable.
+
+Recommended change:
+Reframe the primary proposition around technology outcomes and economics.
+
+Impact:
+High
+
+Effort:
+Medium
+
+Confidence:
+High
+
+Priority:
+P0
+```
+
+Do not produce recommendations without evidence.
+
+---
+
+# 25. PRIORITISATION
+
+Do not use one arbitrary "overall score".
+
+Recommendations should have independent dimensions:
+
+* impact
+* effort
+* confidence
+* urgency
+
+Optionally:
+
+* strategic alignment
+* dependency
+* reversibility
+
+Use these to determine priority.
+
+Suggested priority levels:
+
+```text
+P0 — Must do
+P1 — Important
+P2 — Valuable
+P3 — Optional
+```
+
+The user should be able to understand why something is P0.
+
+---
+
+# 26. OPPORTUNITY MATRIX
+
+Generate an opportunity map.
+
+Conceptually:
+
+```text
+                 HIGH IMPACT
+                     ↑
+                     │
+         DO NOW      │      STRATEGIC BETS
+                     │
+                     │
+LOW EFFORT ──────────┼────────────── HIGH EFFORT
+                     │
+         QUICK WINS  │      DEFER / AVOID
+                     │
+                     ↓
+                 LOW IMPACT
+```
+
+Recommendations should be plotted based on impact and effort.
+
+Confidence should be visible separately.
+
+---
+
+# 27. ACTION PLAN
+
+Convert recommendations into concrete actions.
+
+Each action must include:
+
+* ID
+* recommendation
+* description
+* affected asset
+* owner if known
+* effort
+* dependency
+* priority
+* status
+* validation
+
+Generate a practical roadmap:
+
+## 0–30 days
+
+Fundamentals.
+
+## 31–60 days
+
+Differentiation and proof.
+
+## 61–90 days
+
+Authority, distribution, optimisation.
+
+Do not force this exact timeframe when it is inappropriate.
+
+The principle is:
+
+> translate strategy into an executable sequence.
+
+---
+
+# 28. CHANGE TREE
+
+This is a first-class output and a key product differentiator.
+
+The Change Tree is NOT an implementation file tree.
+
+It is a compact representation of prescribed changes.
+
+It answers:
+
+> Where exactly should something change?
+
+Supported operations:
+
+* [NEW]
+* [EDIT]
+* [REMOVE]
+* [MOVE]
+
+Examples:
+
+```text
+andreinita.co/
+├── [EDIT] /index
+│   ├── [EDIT] Hero
+│   │   ├── [CHANGE] Executive positioning
+│   │   └── [REMOVE] Generic technology framing
+│   │
+│   └── [EDIT] Proof section
+│       ├── [ADD] Commercial outcomes
+│       └── [REORDER] Existing evidence
+│
+├── [NEW] /advisory
+│   ├── [NEW] Proposition
+│   ├── [NEW] Services
+│   ├── [NEW] Proof
+│   └── [NEW] CTA
+│
+├── [EDIT] /writing
+│   └── [NEW] Technology Economics pillar
+│
+└── [REMOVE] /legacy-page
+```
+
+The same concept must work for non-web entities:
+
+```text
+POSITIONING/
+├── [NEW] Technology economics territory
+├── [EDIT] Executive narrative
+├── [EDIT] Audience hierarchy
+└── [REMOVE] Generic AI-expert framing
+```
+
+For a product:
+
+```text
+PRODUCT/
+├── [EDIT] Onboarding
+├── [NEW] Enterprise tier
+├── [EDIT] Pricing
+└── [REMOVE] Low-value feature
+```
+
+For a charity:
+
+```text
+DIGITAL/
+├── [EDIT] Homepage
+├── [NEW] Impact page
+├── [EDIT] Donation journey
+└── [NEW] Donor stories
+```
+
+For government:
+
+```text
+SERVICE/
+├── [EDIT] Eligibility journey
+├── [REMOVE] Redundant step
+├── [NEW] Status page
+└── [EDIT] Guidance content
+```
+
+The Change Tree should be generated from the action/recommendation model.
+
+It should NOT be free-form text generated independently.
+
+---
+
+# 29. CHANGE TREE TRACEABILITY
+
+Every tree node should be linkable to:
+
+* action
+* recommendation
+* finding
+* evidence
+
+For example:
+
+```text
+WEBSITE/
+└── [EDIT] Homepage
+    └── [EDIT] Hero
+```
+
+Clicking the node should expose:
+
+```text
+Recommendation:
+R-014
+
+Finding:
+F-023
+
+Evidence:
+E-104
+E-117
+E-129
+
+Expected impact:
+High
+
+Confidence:
+High
+```
+
+This is essential.
+
+---
+
+# 30. UNKNOWN / ASSUMPTION MODEL
+
+The system must explicitly maintain:
+
+## Known
+
+Facts supported by evidence.
+
+## Assumptions
+
+Interpretations used because evidence is incomplete.
+
+## Unknowns
+
+Things the research cannot establish.
+
+## Hypotheses
+
+Potential explanations/opportunities requiring validation.
+
+Example:
+
+```text
+KNOWN
+✓ Public positioning
+✓ Published content
+✓ Competitor messaging
+
+UNKNOWN
+? Actual conversion rate
+? Lost opportunities
+? Internal perception
+
+HYPOTHESIS
+The current positioning may undersell commercial outcomes.
+```
+
+Never represent unknowns as facts.
+
+---
+
+# 31. RESEARCH LIMITATIONS
+
+Every final analysis should include:
+
+## What we know
+
+## What we do not know
+
+## What we inferred
+
+## What should be validated
+
+This makes the product intellectually honest and improves trust.
+
+---
+
+# 32. EXECUTIVE SUMMARY
+
+Every generated plan must begin with an Executive Summary.
+
+It should answer:
+
+* what was analysed
+* why
+* current position
+* strongest conclusions
+* major opportunities
+* major risks
+* top recommendations
+* immediate priorities
+
+Example structure:
+
+```text
+Current position:
+...
+
+Primary opportunity:
+...
+
+Primary constraint:
+...
+
+Competitive position:
+...
+
+Top priorities:
+1. ...
+2. ...
+3. ...
+```
+
+It must be useful to someone who reads only the first few minutes of the report.
+
+---
+
+# 33. TO-DO LIST
+
+Every plan must also contain a concise executable To-Do List.
+
+Group by:
+
+* P0
+* P1
+* P2
+* P3
+
+Each item should reference its recommendation/action ID.
+
+---
+
+# 34. ASCII MOCK-UP
+
+Every implementation plan generated for this project must begin with an ASCII product mock-up.
+
+The mock-up is not decorative.
+
+It is a quick way to communicate:
+
+* information hierarchy
+* key screens
+* primary user journey
+* output structure
+
+Keep it understandable in a terminal.
+
+---
+
+# 35. ASCII CHANGE TREE
+
+Every implementation plan must also include the ASCII Change Tree near the top.
+
+This is the alternate compact representation of prescribed changes.
+
+It should be used whenever the project involves:
+
+* website changes
+* files
+* concepts
+* product structures
+* content
+* strategic positioning
+* information architecture
+
+---
+
+# 36. MASTER PLAN STRUCTURE
+
+The implementation plan itself should follow this structure:
+
+```text
+00. Executive Summary
+01. To-Do List
+02. ASCII Mock-up
+03. ASCII Change Tree
+04. Product Model
+
+05. Product Principles
+06. Generalisation Model
+07. Onboarding
+08. Entity Model
+09. Objective Model
+10. Audience Model
+11. Comparison Model
+12. Research Questions
+13. Research Planner
+14. Source Model
+15. Evidence Model
+16. Observation Model
+17. Analysis Modules
+18. Findings
+19. Opportunities
+20. Recommendations
+21. Prioritisation
+22. Action Plan
+23. Change Tree
+24. Unknowns / Assumptions
+25. Executive Output
+26. Detailed Plan Output
+27. HTML Output
+28. Data Model
+29. Technical Architecture
+30. Research Orchestration
+31. Agent / Subagent Strategy
+32. Evaluation
+33. Testing
+34. State Management
+35. Re-running / Versioning
+36. Implementation Phases
+37. Future Extensions
+```
+
+---
+
+# 37. OUTPUT MODEL
+
+Canonical data should eventually be able to render:
+
+1. Executive brief
+2. Detailed Markdown/plan
+3. Interactive HTML
+4. Structured JSON
+
+Potential future outputs:
+
+* PDF
+* presentation
+* API
+* comparison dashboard
+* historical comparison
+* recurring monitoring
+
+Do not build all of these now unless required.
+
+Build the canonical model so they are possible later.
+
+---
+
+# 38. HTML REPORT
+
+The HTML should NOT be a PDF converted to HTML.
+
+It should be an interactive intelligence interface.
+
+Recommended navigation:
+
+```text
+Overview
+Context
+Audience
+Market
+Competition
+Positioning
+Digital
+Content
+Opportunities
+Recommendations
+Roadmap
+Evidence
+```
+
+The main overview should show:
+
+* objective
+* entity
+* research date
+* key assessments
+* top findings
+* top opportunities
+* top recommendations
+* opportunity map
+* action roadmap
+
+---
+
+# 39. PROGRESSIVE DISCLOSURE
+
+The internal research may contain:
+
+* hundreds of sources
+* hundreds/thousands of observations
+* dozens of findings
+* dozens of opportunities
+* dozens of recommendations
+* many implementation actions
+
+The user should not see all of that immediately.
+
+Initial view:
+
+```text
+Objective
+Current position
+5 important findings
+Top opportunities
+Priority recommendations
+90-day action plan
+```
+
+Then allow drill-down:
+
+Recommendation
+↓
+Finding
+↓
+Evidence
+↓
+Source
+
+The user should feel that a strategy/research team has done the work for them.
+
+They should not feel that they are operating a research database.
+
+---
+
+# 40. SCORECARD
+
+Avoid meaningless "overall score: 73/100".
+
+Instead provide dimension-specific assessments.
+
+Example:
+
+```text
+Positioning       Strong
+Differentiation   Moderate
+Credibility       Very strong
+Audience fit      Strong
+Proof             Strong
+Discoverability   Moderate
+```
+
+Every assessment needs:
+
+* methodology
+* evidence
+* confidence
+
+Numerical scoring may be used for specific dimensions when justified.
+
+Never manufacture precision.
+
+---
+
+# 41. EVIDENCE ROOM
+
+The HTML should provide an evidence section.
+
+Example:
+
+```text
+E-103
+
+Source:
+Competitor homepage
+
+Observation:
+...
+
+Relevance:
+High
+
+Used by:
+F-023
+F-031
+R-014
+```
+
+Users should be able to understand why a conclusion exists.
+
+---
+
+# 42. RESEARCH GRAPH
+
+Conceptually represent:
+
+```text
+Source
+  ↓
+Evidence
+  ↓
+Finding
+  ↓
+Opportunity
+  ↓
+Recommendation
+  ↓
+Action
+  ↓
+Expected outcome
+```
+
+And:
+
+```text
+Entity
+  ↓
+Audience
+  ↓
+Objective
+  ↓
+Comparison
+  ↓
+Finding
+```
+
+This is the underlying intelligence graph.
+
+Do not necessarily implement a graph database.
+
+The conceptual graph can be represented using ordinary structured data.
+
+---
+
+# 43. AGENT ARCHITECTURE
+
+Do not build one giant autonomous agent.
+
+The system should be organised into specialised operations.
+
+Potential operations:
+
+```text
+discover_sources()
+classify_source()
+extract_observations()
+normalise_entity()
+identify_comparisons()
+qualify_comparison()
+generate_research_questions()
+assess_research_coverage()
+cluster_positioning()
+detect_patterns()
+detect_gaps()
+detect_opportunities()
+generate_findings()
+generate_recommendations()
+prioritise_actions()
+generate_change_tree()
+render_plan()
+render_html()
+validate_output()
+```
+
+Each operation should have:
+
+* defined inputs
+* defined outputs
+* validation
+* provenance
+* error handling at system boundaries
+
+---
+
+# 44. SUBAGENTS
+
+Use subagents only when work:
+
+* can run independently
+* benefits from isolated context
+* is genuinely parallel
+* has a well-defined output
+
+Do NOT spawn subagents for:
+
+* trivial searches
+* simple file edits
+* single-file changes
+* operations where shared context is essential
+
+Avoid agent proliferation.
+
+The simplest architecture that works is preferred.
+
+---
+
+# 45. LLM BOUNDARIES
+
+LLMs may be used for:
+
+* interpretation
+* classification
+* synthesis
+* hypothesis generation
+* recommendation generation
+* research planning
+
+LLMs should NOT be treated as the canonical database.
+
+Deterministic code should handle:
+
+* IDs
+* relationships
+* schemas
+* state
+* validation
+* sorting
+* prioritisation calculations
+* rendering
+* provenance
+* persistence
+* deduplication where deterministic methods suffice
+
+---
+
+# 46. VALIDATION
+
+Every generated object should be validated against its schema.
+
+At minimum:
+
+* required fields exist
+* IDs are unique
+* referenced IDs exist
+* sources exist
+* evidence references valid sources
+* findings reference evidence
+* recommendations reference findings
+* actions reference recommendations
+* change-tree nodes reference actions/recommendations
+* confidence values are valid
+* priorities are valid
+
+Do not let invalid intelligence propagate into final outputs.
+
+---
+
+# 47. EVALUATION FRAMEWORK
+
+Build evaluation from day one.
+
+Create an evaluation corpus spanning:
+
+```text
+commercial SaaS
+personal brand
+professional services
+charity
+NGO
+government
+product
+organisation
+```
+
+Evaluate:
+
+## Research quality
+
+* Did we identify relevant research questions?
+* Did we find sufficient evidence?
+* Did we miss major sources?
+* Did we stop at an appropriate point?
+
+## Evidence quality
+
+* Is provenance correct?
+* Are claims supported?
+* Are observations distinct from interpretations?
+
+## Analysis quality
+
+* Are findings meaningful?
+* Are conclusions supported?
+* Are contradictions detected?
+
+## Competitive quality
+
+* Are the comparison entities relevant?
+* Are alternatives/substitutes distinguished?
+* Is the landscape sufficiently broad?
+
+## Recommendation quality
+
+* Are recommendations actionable?
+* Are they supported?
+* Are priorities sensible?
+* Is the effort/impact assessment defensible?
+
+## Implementation quality
+
+* Is the Change Tree specific?
+* Does every important recommendation map to a change?
+* Can a developer act on it?
+
+## Output quality
+
+* Is the executive summary useful?
+* Is the HTML understandable?
+* Can users trace conclusions to evidence?
+* Is the report free of unsupported claims?
+
+---
+
+# 48. TESTS
+
+Do not merely test whether code executes.
+
+Create tests for:
+
+* schema validation
+* relationship integrity
+* provenance
+* rendering
+* research-state transitions
+* comparison classification
+* recommendation traceability
+* Change Tree generation
+* HTML navigation
+* regression cases
+
+Maintain a structured test state file where useful.
+
+Do not weaken or delete tests merely to make implementation pass.
+
+---
+
+# 49. TEST DATA
+
+Create representative fixtures.
+
+At minimum:
+
+```text
+fixtures/
+├── personal-brand/
+├── commercial-saas/
+├── charity/
+├── ngo/
+├── government/
+├── product/
+└── professional-services/
+```
+
+Each should test different modules.
+
+The system should not be hard-coded around andreinita.co.
+
+---
+
+# 50. ANDREINITA.CO AS THE FIRST REAL TEST CASE
+
+Use andreinita.co as a real dogfooding case.
+
+This is not a special hard-coded use case.
+
+It is the first serious validation case.
+
+The objective could be:
+
+> Improve the site's ability to generate CTO opportunities and establish differentiated executive positioning.
+
+Potential research areas:
+
+* executive positioning
+* audience
+* CTO market
+* comparable CTO profiles
+* recruitment decision makers
+* proof of technology/business impact
+* content authority
+* competitive positioning
+* discoverability
+* AI/search visibility
+* website experience
+* differentiation
+* technology economics territory
+* advisory positioning
+
+The system should discover what is relevant rather than hard-code this list.
+
+The analysis should explicitly compare the subject against relevant alternatives/benchmarks.
+
+The system should NOT simply analyse andreinita.co in isolation.
+
+---
+
+# 51. IMPORTANT PRODUCT PRINCIPLE: ALWAYS CONSIDER THE OUTSIDE WORLD
+
+A major insight from this project:
+
+> Analysing an entity only against itself is often insufficient.
+
+For example:
+
+"Your homepage could be clearer."
+
+is weak.
+
+Better:
+
+"Your homepage could be clearer, and compared with 11 relevant alternatives, the largest differentiation gap is X."
+
+Therefore competitor/comparison analysis should be an integrated part of onboarding/research, not an optional afterthought.
+
+However:
+
+Do not force competitive analysis when the objective genuinely does not require it.
+
+Use a decision rule based on objective/context.
+
+---
+
+# 52. MARKET RESEARCH AND COMPETITIVE ANALYSIS
+
+Treat these as related but distinct.
+
+## Market research asks:
+
+* What is happening externally?
+* What trends matter?
+* What audiences exist?
+* What needs exist?
+* What is changing?
+* What opportunities are emerging?
+
+## Competitive analysis asks:
+
+* Who else occupies this space?
+* How do they position themselves?
+* What alternatives exist?
+* What are the norms?
+* What is crowded?
+* Where is the white space?
+
+Both feed into strategic analysis.
+
+---
+
+# 53. CONSULTANCY-GRADE OUTPUT STANDARD
+
+The product should behave like a strong strategy/research consultancy.
+
+But do not reproduce consultancy theatre.
+
+Do not produce:
+
+* generic frameworks for their own sake
+* arbitrary scores
+* filler
+* obvious observations
+* huge competitor descriptions without synthesis
+* recommendations unsupported by evidence
+* 100-page reports that say nothing
+* unnecessary jargon
+
+The standard is:
+
+> Detailed where detail changes a decision. Concise where it does not.
+
+---
+
+# 54. SEAMLESS USER EXPERIENCE
+
+The ideal user journey:
+
+```text
+1. Tell us what you are trying to achieve.
+          ↓
+2. Give us your entity/site if relevant.
+          ↓
+3. Tell us any known comparisons.
+          ↓
+4. We infer the research context.
+          ↓
+5. We show our research plan.
+          ↓
+6. User can correct it.
+          ↓
+7. Research runs.
+          ↓
+8. Evidence accumulates.
+          ↓
+9. Analysis is performed.
+          ↓
+10. Findings emerge.
+          ↓
+11. Opportunities emerge.
+          ↓
+12. Recommendations are prioritised.
+          ↓
+13. Changes are mapped.
+          ↓
+14. User receives:
+      - executive brief
+      - detailed plan
+      - interactive HTML
+```
+
+The user should not have to understand:
+
+* research methodology
+* ontology
+* graph theory
+* evidence modelling
+* agent orchestration
+* source classification
+
+Those are implementation details.
+
+---
+
+# 55. USER CONTROL
+
+Use progressive disclosure.
+
+The system should be autonomous by default but transparent.
+
+At major decision points show:
+
+> Here's what we understood.
+
+> Here's what we're going to investigate.
+
+> Here's what we found.
+
+> Here's where confidence is low.
+
+> Here's what we recommend.
+
+The user should be able to correct assumptions.
+
+Do not force them through a questionnaire before doing useful work.
+
+---
+
+# 56. STATE MANAGEMENT
+
+Persist structured state.
+
+Use machine-readable structured formats for:
+
+* project state
+* research questions
+* tests
+* analysis state
+* recommendation state
+* run status
+
+Use human-readable progress notes for broader development context.
+
+Use Git for implementation history.
+
+Maintain clear checkpoints.
+
+A future Claude Code session should be able to discover:
+
+* current state
+* completed work
+* remaining work
+* tests
+* architecture decisions
+* known problems
+
+without relying on conversation history.
+
+---
+
+# 57. PROJECT STATE FILES
+
+If appropriate to the existing repository, maintain files such as:
+
+```text
+PROJECT_PLAN.md
+PROGRESS.md
+DECISIONS.md
+TESTS.md
+```
+
+Do not blindly create these if equivalent files already exist.
+
+Inspect the repository first.
+
+If the repository already has conventions, preserve them.
+
+---
+
+# 58. CLAUDE CODE OPERATING RULES
+
+Before changing anything:
+
+1. Inspect the repository.
+2. Identify framework and architecture.
+3. Read existing documentation.
+4. Identify existing tests.
+5. Understand current data flow.
+6. Find existing components/utilities that can be reused.
+7. Do not speculate about code that has not been opened.
+8. Do not replace working architecture unnecessarily.
+
+Then create/update the implementation plan.
+
+Work incrementally.
+
+After each meaningful phase:
+
+* run tests
+* run type checks
+* run linting if present
+* build the project
+* inspect output
+* manually verify critical UI behaviour
+* update progress
+
+---
+
+# 59. DO NOT OVERENGINEER
+
+Do not:
+
+* introduce abstractions for one use case
+* create unnecessary helper layers
+* add infrastructure without demonstrated need
+* refactor unrelated code
+* add hypothetical configurability
+* create a giant framework inside the application
+* build a multi-agent system simply because it sounds sophisticated
+
+Prefer:
+
+simple data structures
++
+small functions
++
+clear interfaces
++
+deterministic processing
++
+LLM only where reasoning adds value
+
+---
+
+# 60. DO NOT HARD-CODE THE FIRST USE CASE
+
+andreinita.co is a validation case, not the product ontology.
+
+Do not write:
+
+```text
+if entity == "personal website":
+   ...
+```
+
+unless this is genuinely part of a generic entity-type strategy.
+
+Instead:
+
+```text
+entity.type
+objective.type
+audience
+modules
+```
+
+drive behaviour.
+
+---
+
+# 61. MODULE SELECTION
+
+Create a mechanism that decides which research modules are relevant.
+
+For example:
+
+```text
+Objective:
+Win professional opportunities
+
+Relevant:
+Positioning
+Audience
+Credibility
+Proof
+Competition
+Content
+Discoverability
+Digital experience
+
+Not necessarily relevant:
+Pricing
+Product feature comparison
+Customer churn
+```
+
+For:
+
+```text
+Objective:
+Increase SaaS acquisition
+```
+
+activate:
+
+* ICP
+* market
+* competitors
+* alternatives
+* product
+* pricing
+* proof
+* conversion
+* positioning
+* content
+
+The module system should be data-driven.
+
+---
+
+# 62. RECOMMENDATION → CHANGE TREE
+
+This relationship must be deterministic wherever possible.
+
+For each recommendation:
+
+```text
+affected_assets:
+[
+  {
+    "type": "website_page",
+    "path": "/",
+    "operation": "edit",
+    "target": "hero"
+  }
+]
+```
+
+The renderer can then generate:
+
+```text
+WEBSITE/
+└── [EDIT] Homepage
+    └── [EDIT] Hero
+```
+
+This prevents the Change Tree from becoming another hallucination layer.
+
+---
+
+# 63. OUTPUT TRACEABILITY
+
+Every displayed recommendation should allow the user to answer:
+
+> Why are you telling me this?
+
+The interface should expose:
+
+Recommendation
+↓
+Finding
+↓
+Evidence
+↓
+Source
+
+Every major conclusion must be defensible.
+
+---
+
+# 64. CONTRADICTIONS
+
+The evidence model must support contradictory evidence.
+
+Example:
+
+Source A:
+"Company positions itself as enterprise-first."
+
+Source B:
+"Most visible customer examples are SMB."
+
+Do not force a single conclusion.
+
+Represent:
+
+```text
+E-001 supports F-001
+E-002 contradicts F-001
+```
+
+Then analyse the contradiction.
+
+This can itself become a finding.
+
+---
+
+# 65. CONFIDENCE
+
+Use confidence at multiple levels.
+
+## Evidence confidence
+
+How trustworthy is the source/observation?
+
+## Analytical confidence
+
+How strongly does the evidence support the finding?
+
+## Recommendation confidence
+
+How confident are we that the recommended action follows from the analysis?
+
+Do not conflate them.
+
+Use qualitative levels where numerical precision is unjustified:
+
+* High
+* Medium
+* Low
+
+If numerical values are used internally, do not necessarily expose them publicly.
+
+---
+
+# 66. RESEARCH SOURCE QUALITY
+
+Where relevant, prefer:
+
+1. primary sources
+2. official sources
+3. direct evidence
+4. authoritative third-party sources
+5. reputable secondary sources
+6. weaker sources only where useful and clearly labelled
+
+Do not treat all sources equally.
+
+---
+
+# 67. RESEARCH CITATIONS
+
+The final report must preserve source provenance.
+
+Every externally derived material claim should be traceable to its source.
+
+Where the output format permits, expose citations inline.
+
+The user should be able to inspect source context.
+
+---
+
+# 68. VERSIONING
+
+The system should eventually support repeated analyses.
+
+A project should be able to have:
+
+```text
+Analysis v1
+Analysis v2
+Analysis v3
+```
+
+The model should make it possible to identify:
+
+* new sources
+* changed sources
+* new competitors
+* changed positioning
+* new findings
+* resolved recommendations
+* unresolved recommendations
+* emerging opportunities
+
+Do not necessarily build full monitoring in V1.
+
+Design the data model so it is possible.
+
+---
+
+# 69. HISTORICAL INTELLIGENCE
+
+Future capability:
+
+```text
+September
+↓
+October
+↓
+November
+```
+
+Compare:
+
+* what changed
+* what improved
+* what deteriorated
+* what was implemented
+* what new threats appeared
+* what new opportunities appeared
+
+This transforms the product from a report generator into a persistent intelligence system.
+
+---
+
+# 70. FUTURE PRODUCT DIRECTION
+
+Do not implement prematurely, but preserve architectural compatibility with:
+
+* recurring research
+* monitoring
+* alerts
+* competitive intelligence
+* market monitoring
+* strategy updates
+* website change detection
+* content opportunity monitoring
+* historical benchmarking
+* API access
+* team collaboration
+* recommendation tracking
+
+---
+
+# 71. IMPLEMENTATION PHASES
+
+Implement in deliberate phases.
+
+## Phase 0 — Repository audit
+
+Before coding:
+
+* inspect repository
+* understand architecture
+* understand current website graph implementation
+* identify existing components
+* identify current data structures
+* identify current research capabilities
+* identify current output capabilities
+* identify gaps
+
+Do not rewrite the project.
+
+Produce a grounded implementation map.
+
+---
+
+## Phase 1 — Canonical data model
+
+Implement:
+
+* Entity
+* Objective
+* Audience
+* Comparison
+* ResearchQuestion
+* Source
+* Observation
+* Evidence
+* Finding
+* Opportunity
+* Recommendation
+* Action
+* ChangeTreeNode
+* Assumption
+* Unknown
+* AnalysisRun
+
+Validate relationships.
+
+---
+
+## Phase 2 — Research planning
+
+Implement:
+
+* objective interpretation
+* module selection
+* research question generation
+* comparison discovery planning
+* research coverage state
+
+---
+
+## Phase 3 — Evidence pipeline
+
+Implement:
+
+* source representation
+* observation extraction
+* evidence construction
+* provenance
+* confidence
+* deduplication
+* contradiction handling
+
+---
+
+## Phase 4 — Analysis
+
+Implement modular analysis:
+
+* positioning
+* audience
+* comparison
+* market
+* messaging
+* digital
+* content
+* discoverability
+* credibility
+* proof
+
+Only activate relevant modules.
+
+---
+
+## Phase 5 — Findings and opportunities
+
+Implement:
+
+* finding generation
+* opportunity detection
+* white-space analysis
+* risk identification
+* unknowns
+* assumptions
+
+---
+
+## Phase 6 — Recommendations
+
+Implement:
+
+* recommendation generation
+* impact
+* effort
+* confidence
+* urgency
+* priority
+* dependencies
+* affected assets
+
+---
+
+## Phase 7 — Change Tree
+
+Implement:
+
+* NEW
+* EDIT
+* REMOVE
+* MOVE
+
+Generate tree from actions/recommendations.
+
+Ensure traceability.
+
+---
+
+## Phase 8 — Canonical output
+
+Implement structured final analysis object.
+
+Then render:
+
+* Executive Brief
+* Detailed Plan
+* JSON
+
+---
+
+## Phase 9 — Interactive HTML
+
+Implement:
+
+* persistent navigation
+* executive dashboard
+* scorecards/assessments
+* findings
+* opportunity map
+* competitive landscape
+* recommendations
+* roadmap
+* Change Tree
+* evidence explorer
+* source traceability
+* unknowns/assumptions
+
+---
+
+## Phase 10 — Dogfood with andreinita.co
+
+Run the full system against andreinita.co.
+
+Do not special-case it.
+
+Use the result to identify:
+
+* missing ontology concepts
+* weak modules
+* bad assumptions
+* missing evidence
+* poor recommendations
+* UX friction
+* output problems
+
+Fix the general system, not merely the specific analysis.
+
+---
+
+## Phase 11 — Cross-domain evaluation
+
+Run fixtures across:
+
+* commercial
+* professional
+* personal
+* charity
+* NGO
+* government
+* product
+
+Verify that the system generalises.
+
+---
+
+# 72. DEFINITION OF DONE
+
+Do not declare the project complete because:
+
+* the page renders
+* tests pass
+* an LLM generated a report
+
+It is complete only when:
+
+## Product
+
+* onboarding is simple
+* objective drives analysis
+* comparison discovery works
+* relevant modules are selected automatically
+* users can correct research framing
+
+## Intelligence
+
+* evidence has provenance
+* findings are distinct from evidence
+* recommendations are distinct from findings
+* unknowns are explicit
+* contradictions can be represented
+* confidence is represented
+
+## Competitive analysis
+
+* known comparisons are accepted
+* additional comparisons can be discovered
+* comparison types are distinguished
+* synthesis identifies patterns and white space
+
+## Actionability
+
+* recommendations are prioritised
+* recommendations map to actions
+* actions map to affected assets
+* Change Tree is generated
+* actions are concrete enough to execute
+
+## Output
+
+* Executive Summary is useful
+* To-Do List is useful
+* ASCII Mock-up is useful
+* ASCII Change Tree is useful
+* detailed plan is comprehensive
+* HTML is interactive
+* evidence is traceable
+
+## Engineering
+
+* schemas validate
+* relationships validate
+* tests exist
+* fixtures exist
+* build passes
+* no unnecessary infrastructure was introduced
+* no major functionality is hard-coded to andreinita.co
+
+---
+
+# 73. REQUIRED IMPLEMENTATION DISCIPLINE
+
+Do not start by writing a large amount of code.
+
+First:
+
+1. inspect
+2. map
+3. model
+4. validate architecture
+5. implement canonical schemas
+6. implement one complete vertical slice
+7. evaluate it
+8. generalise
+9. expand modules
+10. improve UX
+
+The first vertical slice should go all the way through:
+
+```text
+Onboarding
+→ Research Question
+→ Source
+→ Evidence
+→ Finding
+→ Recommendation
+→ Action
+→ Change Tree
+→ Executive Summary
+→ HTML
+```
+
+A thin complete slice is preferable to implementing ten disconnected subsystems.
+
+---
+
+# 74. THE FIRST VERTICAL SLICE
+
+Use andreinita.co.
+
+Scenario:
+
+```text
+Entity:
+Personal professional website
+
+Objective:
+Generate CTO opportunities and strengthen differentiated executive positioning.
+
+Audience:
+Technology company founders
+CEOs
+Recruiters
+Boards / investors where relevant
+
+Comparison:
+User-supplied + automatically discovered comparable CTO/executive profiles
+```
+
+The vertical slice should demonstrate:
+
+```text
+WEBSITE
+↓
+CURRENT POSITION
+↓
+COMPARISON LANDSCAPE
+↓
+FINDING
+↓
+OPPORTUNITY
+↓
+RECOMMENDATION
+↓
+ACTION
+↓
+CHANGE TREE
+```
+
+Example:
+
+```text
+F-023
+Technical capability is stronger than explicit business-outcome differentiation.
+
+↓
+
+O-011
+Technology economics may represent underoccupied positioning territory.
+
+↓
+
+R-014
+Reframe primary executive proposition around technology outcomes.
+
+↓
+
+A-007
+Rewrite homepage hero.
+
+↓
+
+CHANGE TREE
+
+andreinita.co/
+└── [EDIT] Homepage
+    └── [EDIT] Hero
+        └── [CHANGE] Executive proposition
+```
+
+These are illustrative examples only.
+
+The actual system must independently establish whether the evidence supports them.
+
+Do not hard-code these conclusions.
+
+---
+
+# 75. CLAUDE CODE BEHAVIOUR
+
+When implementing this specification:
+
+* inspect before editing
+* reuse existing architecture
+* prefer simple solutions
+* do not create unnecessary abstractions
+* do not speculate about files you have not opened
+* do not claim something is implemented until verified
+* do not stop after writing code without running relevant tests
+* do not silently skip difficult requirements
+* do not replace requirements with easier approximations
+* do not hard-code test cases
+* do not introduce external infrastructure without justification
+* keep the system general
+* keep state explicit
+* keep provenance explicit
+
+If a requirement conflicts with the existing architecture, identify the conflict and choose the smallest principled change.
+
+---
+
+# 76. VERIFICATION LOOP
+
+After each implementation phase:
+
+```text
+IMPLEMENT
+↓
+TYPE CHECK
+↓
+TEST
+↓
+BUILD
+↓
+RUN / INSPECT
+↓
+VERIFY AGAINST REQUIREMENTS
+↓
+UPDATE PROGRESS
+```
+
+For UI:
+
+* run the application
+* inspect actual rendered output
+* test interactions
+* verify responsive behaviour
+* verify accessibility
+* verify empty/loading/error states
+* verify long-content behaviour
+
+For intelligence:
+
+* inspect generated structured data
+* validate references
+* inspect evidence provenance
+* inspect recommendation traceability
+* verify Change Tree
+* verify rendered outputs match canonical data
+
+---
+
+# 77. AVOID THE "BEAUTIFUL DEMO" FAILURE MODE
+
+The system must not optimise for:
+
+> "This report looks impressive."
+
+It must optimise for:
+
+> "This analysis helps someone make a better decision and tells them what to do next."
+
+Prioritise:
+
+1. evidence
+2. reasoning quality
+3. traceability
+4. actionability
+5. clarity
+6. visual polish
+
+Not the other way around.
+
+---
+
+# 78. AVOID THE "AI CONSULTANT THEATRE" FAILURE MODE
+
+Do not produce generic statements like:
+
+* "Strengthen your brand."
+* "Improve your messaging."
+* "Leverage AI."
+* "Focus on your audience."
+* "Differentiate from competitors."
+* "Create more content."
+
+Unless the system can specify:
+
+* why
+* based on what evidence
+* compared with whom
+* what specifically should change
+* where
+* expected impact
+* effort
+* confidence
+
+A recommendation should be executable.
+
+---
+
+# 79. THE ULTIMATE TEST
+
+A user should be able to read the report and ask:
+
+> "Why?"
+
+The system should answer:
+
+```text
+Because of F-023.
+
+F-023 is supported by E-104, E-117 and E-129.
+
+E-104 comes from source S-021.
+
+The finding became opportunity O-011.
+
+O-011 produced recommendation R-014.
+
+R-014 affects these assets:
+
+WEBSITE/
+└── [EDIT] Homepage
+    └── [EDIT] Hero
+```
+
+If the system cannot do this, the intelligence pipeline is incomplete.
+
+---
+
+# 80. FINAL ARCHITECTURE
+
+The target architecture is:
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                         USER                                │
+│                                                             │
+│ Entity · Objective · Audience · Decision · Comparisons      │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+┌─────────────────────────────────────────────────────────────┐
+│                     CONTEXT MODEL                           │
+│                                                             │
+│ Normalised strategic context                                │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    RESEARCH PLANNER                         │
+│                                                             │
+│ Questions · Modules · Sources · Comparisons                 │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    EVIDENCE ENGINE                           │
+│                                                             │
+│ Sources → Observations → Evidence → Provenance              │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+┌─────────────────────────────────────────────────────────────┐
+│                     ANALYSIS ENGINE                          │
+│                                                             │
+│ Patterns → Findings → Gaps → Opportunities                  │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 RECOMMENDATION ENGINE                        │
+│                                                             │
+│ Opportunities → Priorities → Recommendations                 │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+┌─────────────────────────────────────────────────────────────┐
+│                  IMPLEMENTATION MODEL                         │
+│                                                             │
+│ Recommendations → Actions → Change Tree                     │
+└──────────────────────────────┬──────────────────────────────┘
+                               ↓
+              ┌────────────────┼────────────────┐
+              ↓                ↓                ↓
+        EXECUTIVE BRIEF   DETAILED PLAN    HTML REPORT
+              │                │                │
+              └────────────────┼────────────────┘
+                               ↓
+                    CANONICAL INTELLIGENCE
+                          DATA MODEL
+```
+
+---
+
+# 81. NORTH STAR
+
+The final product should feel like:
+
+> "I give this system a strategic problem. It figures out what it needs to know, researches the relevant environment, tells me what the evidence says, explains what that means, identifies where the opportunity is, tells me what I should do, and shows me exactly what needs to change."
+
+Not:
+
+> "I uploaded my website and AI gave me an audit."
+
+That distinction should influence every implementation decision.
+
+---
+
+# 82. START NOW
+
+Do not immediately implement every component.
+
+First inspect the existing repository and produce:
+
+1. current architecture map
+2. current data-flow map
+3. existing website graph capabilities
+4. existing research capabilities
+5. existing output/rendering capabilities
+6. gaps against this specification
+7. proposed implementation phases
+8. files/components that will change
+9. files/components that should remain untouched
+10. risks and architectural decisions
+
+Then begin with the canonical data model and the first complete vertical slice.
+
+Do not ask for clarification unless genuinely blocked by missing information that cannot be discovered from the repository or existing project context.
+
+Make reasonable decisions, document them in `DECISIONS.md` if that convention fits the repository, and proceed.
+
+Do not claim completion until the implementation has been tested against the definition of done above.
