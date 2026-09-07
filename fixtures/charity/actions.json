@@ -1,0 +1,36 @@
+[
+  {
+    "id": "A-0001",
+    "recommendation_id": "R-0001",
+    "description": "Change the donation form default frequency from one-time to monthly.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "operation": "edit",
+        "target": "frequency-default"
+      }
+    ],
+    "effort": "low",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "A donor completing the form without touching frequency gives monthly.",
+    "horizon": "now"
+  },
+  {
+    "id": "A-0002",
+    "recommendation_id": "R-0002",
+    "description": "Add an impact statement above the donation form.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "operation": "edit",
+        "target": "impact-statement"
+      }
+    ],
+    "effort": "low",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "The impact statement appears above the form in the rendered page.",
+    "horizon": "now"
+  }
+]

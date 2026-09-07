@@ -1,0 +1,64 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Link the repair grant from the housing section navigation",
+    "problem": "The grant page is reachable only through the general A-Z services index, unlike the benchmark council’s equivalent page.",
+    "why_it_matters": "A resident who does not already know the grant’s exact name is less likely to find it here than on a comparable council’s site.",
+    "finding_ids": [
+      "F-0001"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "Matches a navigation pattern already in use by a benchmark council service.",
+    "recommended_change": "Add a direct link to the repair grant page from the housing section of the council’s navigation.",
+    "expected_outcome": "A resident browsing the housing section can reach the grant page without already knowing its name.",
+    "impact": "medium",
+    "effort": "low",
+    "confidence": "medium",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Linking from housing navigation increases traffic to the grant page from within the housing section.",
+      "success_metric": "Share of grant-page visits that arrive via the housing section navigation.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare the referral share for eight weeks before and after the navigation change.",
+      "falsifier": "The referral share from housing navigation is unchanged between the two eight-week windows.",
+      "review_period": "8 weeks"
+    }
+  },
+  {
+    "id": "R-0002",
+    "title": "Add accessible labels to the three unlabelled application fields",
+    "problem": "Three required fields in the application form have no label a screen reader can announce.",
+    "why_it_matters": "A resident using assistive technology cannot reliably complete the application as it stands.",
+    "finding_ids": [
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0002"
+    ],
+    "strategic_rationale": "A mechanical accessibility fix with no ambiguity about whether it is needed.",
+    "recommended_change": "Add a programmatically associated label to each of the three fields identified.",
+    "expected_outcome": "A screen reader announces a correct label for every required field in the form.",
+    "impact": "high",
+    "effort": "low",
+    "confidence": "high",
+    "urgency": "high",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "binary",
+      "hypothesis": "Adding accessible labels removes the identified barrier for screen reader users.",
+      "success_metric": "Whether all three fields have a programmatically associated label, verified by re-inspection.",
+      "baseline": "Zero of three fields labelled.",
+      "target": "Three of three fields labelled.",
+      "validation_method": "Re-inspect the form markup after the change ships.",
+      "falsifier": "A re-inspection after the change still finds one or more of the three fields without a label.",
+      "review_period": "On next release"
+    }
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The donation form defaults to a one-time gift, with monthly as a selectable option.",
+    "locator": "form#donate select[name=frequency]",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0002",
+    "observation_type": "positive",
+    "statement": "The donation form defaults to a monthly gift, with one-time as a selectable option.",
+    "locator": "form#give select[name=frequency]",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0003",
+    "source_id": "S-0003",
+    "observation_type": "positive",
+    "statement": "The donation form defaults to a monthly gift.",
+    "locator": "form#donate-now input[name=monthly]",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0004",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The donation form appears above any statement of what a gift funds or its measured effect.",
+    "locator": "main > form#donate",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  }
+]

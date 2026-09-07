@@ -1,0 +1,100 @@
+{
+  "id": "PLAN-0001",
+  "created_at": "2026-09-07T09:00:00.000Z",
+  "objective_interpretation": "The review treats this as an internal allocation decision between two programmes, not as a positioning or acquisition review.",
+  "activated_modules": [
+    {
+      "key": "positioning",
+      "reason": "How each programme’s outcomes are framed for funders is itself a positioning choice.",
+      "research_question_ids": []
+    },
+    {
+      "key": "audience",
+      "reason": "The programme director and the institutional funder weigh the same evidence for different reasons.",
+      "research_question_ids": []
+    },
+    {
+      "key": "messaging",
+      "reason": "The allocation rationale has to be stated in a way a funder can follow, not just decided internally.",
+      "research_question_ids": []
+    },
+    {
+      "key": "market",
+      "reason": "How funder priorities are trending in the region bears on which programme is easier to fund at scale.",
+      "research_question_ids": []
+    },
+    {
+      "key": "operations",
+      "reason": "Scaling either programme is fundamentally a delivery-capacity question.",
+      "research_question_ids": [
+        "RQ-0002"
+      ]
+    },
+    {
+      "key": "credibility",
+      "reason": "Institutional funders weigh a programme’s track record before its projected impact.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "external_environment",
+      "reason": "The funding environment for the region shapes what is realistically fundable at scale.",
+      "research_question_ids": []
+    }
+  ],
+  "dormant_modules": [
+    {
+      "key": "competitive_landscape",
+      "reason": "scope.json records comparison as explicitly not applicable to this internal allocation decision."
+    },
+    {
+      "key": "offer",
+      "reason": "Neither programme is a packaged offer being sold; both are delivered directly."
+    },
+    {
+      "key": "content",
+      "reason": "No blog or writing corpus bears on a funding-allocation decision."
+    },
+    {
+      "key": "acquisition",
+      "reason": "Beneficiaries are reached through the programme itself, not through a funnel this review covers."
+    },
+    {
+      "key": "conversion",
+      "reason": "There is no purchase or signup step in either programme."
+    },
+    {
+      "key": "pricing",
+      "reason": "Neither programme charges beneficiaries."
+    },
+    {
+      "key": "digital_experience",
+      "reason": "The evidence base is programme reports, not web pages; no digital asset is in scope."
+    },
+    {
+      "key": "accessibility",
+      "reason": "No digital asset is in scope for this review."
+    },
+    {
+      "key": "discoverability",
+      "reason": "No digital asset is in scope for this review."
+    },
+    {
+      "key": "reputation",
+      "reason": "No press or public sentiment signal was anticipated for an internal allocation decision."
+    },
+    {
+      "key": "trust",
+      "reason": "No security, privacy or compliance concern was raised for this decision."
+    }
+  ],
+  "comparison_plan": {
+    "supplied_count": 0,
+    "to_discover": false,
+    "rationale": "Comparison does not apply to this decision; see scope.comparison_not_applicable_reason."
+  },
+  "anticipated_gaps": [
+    "No independent evaluation exists for either programme; both figures come from internal reporting."
+  ]
+}

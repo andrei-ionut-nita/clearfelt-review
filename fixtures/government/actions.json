@@ -1,0 +1,36 @@
+[
+  {
+    "id": "A-0001",
+    "recommendation_id": "R-0001",
+    "description": "Add a link to the repair grant page in the housing section navigation.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "operation": "edit",
+        "target": "housing-navigation-link"
+      }
+    ],
+    "effort": "low",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "The repair grant page is reachable from a link within the housing section navigation.",
+    "horizon": "now"
+  },
+  {
+    "id": "A-0002",
+    "recommendation_id": "R-0002",
+    "description": "Add an accessible label to each of the three identified form fields.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0002",
+        "operation": "edit",
+        "target": "field-labels"
+      }
+    ],
+    "effort": "low",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "A screen reader announces a correct label for all three fields.",
+    "horizon": "now"
+  }
+]

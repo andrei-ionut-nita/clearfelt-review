@@ -1,0 +1,38 @@
+[
+  {
+    "id": "F-0001",
+    "category": "credibility",
+    "title": "No named client or measured outcome appears anywhere checked",
+    "statement": "The subject names no client or measured outcome anywhere checked, while both qualified comparisons name specific clients with measured results.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "confidence": "high",
+    "importance": "high",
+    "implication": "A prospect comparing three firms sees concrete proof on two of them and none on this one.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [],
+    "audience_relevance": "Prospective clients evaluating advisors before a first call are the ones weighing this directly."
+  },
+  {
+    "id": "F-0002",
+    "category": "discoverability",
+    "title": "The firm does not appear on the first page of results for its own specialism",
+    "statement": "A prospect searching for the firm’s specialism and region does not see the firm on the first page of results.",
+    "claim_type": "inferred",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "confidence": "low",
+    "importance": "medium",
+    "implication": "A prospect who does not already know the firm by name or referral is unlikely to find it through a direct search.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "audience_relevance": "A prospect with no referral relationship, searching cold, is the one this affects."
+  }
+]

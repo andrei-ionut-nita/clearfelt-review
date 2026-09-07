@@ -1,0 +1,9 @@
+[
+  {
+    "id": "UNK-0001",
+    "statement": "Where in checkout buyers actually abandon is not established.",
+    "why_unknown": "No analytics access; only the stated requirement in the checkout form is observable from outside.",
+    "how_to_resolve": "Instrument the checkout flow and compare abandonment before and after the account-creation step moves.",
+    "blocks_finding_ids": []
+  }
+]

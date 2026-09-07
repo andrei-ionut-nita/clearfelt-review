@@ -1,0 +1,66 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Publish named client outcomes with measured results on the client work page",
+    "problem": "The client work page names no client or measured outcome, unlike both qualified comparisons.",
+    "why_it_matters": "A prospect comparing three firms sees concrete proof on two of them and none on this one.",
+    "finding_ids": [
+      "F-0001"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "Closes a proof gap already normalised across the qualified comparison set, using outcomes the firm already has internally.",
+    "recommended_change": "Add two or three named client case studies to the work page, each stating a specific measured result, with client permission.",
+    "expected_outcome": "A prospect reading the work page sees at least one specific, named, measured outcome.",
+    "impact": "high",
+    "effort": "medium",
+    "confidence": "high",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Publishing named outcomes increases the enquiry rate from visitors to the work page.",
+      "success_metric": "Work-page-to-enquiry conversion rate.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare enquiry rate for eight weeks before and after the case studies publish.",
+      "falsifier": "Enquiry rate is indistinguishable between the two eight-week windows.",
+      "review_period": "8 weeks"
+    }
+  },
+  {
+    "id": "R-0002",
+    "title": "Improve search visibility for the firm’s core specialism and region",
+    "problem": "A prospect searching for the firm’s specialism and region does not see the firm on the first page of results.",
+    "why_it_matters": "A prospect with no referral relationship, searching cold, is unlikely to find the firm this way.",
+    "finding_ids": [
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0002"
+    ],
+    "strategic_rationale": "Opens a channel referral relationships do not cover, though the underlying cause is not yet fully diagnosed.",
+    "recommended_change": "Commission a fuller search-visibility audit across the firm’s core search terms, since this run’s single check was not conclusive on its own.",
+    "expected_outcome": "A specific, evidenced list of search terms and gaps to act on, rather than a single spot-check result.",
+    "impact": "medium",
+    "effort": "low",
+    "confidence": "low",
+    "urgency": "low",
+    "dependencies": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "measurement": {
+      "kind": "qualitative",
+      "hypothesis": "A fuller audit will identify specific, actionable gaps behind the single spot-check result this run found.",
+      "success_metric": "Whether the audit produces a specific list of search terms and ranking gaps.",
+      "baseline": "One spot-check result, not yet a diagnosed cause.",
+      "target": "A completed audit with named gaps and a proposed fix for each.",
+      "validation_method": "Review the audit’s findings against the original spot-check result for consistency.",
+      "falsifier": "The audit finds the firm already ranks well across its core terms, contradicting this run’s spot-check.",
+      "review_period": "Next quarter"
+    }
+  }
+]

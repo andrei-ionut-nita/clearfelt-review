@@ -1,0 +1,49 @@
+[
+  {
+    "id": "RQ-0001",
+    "question": "How findable is the application compared against a benchmark council service?",
+    "module": "discoverability",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "Both pages’ presence in a direct site search is directly observable.",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002"
+    ],
+    "confidence": "medium",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0002",
+    "question": "Does the application form meet basic accessibility requirements for assistive technology?",
+    "module": "accessibility",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "Form field labelling is directly inspectable in the page markup.",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "confidence": "high",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0003",
+    "question": "What trust or policy signal does a resident see before entering financial information?",
+    "module": "trust",
+    "state": "INSUFFICIENT_EVIDENCE",
+    "stop_reason": "no_evidence_available",
+    "stop_detail": "No user testing or resident feedback data exists on this specific step.",
+    "evidence_ids": [],
+    "source_ids": [
+      "S-0001"
+    ],
+    "confidence": "low",
+    "priority": 2
+  }
+]

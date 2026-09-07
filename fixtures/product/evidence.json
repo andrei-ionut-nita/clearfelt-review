@@ -1,0 +1,50 @@
+[
+  {
+    "id": "E-0001",
+    "observation_ids": [
+      "OBS-0001",
+      "OBS-0002",
+      "OBS-0003"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
+    "claim": "The subject shows no visible review count and requires a 100 minimum for free shipping, while both qualified comparisons show review counts in the hundreds or thousands and ship free with no minimum.",
+    "research_question_ids": [
+      "RQ-0001"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [
+      "F-0001"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0002",
+    "observation_ids": [
+      "OBS-0004"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "claim": "A buyer must create an account before entering a shipping address at checkout.",
+    "research_question_ids": [
+      "RQ-0002"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [
+      "F-0002"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  }
+]

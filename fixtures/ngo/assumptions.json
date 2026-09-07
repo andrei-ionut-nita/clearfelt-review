@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ASM-0001",
+    "statement": "The two programmes’ self-reported cost-per-beneficiary figures are calculated on a comparable basis.",
+    "why_assumed": "No independent evaluation exists to verify the reporting methodology behind either figure.",
+    "status": "unvalidated",
+    "validation_method": "Commission or obtain an independent review of both programmes’ cost-accounting methodology.",
+    "evidence_ids": []
+  }
+]

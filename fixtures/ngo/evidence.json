@@ -1,0 +1,48 @@
+[
+  {
+    "id": "E-0001",
+    "observation_ids": [
+      "OBS-0001",
+      "OBS-0002"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002"
+    ],
+    "claim": "The water programme reaches a beneficiary at roughly a fifth of the nutrition programme’s reported cost.",
+    "research_question_ids": [
+      "RQ-0001"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "medium",
+    "corroborated_by": [],
+    "supports": [
+      "F-0001"
+    ],
+    "contradicts": [],
+    "temporal_scope": "historical"
+  },
+  {
+    "id": "E-0002",
+    "observation_ids": [
+      "OBS-0003"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "claim": "The water programme has unused staffing capacity that would allow it to scale without new hiring.",
+    "research_question_ids": [
+      "RQ-0002"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "medium",
+    "corroborated_by": [],
+    "supports": [
+      "F-0002"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  }
+]

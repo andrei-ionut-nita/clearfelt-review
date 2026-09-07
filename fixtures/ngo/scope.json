@@ -1,0 +1,55 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Increase impact per pound spent across field programmes.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001",
+    "AST-0002"
+  ],
+  "decision": {
+    "statement": "Which of the two current field programmes should receive next year’s marginal funding to scale?",
+    "decision_maker": "Programme director",
+    "horizon": "One funding cycle",
+    "evidence_required": [
+      "What each programme’s own reporting shows about cost per beneficiary reached",
+      "What operational capacity exists to scale either programme without degrading delivery"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "Programme director allocating next cycle’s marginal funding",
+      "priority": 1,
+      "decision_role": "Decision maker"
+    },
+    {
+      "name": "Institutional funders reviewing the allocation rationale",
+      "priority": 2,
+      "decision_role": "Funder"
+    }
+  ],
+  "geography": [
+    "East Africa region"
+  ],
+  "languages": [
+    "en"
+  ],
+  "channels": [],
+  "exclusions": [
+    "Programmes outside the current funding cycle, which are not eligible for reallocation"
+  ],
+  "depth": "standard",
+  "comparison_applicable": false,
+  "comparison_not_applicable_reason": "The decision is which of two internal programmes to scale, not how the organisation compares against others; no external comparison bears on this allocation.",
+  "budget": {
+    "max_sources": 10,
+    "max_search_iterations": 4,
+    "max_depth": 1,
+    "min_evidence_per_question": 1,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": [
+      "RQ-0001"
+    ]
+  }
+}

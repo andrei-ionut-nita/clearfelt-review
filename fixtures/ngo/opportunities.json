@@ -1,0 +1,18 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Existing headroom lets the water programme scale without new capacity investment",
+    "description": "Marginal funding could go directly to reach, rather than first funding the staffing capacity to enable it.",
+    "supporting_finding_ids": [
+      "F-0001",
+      "F-0002"
+    ],
+    "supporting_evidence_ids": [
+      "E-0001",
+      "E-0002"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "medium"
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "UNK-0001",
+    "statement": "What trust or policy signal a resident sees before entering financial information is not established.",
+    "why_unknown": "No user testing or resident feedback data exists on this specific step of the form.",
+    "how_to_resolve": "Commission a small round of moderated user testing on the financial-information step.",
+    "blocks_finding_ids": []
+  }
+]

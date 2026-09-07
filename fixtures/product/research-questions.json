@@ -1,0 +1,36 @@
+[
+  {
+    "id": "RQ-0001",
+    "question": "How does price, review count and shipping compare against the qualified comparison set?",
+    "module": "pricing",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "Both qualified comparisons publish price, review count and shipping terms directly.",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
+    "confidence": "high",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0002",
+    "question": "What friction exists at checkout?",
+    "module": "conversion",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "The checkout flow itself states its required steps directly.",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "confidence": "medium",
+    "priority": 1
+  }
+]

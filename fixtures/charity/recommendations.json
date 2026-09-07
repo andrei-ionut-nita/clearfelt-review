@@ -1,0 +1,66 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Default the donation form to monthly, matching both benchmark charities",
+    "problem": "The donation form defaults to one-time, next to benchmark charities that both default to monthly.",
+    "why_it_matters": "A donor comparing causes encounters recurring giving as the norm everywhere except on this form.",
+    "finding_ids": [
+      "F-0001"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "Matches a default already normalised across the qualified comparison set.",
+    "recommended_change": "Change the donation form default from one-time to monthly, keeping one-time selectable.",
+    "expected_outcome": "A donor completing the form without changing the default gives monthly rather than once.",
+    "impact": "high",
+    "effort": "low",
+    "confidence": "high",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Defaulting to monthly increases the share of gifts that are recurring.",
+      "success_metric": "Share of completed donations that are monthly rather than one-time.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare the monthly share for six weeks before and after the default change.",
+      "falsifier": "The monthly share is unchanged between the two six-week windows, or total completed gifts fall enough that recurring gains do not offset it.",
+      "review_period": "6 weeks"
+    }
+  },
+  {
+    "id": "R-0002",
+    "title": "State what a monthly gift funds before the donation form",
+    "problem": "A prospective donor is asked to give before seeing any statement of what the gift funds.",
+    "why_it_matters": "A donor deciding whether to trust the cause with a recurring commitment has nothing to weigh before the request.",
+    "finding_ids": [
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0002"
+    ],
+    "strategic_rationale": "Gives a reason before a request, on the page most likely to convert a first-time gift.",
+    "recommended_change": "Add one sentence stating what a typical monthly gift funds, placed above the donation form rather than after it.",
+    "expected_outcome": "A donor reaching the form has already seen one concrete statement of impact.",
+    "impact": "medium",
+    "effort": "low",
+    "confidence": "medium",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Impact proof above the form increases form completion.",
+      "success_metric": "Donation form completion rate for visitors who scroll past the impact statement.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare completion rate for four weeks before and after the change.",
+      "falsifier": "Completion rate is unchanged between the two four-week windows.",
+      "review_period": "4 weeks"
+    }
+  }
+]

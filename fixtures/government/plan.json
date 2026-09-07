@@ -1,0 +1,106 @@
+{
+  "id": "PLAN-0001",
+  "created_at": "2026-09-07T09:00:00.000Z",
+  "objective_interpretation": "The review treats the grant application as a findability, accessibility and trust decision for an eligible resident, not as a general service review.",
+  "activated_modules": [
+    {
+      "key": "positioning",
+      "reason": "How the grant is described against other councils’ equivalent services affects whether a resident recognises it applies to them.",
+      "research_question_ids": []
+    },
+    {
+      "key": "audience",
+      "reason": "A resident using assistive technology and one applying unassisted meet the same form differently.",
+      "research_question_ids": []
+    },
+    {
+      "key": "messaging",
+      "reason": "Eligibility and policy language has to be understood correctly, not just present.",
+      "research_question_ids": []
+    },
+    {
+      "key": "competitive_landscape",
+      "reason": "Benchmark council services for the same grant type show what a well-run version of this service looks like.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "offer",
+      "reason": "The grant itself, its eligibility rules and what it covers, is the subject of the application.",
+      "research_question_ids": []
+    },
+    {
+      "key": "conversion",
+      "reason": "Completing the application is the decision this review exists to improve.",
+      "research_question_ids": [
+        "RQ-0003"
+      ]
+    },
+    {
+      "key": "digital_experience",
+      "reason": "The application is a web form.",
+      "research_question_ids": []
+    },
+    {
+      "key": "accessibility",
+      "reason": "A public service has an obligation to be usable by residents using assistive technology.",
+      "research_question_ids": [
+        "RQ-0002"
+      ]
+    },
+    {
+      "key": "discoverability",
+      "reason": "A resident who does not already know the grant exists has to be able to find it.",
+      "research_question_ids": []
+    },
+    {
+      "key": "trust",
+      "reason": "The application collects personal and financial information a resident has to trust the council with.",
+      "research_question_ids": []
+    },
+    {
+      "key": "external_environment",
+      "reason": "Eligibility rules are set by national and local policy, not by the council alone.",
+      "research_question_ids": []
+    }
+  ],
+  "dormant_modules": [
+    {
+      "key": "market",
+      "reason": "There is no market this service competes in; residents do not choose between councils."
+    },
+    {
+      "key": "content",
+      "reason": "No blog or writing corpus bears on a single grant application form."
+    },
+    {
+      "key": "credibility",
+      "reason": "Not raised for a mandatory public service; residents do not weigh third-party endorsement before applying."
+    },
+    {
+      "key": "acquisition",
+      "reason": "Eligible residents are reached through the council’s own channels, not an acquisition funnel this review covers."
+    },
+    {
+      "key": "pricing",
+      "reason": "The grant is free to apply for; there is no price to analyse."
+    },
+    {
+      "key": "reputation",
+      "reason": "No press or public sentiment signal was anticipated for this specific form."
+    },
+    {
+      "key": "operations",
+      "reason": "Grant processing and payment operations are out of scope; this review covers the application step only."
+    }
+  ],
+  "comparison_plan": {
+    "supplied_count": 0,
+    "to_discover": true,
+    "rationale": "No comparisons were supplied, so the benchmark set had to be discovered by service type."
+  },
+  "anticipated_gaps": [
+    "No analytics access, so where in the form residents actually abandon is not directly observable."
+  ]
+}

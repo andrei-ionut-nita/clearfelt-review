@@ -1,0 +1,36 @@
+[
+  {
+    "id": "F-0001",
+    "category": "discoverability",
+    "title": "The grant is reachable only through the general services index",
+    "statement": "The subject’s grant page is reachable only through a general index while the benchmark council links its equivalent page from the relevant section navigation.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "confidence": "high",
+    "importance": "high",
+    "implication": "A resident who does not already know the grant’s exact name is less likely to find it here than on the benchmark council’s site.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [],
+    "audience_relevance": "Eligible residents who have not already been told the grant exists are the ones this affects."
+  },
+  {
+    "id": "F-0002",
+    "category": "accessibility",
+    "title": "Three required application fields have no accessible label",
+    "statement": "Three required fields in the application form have no label a screen reader can announce.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "confidence": "high",
+    "importance": "high",
+    "implication": "A resident using a screen reader cannot reliably tell what three of the required fields are asking for.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [],
+    "audience_relevance": "Residents using assistive technology to complete the form are directly blocked by this."
+  }
+]

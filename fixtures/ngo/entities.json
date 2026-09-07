@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "ngo",
+    "role": "subject",
+    "name": "Fieldward Trust",
+    "description": "An NGO running two field programmes in the same region.",
+    "canonical_url": "https://fieldward-trust.example",
+    "geography": [
+      "East Africa region"
+    ],
+    "industry": "Development and relief",
+    "asset_ids": [
+      "AST-0001",
+      "AST-0002"
+    ]
+  }
+]

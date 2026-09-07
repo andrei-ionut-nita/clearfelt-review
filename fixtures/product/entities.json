@@ -1,0 +1,31 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "company",
+    "role": "subject",
+    "name": "Trailmark Packs",
+    "description": "A direct-to-consumer hiking pack brand.",
+    "canonical_url": "https://trailmark-packs.example",
+    "industry": "Outdoor gear",
+    "asset_ids": [
+      "AST-0001",
+      "AST-0002"
+    ]
+  },
+  {
+    "id": "ENT-0002",
+    "type": "company",
+    "role": "comparison",
+    "name": "Comparable pack brand A",
+    "canonical_url": "https://comparable-pack-a.example",
+    "asset_ids": []
+  },
+  {
+    "id": "ENT-0003",
+    "type": "company",
+    "role": "comparison",
+    "name": "Comparable pack brand B",
+    "canonical_url": "https://comparable-pack-b.example",
+    "asset_ids": []
+  }
+]

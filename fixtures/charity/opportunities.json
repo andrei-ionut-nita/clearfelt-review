@@ -1,0 +1,34 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Recurring giving as the default is unoccupied only by the subject",
+    "description": "Both benchmark charities already default to monthly. Matching the default, rather than leaving one-time as the norm, closes a gap the comparison set has already normalised for this donor.",
+    "supporting_finding_ids": [
+      "F-0001"
+    ],
+    "supporting_evidence_ids": [
+      "E-0001"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "medium",
+    "white_space": {
+      "territory": "Recurring giving as the default ask",
+      "current_position": "low"
+    }
+  },
+  {
+    "id": "O-0002",
+    "title": "A visible impact statement above the ask gives the donor something to trust before giving",
+    "description": "Stating what a monthly gift funds before the form, rather than after, gives a first-time donor a reason before a request.",
+    "supporting_finding_ids": [
+      "F-0002"
+    ],
+    "supporting_evidence_ids": [
+      "E-0002"
+    ],
+    "strategic_value": "medium",
+    "audience_value": "medium",
+    "confidence": "medium"
+  }
+]

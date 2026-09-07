@@ -1,0 +1,20 @@
+{
+  "id": "r-20260907-001",
+  "slug": "trailmark-packs",
+  "created_at": "2026-09-07T09:00:00.000Z",
+  "updated_at": "2026-09-07T09:00:00.000Z",
+  "stage": "complete",
+  "approved_gates": {
+    "scope": "2026-09-07T09:00:00.000Z",
+    "research_plan": "2026-09-07T09:00:00.000Z",
+    "findings": "2026-09-07T09:00:00.000Z"
+  },
+  "observability": {
+    "started_at": "2026-09-07T09:00:00.000Z",
+    "finished_at": "2026-09-07T10:10:00.000Z",
+    "sources_discovered": 6,
+    "sources_retrieved": 3,
+    "retrieval_failures": 0,
+    "search_iterations": 2
+  }
+}

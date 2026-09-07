@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ASM-0001",
+    "statement": "Defaulting to monthly will not materially reduce the number of donors who complete a gift at all.",
+    "why_assumed": "No historical default-change data exists for this form to check against.",
+    "status": "unvalidated",
+    "validation_method": "Compare total completed-gift counts, not just frequency share, before and after the change.",
+    "evidence_ids": []
+  }
+]

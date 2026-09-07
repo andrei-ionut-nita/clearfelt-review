@@ -6,6 +6,7 @@ import {
   makeFeedback,
   makeFinding,
   makeRecommendation,
+  makeSource,
   makeValidReview,
 } from './testing/factory.ts';
 
@@ -94,6 +95,59 @@ describe('diffReviews', () => {
       a.feedback = [makeFeedback({ type: 'accept', target_id: 'F-0001' })];
       const report = diffReviews(a, runB());
       expect(report.feedback_still_open).toEqual([]);
+    });
+  });
+
+  describe('evidence_base', () => {
+    it('counts the excluded evidentiary collections without diffing them item by item', () => {
+      const report = diffReviews(
+        runA(),
+        runB({ sources: [makeSource(), makeSource({ id: 'S-0002' })] }),
+      );
+      const sources = report.evidence_base.find((e) => e.collection === 'sources');
+      expect(sources).toEqual({ collection: 'sources', a_count: 1, b_count: 2 });
+      // observations and evidence were not overridden, so the count held steady.
+      const observations = report.evidence_base.find((e) => e.collection === 'observations');
+      expect(observations).toEqual({ collection: 'observations', a_count: 1, b_count: 1 });
+    });
+  });
+
+  describe('feedback_possible_matches', () => {
+    it('flags a closely worded unlinked candidate as a caution, not a match', () => {
+      const a = runA();
+      a.feedback = [makeFeedback({ type: 'reject', target_id: 'F-0001' })];
+      // Close wording to A's default finding F-0001, "Proposition leads on
+      // outcomes", but carries no supersedes: still reads as fully new.
+      const report = diffReviews(
+        a,
+        runB({
+          findings: [makeFinding({ id: 'F-0009', title: 'Proposition still leads on outcomes' })],
+        }),
+      );
+      expect(report.feedback_still_open.map((f) => f.id)).toEqual(['FB-0001']);
+      expect(report.feedback_possible_matches).toEqual([
+        {
+          feedback_id: 'FB-0001',
+          target_id: 'F-0001',
+          candidate_id: 'F-0009',
+          candidate_label: 'Proposition still leads on outcomes',
+          similarity: expect.any(Number),
+        },
+      ]);
+    });
+
+    it('does not flag an unrelated candidate', () => {
+      const a = runA();
+      a.feedback = [makeFeedback({ type: 'reject', target_id: 'F-0001' })];
+      const report = diffReviews(
+        a,
+        runB({
+          findings: [
+            makeFinding({ id: 'F-0009', title: 'Checkout requires a card before trial access' }),
+          ],
+        }),
+      );
+      expect(report.feedback_possible_matches).toEqual([]);
     });
   });
 });

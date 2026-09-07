@@ -1,0 +1,56 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Increase online purchase conversion for the flagship hiking pack.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001",
+    "AST-0002"
+  ],
+  "decision": {
+    "statement": "Which change to the product page or checkout would most increase purchase conversion for the flagship pack this quarter?",
+    "decision_maker": "Head of ecommerce",
+    "horizon": "One quarter",
+    "evidence_required": [
+      "How the product page compares against the qualified comparison set on price, reviews and shipping terms",
+      "What friction exists at checkout"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "First-time buyers comparing packs before purchase",
+      "priority": 1,
+      "decision_role": "Buyer"
+    },
+    {
+      "name": "Returning customers reordering or upgrading",
+      "priority": 2,
+      "decision_role": "Buyer"
+    }
+  ],
+  "geography": [
+    "United States"
+  ],
+  "languages": [
+    "en"
+  ],
+  "channels": [
+    "website"
+  ],
+  "exclusions": [
+    "Wholesale and retail-partner sales, which use a separate ordering process"
+  ],
+  "depth": "standard",
+  "comparison_applicable": true,
+  "budget": {
+    "max_sources": 20,
+    "max_search_iterations": 8,
+    "max_depth": 2,
+    "min_evidence_per_question": 1,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": [
+      "RQ-0001"
+    ]
+  }
+}

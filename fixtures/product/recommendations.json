@@ -1,0 +1,66 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Display the review count and remove the free-shipping minimum",
+    "problem": "The product page shows no visible review count and requires a 100 minimum for free shipping, unlike both qualified comparisons.",
+    "why_it_matters": "A buyer comparing three packs sees proof and a shipping term on two of them and neither on this one.",
+    "finding_ids": [
+      "F-0001"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "Matches terms already normalised across the qualified comparison set.",
+    "recommended_change": "Show the existing review count prominently on the product page, and remove the 100 minimum for free shipping.",
+    "expected_outcome": "A buyer comparing this page against the other two sees review proof and an unconditional free-shipping term on all three.",
+    "impact": "high",
+    "effort": "medium",
+    "confidence": "high",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Showing review count and removing the shipping minimum increases purchase conversion on the product page.",
+      "success_metric": "Product-page-to-purchase conversion rate.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare conversion rate for six weeks before and after both changes ship together.",
+      "falsifier": "Conversion rate is indistinguishable between the two six-week windows.",
+      "review_period": "6 weeks"
+    }
+  },
+  {
+    "id": "R-0002",
+    "title": "Allow guest checkout before account creation",
+    "problem": "A buyer must create an account before entering a shipping address at checkout.",
+    "why_it_matters": "A buyer who wants to see the final cost with shipping cannot do so without first creating an account.",
+    "finding_ids": [
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0002"
+    ],
+    "strategic_rationale": "Removes a commitment step from what is still a price-checking step for the buyer.",
+    "recommended_change": "Let checkout proceed through the shipping-cost step as a guest, offering account creation only at payment.",
+    "expected_outcome": "A buyer can see the total cost with shipping before being asked to create an account.",
+    "impact": "medium",
+    "effort": "medium",
+    "confidence": "medium",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Guest checkout increases the share of shipping-cost views that complete a purchase.",
+      "success_metric": "Shipping-step-to-purchase completion rate.",
+      "baseline": "unknown",
+      "target": "Establish a baseline, then improve on it",
+      "validation_method": "Compare completion rate for six weeks before and after the change.",
+      "falsifier": "Completion rate is unchanged between the two six-week windows.",
+      "review_period": "6 weeks"
+    }
+  }
+]

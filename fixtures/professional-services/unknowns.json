@@ -1,0 +1,11 @@
+[
+  {
+    "id": "UNK-0001",
+    "statement": "Whether the firm ranks similarly across its other core specialism and region terms is not established.",
+    "why_unknown": "Budget for this run only covered a single search term.",
+    "how_to_resolve": "Commission the fuller search-visibility audit recommended in R-0002.",
+    "blocks_finding_ids": [
+      "F-0002"
+    ]
+  }
+]

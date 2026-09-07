@@ -1,0 +1,42 @@
+[
+  {
+    "id": "COMP-0001",
+    "entity_id": "ENT-0002",
+    "name": "Comparable advisory firm A",
+    "type": "direct_competitor",
+    "status": "qualified",
+    "proposed_by": "system",
+    "why_included": "Same specialism, same client segment, addresses the same enquiry decision.",
+    "audience_overlap": "high",
+    "objective_overlap": "high",
+    "decision_overlap": "high",
+    "relevance": "high",
+    "confidence": "high",
+    "source_ids": [
+      "S-0002"
+    ],
+    "positioning_territories": [
+      "Named client outcomes with measured results"
+    ]
+  },
+  {
+    "id": "COMP-0002",
+    "entity_id": "ENT-0003",
+    "name": "Comparable advisory firm B",
+    "type": "direct_competitor",
+    "status": "qualified",
+    "proposed_by": "system",
+    "why_included": "Appears alongside firm A when prospects search for this specialism.",
+    "audience_overlap": "high",
+    "objective_overlap": "medium",
+    "decision_overlap": "high",
+    "relevance": "medium",
+    "confidence": "medium",
+    "source_ids": [
+      "S-0003"
+    ],
+    "positioning_territories": [
+      "Named client outcomes with measured results"
+    ]
+  }
+]

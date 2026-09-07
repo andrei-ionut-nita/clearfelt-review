@@ -1,0 +1,22 @@
+[
+  {
+    "id": "AST-0001",
+    "entity_id": "ENT-0001",
+    "type": "programme",
+    "path": "PROGRAMME-WATER",
+    "title": "Clean water access programme",
+    "source_ids": [
+      "S-0001"
+    ]
+  },
+  {
+    "id": "AST-0002",
+    "entity_id": "ENT-0001",
+    "type": "programme",
+    "path": "PROGRAMME-NUTRITION",
+    "title": "Child nutrition programme",
+    "source_ids": [
+      "S-0002"
+    ]
+  }
+]

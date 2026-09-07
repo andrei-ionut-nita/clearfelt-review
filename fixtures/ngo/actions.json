@@ -1,0 +1,19 @@
+[
+  {
+    "id": "A-0001",
+    "recommendation_id": "R-0001",
+    "description": "Update the funding allocation plan to direct marginal funding to the water programme.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "operation": "edit",
+        "target": "funding-allocation"
+      }
+    ],
+    "effort": "low",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "The approved allocation plan for next cycle shows marginal funding directed to the water programme.",
+    "horizon": "now"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "COMP-0001",
+    "entity_id": "ENT-0002",
+    "name": "Benchmark relief charity A",
+    "type": "benchmark",
+    "status": "qualified",
+    "proposed_by": "system",
+    "why_included": "Same cause area, same donor pool, comparable scale.",
+    "audience_overlap": "high",
+    "objective_overlap": "high",
+    "decision_overlap": "high",
+    "relevance": "high",
+    "confidence": "high",
+    "source_ids": [
+      "S-0002"
+    ],
+    "positioning_territories": [
+      "Recurring giving as the default ask"
+    ]
+  },
+  {
+    "id": "COMP-0002",
+    "entity_id": "ENT-0003",
+    "name": "Benchmark relief charity B",
+    "type": "benchmark",
+    "status": "qualified",
+    "proposed_by": "system",
+    "why_included": "Appears alongside charity A when donors compare relief causes.",
+    "audience_overlap": "high",
+    "objective_overlap": "medium",
+    "decision_overlap": "high",
+    "relevance": "medium",
+    "confidence": "medium",
+    "source_ids": [
+      "S-0003"
+    ],
+    "positioning_territories": [
+      "Recurring giving as the default ask"
+    ]
+  }
+]

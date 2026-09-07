@@ -1,0 +1,56 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Increase recurring individual donations.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001",
+    "AST-0002"
+  ],
+  "decision": {
+    "statement": "Which change to the donation ask or the donation page would most increase recurring monthly giving this quarter, in a way donors can trust?",
+    "decision_maker": "Head of fundraising",
+    "horizon": "One quarter",
+    "evidence_required": [
+      "How the donation ask compares against benchmark charities pursuing the same donor",
+      "What proof of impact a donor sees before being asked to give"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "Prospective monthly donors researching before their first gift",
+      "priority": 1,
+      "decision_role": "Giver"
+    },
+    {
+      "name": "Existing one-time donors deciding whether to convert to recurring",
+      "priority": 2,
+      "decision_role": "Giver"
+    }
+  ],
+  "geography": [
+    "United Kingdom"
+  ],
+  "languages": [
+    "en"
+  ],
+  "channels": [
+    "website"
+  ],
+  "exclusions": [
+    "Major gifts and corporate partnerships, which are relationship-managed off-page"
+  ],
+  "depth": "standard",
+  "comparison_applicable": true,
+  "budget": {
+    "max_sources": 15,
+    "max_search_iterations": 6,
+    "max_depth": 2,
+    "min_evidence_per_question": 1,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": [
+      "RQ-0001"
+    ]
+  }
+}

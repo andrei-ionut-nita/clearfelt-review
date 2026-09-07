@@ -5,6 +5,11 @@ import { COLLECTIONS, type Review } from './model/index.ts';
 import { MODULE_KEYS } from './modules/registry.ts';
 import { evaluateQuality } from './quality/index.ts';
 import { ADVERSARIAL_CASES } from './testing/adversarial.ts';
+import { makeCharityExample } from './testing/worked-example-charity.ts';
+import { makeGovernmentExample } from './testing/worked-example-government.ts';
+import { makeNgoExample } from './testing/worked-example-ngo.ts';
+import { makeProductExample } from './testing/worked-example-product.ts';
+import { makeProfessionalServicesExample } from './testing/worked-example-professional-services.ts';
 import { makeCommercialSaasExample } from './testing/worked-example-saas.ts';
 import { makeWorkedExample } from './testing/worked-example.ts';
 import { formatIssues, validateReview } from './validate/index.ts';
@@ -86,6 +91,162 @@ describe('fixtures/commercial-saas', () => {
       c.positioning_territories.includes('Usage-based pricing for scaling teams'),
     );
     expect(crowded.length).toBe(2);
+  });
+});
+
+/**
+ * Four more archetypes, added in Phase 6 to close the gap between the
+ * original plan's seven named archetypes and the two built by the end of
+ * Phase 4. Each block below checks the same three basics every fixture must
+ * pass, plus one assertion proving this archetype's module set is not just
+ * a relabelled copy of an existing one.
+ */
+function decidedModuleKeys(review: Review): string[] {
+  const plan = review.plan;
+  return [
+    ...(plan?.activated_modules.map((m) => m.key) ?? []),
+    ...(plan?.dormant_modules.map((m) => m.key) ?? []),
+  ].sort();
+}
+
+describe('fixtures/charity', () => {
+  it('exists as a real run directory', () => {
+    expect(existsSync(join(FIXTURES, 'charity', 'run.json'))).toBe(true);
+  });
+
+  it('validates, like any real run must', () => {
+    expect(formatIssues(validateReview(loadFixture('charity')).errors)).toBe('');
+  });
+
+  it('matches the source it was generated from', () => {
+    expect(loadFixture('charity')).toEqual(makeCharityExample());
+  });
+
+  it('classifies every registry module', () => {
+    expect(decidedModuleKeys(loadFixture('charity'))).toEqual([...MODULE_KEYS].sort());
+  });
+
+  it('activates trust, unlike personal-brand or commercial-saas', () => {
+    const charity = loadFixture('charity').plan?.activated_modules.map((m) => m.key) ?? [];
+    const brand = loadFixture('personal-brand').plan?.activated_modules.map((m) => m.key) ?? [];
+    const saas = loadFixture('commercial-saas').plan?.activated_modules.map((m) => m.key) ?? [];
+    expect(charity).toEqual(expect.arrayContaining(['trust']));
+    expect(brand).not.toEqual(expect.arrayContaining(['trust']));
+    expect(saas).not.toEqual(expect.arrayContaining(['trust']));
+  });
+});
+
+describe('fixtures/ngo', () => {
+  it('exists as a real run directory', () => {
+    expect(existsSync(join(FIXTURES, 'ngo', 'run.json'))).toBe(true);
+  });
+
+  it('validates, like any real run must', () => {
+    expect(formatIssues(validateReview(loadFixture('ngo')).errors)).toBe('');
+  });
+
+  it('matches the source it was generated from', () => {
+    expect(loadFixture('ngo')).toEqual(makeNgoExample());
+  });
+
+  it('classifies every registry module', () => {
+    expect(decidedModuleKeys(loadFixture('ngo'))).toEqual([...MODULE_KEYS].sort());
+  });
+
+  it('records comparison as explicitly not applicable, the one fixture that does', () => {
+    const ngo = loadFixture('ngo');
+    expect(ngo.scope?.comparison_applicable).toBe(false);
+    expect(ngo.scope?.comparison_not_applicable_reason).toBeTruthy();
+    expect(ngo.comparisons).toEqual([]);
+  });
+
+  it('leaves competitive_landscape dormant because comparison does not apply, not for lack of keywords', () => {
+    const dormant = loadFixture('ngo').plan?.dormant_modules.map((m) => m.key) ?? [];
+    expect(dormant).toEqual(
+      expect.arrayContaining(['competitive_landscape', 'digital_experience']),
+    );
+  });
+});
+
+describe('fixtures/government', () => {
+  it('exists as a real run directory', () => {
+    expect(existsSync(join(FIXTURES, 'government', 'run.json'))).toBe(true);
+  });
+
+  it('validates, like any real run must', () => {
+    expect(formatIssues(validateReview(loadFixture('government')).errors)).toBe('');
+  });
+
+  it('matches the source it was generated from', () => {
+    expect(loadFixture('government')).toEqual(makeGovernmentExample());
+  });
+
+  it('classifies every registry module', () => {
+    expect(decidedModuleKeys(loadFixture('government'))).toEqual([...MODULE_KEYS].sort());
+  });
+
+  it('activates accessibility and discoverability together, unlike any other fixture', () => {
+    const government = loadFixture('government').plan?.activated_modules.map((m) => m.key) ?? [];
+    const saas = loadFixture('commercial-saas').plan?.activated_modules.map((m) => m.key) ?? [];
+    expect(government).toEqual(
+      expect.arrayContaining(['accessibility', 'discoverability', 'trust']),
+    );
+    expect(saas).not.toEqual(expect.arrayContaining(['accessibility']));
+  });
+});
+
+describe('fixtures/product', () => {
+  it('exists as a real run directory', () => {
+    expect(existsSync(join(FIXTURES, 'product', 'run.json'))).toBe(true);
+  });
+
+  it('validates, like any real run must', () => {
+    expect(formatIssues(validateReview(loadFixture('product')).errors)).toBe('');
+  });
+
+  it('matches the source it was generated from', () => {
+    expect(loadFixture('product')).toEqual(makeProductExample());
+  });
+
+  it('classifies every registry module', () => {
+    expect(decidedModuleKeys(loadFixture('product'))).toEqual([...MODULE_KEYS].sort());
+  });
+
+  it('activates operations, unlike any other fixture', () => {
+    const product = loadFixture('product').plan?.activated_modules.map((m) => m.key) ?? [];
+    const saas = loadFixture('commercial-saas').plan?.activated_modules.map((m) => m.key) ?? [];
+    const charity = loadFixture('charity').plan?.activated_modules.map((m) => m.key) ?? [];
+    expect(product).toEqual(expect.arrayContaining(['operations', 'reputation']));
+    expect(saas).not.toEqual(expect.arrayContaining(['operations']));
+    expect(charity).not.toEqual(expect.arrayContaining(['operations']));
+  });
+});
+
+describe('fixtures/professional-services', () => {
+  it('exists as a real run directory', () => {
+    expect(existsSync(join(FIXTURES, 'professional-services', 'run.json'))).toBe(true);
+  });
+
+  it('validates, like any real run must', () => {
+    expect(formatIssues(validateReview(loadFixture('professional-services')).errors)).toBe('');
+  });
+
+  it('matches the source it was generated from', () => {
+    expect(loadFixture('professional-services')).toEqual(makeProfessionalServicesExample());
+  });
+
+  it('classifies every registry module', () => {
+    expect(decidedModuleKeys(loadFixture('professional-services'))).toEqual(
+      [...MODULE_KEYS].sort(),
+    );
+  });
+
+  it('activates content and credibility but leaves pricing dormant, unlike product or commercial-saas', () => {
+    const services = loadFixture('professional-services').plan;
+    const activated = services?.activated_modules.map((m) => m.key) ?? [];
+    const dormant = services?.dormant_modules.map((m) => m.key) ?? [];
+    expect(activated).toEqual(expect.arrayContaining(['content', 'credibility', 'reputation']));
+    expect(dormant).toEqual(expect.arrayContaining(['pricing']));
   });
 });
 

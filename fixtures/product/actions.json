@@ -1,0 +1,36 @@
+[
+  {
+    "id": "A-0001",
+    "recommendation_id": "R-0001",
+    "description": "Show the existing review count and remove the free-shipping minimum on the product page.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0001",
+        "operation": "edit",
+        "target": "review-count-and-shipping-terms"
+      }
+    ],
+    "effort": "medium",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "The review count and an unconditional free-shipping statement both appear on the product page.",
+    "horizon": "now"
+  },
+  {
+    "id": "A-0002",
+    "recommendation_id": "R-0002",
+    "description": "Move account creation to the payment step and allow guest checkout through the shipping-cost step.",
+    "affected_assets": [
+      {
+        "asset_id": "AST-0002",
+        "operation": "edit",
+        "target": "guest-checkout"
+      }
+    ],
+    "effort": "medium",
+    "dependencies": [],
+    "status": "todo",
+    "validation": "A shipping-cost total can be reached at checkout without an account.",
+    "horizon": "next"
+  }
+]

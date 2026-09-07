@@ -46,7 +46,7 @@ $ clearfelt-review trace reviews/acme/r-20260907-001 S-0001 --reverse
 
 ## Status
 
-Phases 0 through 5 complete. 306 tests.
+Phases 0 through 5 complete, plus a Phase 6 hardening pass. 335 tests.
 
 The deterministic layer: canonical model, id allocation, run lifecycle, stage-gated storage, validation and integrity, priority computation, change tree derivation, coverage, traceability, and four renderers over one shared view.
 
@@ -60,7 +60,7 @@ The reasoning layer: four Claude Code skills under `.claude/skills/`, one per st
 
 **Iteration.** `clearfelt-review init <slug> --previous <run>` carries a previous run's `feedback.json` forward, so a rejected comparison stays rejected the second time. `clearfelt-review diff <run-a> <run-b>` shows what carried forward, what is new, and what quietly disappeared, and it never trusts a matching id as evidence of anything: `ids.ts` allocates fresh within every run, so identity across runs exists only where the newer run explicitly claims it with `supersedes`. Verified by hand against a constructed rerun of the personal-brand fixture: leaving `supersedes` unset made everything read as dropped and replaced, which is the correct, if unforgiving, default. See `docs/decisions/0011-cross-run-identity-is-supersedes-only.md`.
 
-All six phases from the original plan are now built. `docs/ROADMAP.md` records what stays deliberately out of scope and why.
+All six phases from the original plan are now built. **Phase 6, hardening.** All seven archetypes the original plan named now have a fixture: `charity`, `ngo`, `government` and `product` and `professional-services` join `personal-brand` and `commercial-saas`, each activating a module combination none of the others do, checked directly by tests. `ngo` is the one fixture where `scope.comparison_applicable` is false, exercising the explicit no-comparison path rather than an unexplained empty array. `diff.ts` now prints an item-count delta for the evidentiary collections it deliberately does not diff item by item, and flags a close textual match between a still-open feedback item and an unlinked new item as a caution, narrowing without closing the blind spot `docs/decisions/0011-cross-run-identity-is-supersedes-only.md` names. `docs/ROADMAP.md` records what stays deliberately out of scope, and what is narrowed rather than closed, and why.
 
 ## Getting started
 

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "UNK-0001",
+    "statement": "Whether the nutrition programme’s higher reported cost reflects a harder-to-reach population rather than lower relative effectiveness is not established.",
+    "why_unknown": "Neither report breaks down cost by beneficiary sub-population.",
+    "how_to_resolve": "Request a population-segmented cost breakdown from both programme teams before the next allocation cycle.",
+    "blocks_finding_ids": [
+      "F-0001"
+    ]
+  }
+]

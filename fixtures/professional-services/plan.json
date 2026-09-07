@@ -1,0 +1,107 @@
+{
+  "id": "PLAN-0001",
+  "created_at": "2026-09-07T09:00:00.000Z",
+  "objective_interpretation": "The review treats the site as a proof-and-findability decision for a prospect evaluating advisors, not as a general brand review.",
+  "activated_modules": [
+    {
+      "key": "positioning",
+      "reason": "How the firm frames its specialism against comparable firms is a positioning choice.",
+      "research_question_ids": []
+    },
+    {
+      "key": "audience",
+      "reason": "A prospective client and a referral source weigh the same site differently.",
+      "research_question_ids": []
+    },
+    {
+      "key": "messaging",
+      "reason": "The site has to justify why this firm, not just state what it does.",
+      "research_question_ids": []
+    },
+    {
+      "key": "competitive_landscape",
+      "reason": "A prospect choosing an advisor compares this firm against others they could engage.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "offer",
+      "reason": "The advisory service itself, and how its scope is described, is the subject of the enquiry decision.",
+      "research_question_ids": []
+    },
+    {
+      "key": "content",
+      "reason": "Published case studies and articles are how the firm demonstrates expertise before a first call.",
+      "research_question_ids": []
+    },
+    {
+      "key": "credibility",
+      "reason": "A track record and named client outcomes are what a prospect weighs before reaching out.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "discoverability",
+      "reason": "A prospect who does not already know the firm’s name has to be able to find it.",
+      "research_question_ids": [
+        "RQ-0002"
+      ]
+    },
+    {
+      "key": "acquisition",
+      "reason": "The site is what a prospect lands on before ever making contact.",
+      "research_question_ids": []
+    },
+    {
+      "key": "conversion",
+      "reason": "Submitting an enquiry is the action this review exists to increase.",
+      "research_question_ids": []
+    },
+    {
+      "key": "digital_experience",
+      "reason": "The site is a set of web pages.",
+      "research_question_ids": []
+    },
+    {
+      "key": "reputation",
+      "reason": "What referral sources and past clients say publicly bears directly on a prospect’s decision to reach out.",
+      "research_question_ids": []
+    }
+  ],
+  "dormant_modules": [
+    {
+      "key": "market",
+      "reason": "Broader advisory-market trends are not what this quarter’s enquiry decision turns on."
+    },
+    {
+      "key": "pricing",
+      "reason": "Engagement rates are quoted per client, not published, so there is no price to analyse on the site."
+    },
+    {
+      "key": "accessibility",
+      "reason": "No compliance driver was raised for this specific site."
+    },
+    {
+      "key": "trust",
+      "reason": "No security, privacy or compliance concern was raised for this decision."
+    },
+    {
+      "key": "operations",
+      "reason": "Engagement delivery is out of scope for a site-and-enquiry decision."
+    },
+    {
+      "key": "external_environment",
+      "reason": "No regulatory or macro-economic driver bears on this decision."
+    }
+  ],
+  "comparison_plan": {
+    "supplied_count": 0,
+    "to_discover": true,
+    "rationale": "No comparisons were supplied, so the qualified set had to be discovered by specialism."
+  },
+  "anticipated_gaps": [
+    "No analytics access, so where a referred prospect first lands on the site is not directly observable."
+  ]
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "S-0001",
+    "url": "https://fieldward-trust.example/reports/water-annual-report.pdf",
+    "title": "Clean water programme annual report",
+    "publisher": "Fieldward Trust",
+    "source_type": "published_report",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0001.pdf",
+    "content_hash": "n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1n1",
+    "authority": "medium",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0001"
+  },
+  {
+    "id": "S-0002",
+    "url": "https://fieldward-trust.example/reports/nutrition-annual-report.pdf",
+    "title": "Child nutrition programme annual report",
+    "publisher": "Fieldward Trust",
+    "source_type": "published_report",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0002.pdf",
+    "content_hash": "n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2n2",
+    "authority": "medium",
+    "independence": {
+      "type": "same_organisation",
+      "of_source_id": "S-0001"
+    },
+    "entity_id": "ENT-0001"
+  }
+]

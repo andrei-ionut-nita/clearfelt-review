@@ -1,0 +1,31 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "company",
+    "role": "subject",
+    "name": "Waymark Advisory",
+    "description": "A boutique operations advisory firm serving mid-market manufacturers.",
+    "canonical_url": "https://waymark-advisory.example",
+    "industry": "Professional services",
+    "asset_ids": [
+      "AST-0001",
+      "AST-0002"
+    ]
+  },
+  {
+    "id": "ENT-0002",
+    "type": "company",
+    "role": "comparison",
+    "name": "Comparable advisory firm A",
+    "canonical_url": "https://comparable-advisory-a.example",
+    "asset_ids": []
+  },
+  {
+    "id": "ENT-0003",
+    "type": "company",
+    "role": "comparison",
+    "name": "Comparable advisory firm B",
+    "canonical_url": "https://comparable-advisory-b.example",
+    "asset_ids": []
+  }
+]

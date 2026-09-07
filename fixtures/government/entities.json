@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "government_service",
+    "role": "subject",
+    "name": "Parkside Council household repair grant",
+    "description": "A means-tested grant service for essential home repairs.",
+    "canonical_url": "https://parkside-council.example/services/repair-grant",
+    "geography": [
+      "Parkside council area"
+    ],
+    "industry": "Local government",
+    "asset_ids": [
+      "AST-0001",
+      "AST-0002"
+    ]
+  },
+  {
+    "id": "ENT-0002",
+    "type": "government_service",
+    "role": "comparison",
+    "name": "Benchmark council repair grant A",
+    "canonical_url": "https://benchmark-council-a.example/services/repair-grant",
+    "asset_ids": []
+  }
+]

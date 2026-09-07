@@ -1,0 +1,26 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "negative",
+    "statement": "The grant page is not linked from the council’s housing section navigation, only from a general A-Z services index.",
+    "locator": "nav#housing-section",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0002",
+    "observation_type": "positive",
+    "statement": "The benchmark council links its equivalent grant page directly from its housing section navigation.",
+    "locator": "nav#housing",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0003",
+    "source_id": "S-0001",
+    "observation_type": "negative",
+    "statement": "Three of the application form’s input fields have no associated label element.",
+    "locator": "form#apply input:not([aria-label]):not([id])",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "actions": [
+    {
+      "id": "RA-0001",
+      "research_question_id": "RQ-0001",
+      "action": "retrieve",
+      "rationale": "The donation form states its own default directly, so it is the primary source for this question.",
+      "target": "https://riverbank-relief.example/donate",
+      "result_event_ids": [
+        "RE-0001"
+      ]
+    },
+    {
+      "id": "RA-0002",
+      "research_question_id": "RQ-0001",
+      "action": "compare",
+      "rationale": "Both benchmark charities needed their own donation forms retrieved to compare defaults.",
+      "target": "benchmark donation forms",
+      "result_event_ids": [
+        "RE-0002",
+        "RE-0003"
+      ]
+    },
+    {
+      "id": "RA-0003",
+      "research_question_id": "RQ-0002",
+      "action": "inspect",
+      "rationale": "The page order itself answers the question; no external source was needed.",
+      "target": "https://riverbank-relief.example/donate",
+      "result_event_ids": [
+        "RE-0004"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "RE-0001",
+      "action_id": "RA-0001",
+      "outcome": "succeeded",
+      "detail": "Donation page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0002",
+      "action_id": "RA-0002",
+      "outcome": "succeeded",
+      "detail": "Benchmark charity A donation page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0003",
+      "action_id": "RA-0002",
+      "outcome": "succeeded",
+      "detail": "Benchmark charity B donation page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0004",
+      "action_id": "RA-0003",
+      "outcome": "succeeded",
+      "detail": "Page order inspected directly; no retrieval needed.",
+      "at": "2026-09-07T09:00:00.000Z"
+    }
+  ]
+}

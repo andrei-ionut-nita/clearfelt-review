@@ -1,0 +1,36 @@
+[
+  {
+    "id": "R-0001",
+    "title": "Direct next cycle’s marginal funding to the water programme",
+    "problem": "Marginal funding has historically been split evenly between the two programmes regardless of relative cost-effectiveness or capacity.",
+    "why_it_matters": "On the reported figures, the same marginal pound reaches roughly five times as many beneficiaries through the water programme, which also has the capacity to absorb it without new hiring.",
+    "finding_ids": [
+      "F-0001",
+      "F-0002"
+    ],
+    "opportunity_ids": [
+      "O-0001"
+    ],
+    "strategic_rationale": "Combines the lower reported cost per beneficiary with existing unused capacity to absorb the funding.",
+    "recommended_change": "Allocate next cycle’s marginal funding to the water programme rather than splitting it evenly with the nutrition programme.",
+    "expected_outcome": "More beneficiaries reached for the same total marginal spend, without a capacity-building delay.",
+    "impact": "high",
+    "effort": "low",
+    "confidence": "medium",
+    "urgency": "medium",
+    "dependencies": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "measurement": {
+      "kind": "quantitative",
+      "hypothesis": "Reallocating marginal funding to the water programme increases total beneficiaries reached next cycle without increasing total spend.",
+      "success_metric": "Total beneficiaries reached across both programmes, at constant total spend.",
+      "baseline": "Beneficiaries reached under the prior even split.",
+      "target": "An increase in total beneficiaries reached at the same total spend.",
+      "validation_method": "Compare total beneficiaries reached this cycle against the prior cycle’s reported figure.",
+      "falsifier": "Total beneficiaries reached this cycle is flat or lower than the prior cycle despite the reallocation.",
+      "review_period": "One funding cycle"
+    }
+  }
+]

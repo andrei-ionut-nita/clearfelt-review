@@ -1,0 +1,22 @@
+[
+  {
+    "id": "AST-0001",
+    "entity_id": "ENT-0001",
+    "type": "website_page",
+    "path": "/donate",
+    "title": "Donate",
+    "source_ids": [
+      "S-0001"
+    ]
+  },
+  {
+    "id": "AST-0002",
+    "entity_id": "ENT-0001",
+    "type": "website_page",
+    "path": "/",
+    "title": "Homepage",
+    "source_ids": [
+      "S-0001"
+    ]
+  }
+]

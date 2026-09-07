@@ -1,0 +1,12 @@
+[
+  {
+    "id": "ASM-0001",
+    "statement": "The single search-visibility check this run performed is representative of the firm’s visibility across its core specialism terms more broadly.",
+    "why_assumed": "Budget for this run only covered one search term; a fuller check was out of scope.",
+    "status": "unvalidated",
+    "validation_method": "Commission the fuller search-visibility audit recommended in R-0002 and compare its findings against this run’s single result.",
+    "evidence_ids": [
+      "E-0002"
+    ]
+  }
+]

@@ -1,0 +1,56 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Increase completed applications for the household repair grant service.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001",
+    "AST-0002"
+  ],
+  "decision": {
+    "statement": "Which change to the grant service’s digital application would most increase completed applications from eligible residents this year?",
+    "decision_maker": "Head of digital services",
+    "horizon": "One financial year",
+    "evidence_required": [
+      "How findable and accessible the application is compared against benchmark council services",
+      "What trust or policy signals a resident sees before submitting personal information"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "Eligible residents applying without assistance",
+      "priority": 1,
+      "decision_role": "Applicant"
+    },
+    {
+      "name": "Residents using assistive technology to complete the form",
+      "priority": 1,
+      "decision_role": "Applicant"
+    }
+  ],
+  "geography": [
+    "Parkside council area"
+  ],
+  "languages": [
+    "en"
+  ],
+  "channels": [
+    "website"
+  ],
+  "exclusions": [
+    "Phone and in-person applications, which are handled by a separate assisted-digital process"
+  ],
+  "depth": "standard",
+  "comparison_applicable": true,
+  "budget": {
+    "max_sources": 15,
+    "max_search_iterations": 6,
+    "max_depth": 2,
+    "min_evidence_per_question": 1,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": [
+      "RQ-0001"
+    ]
+  }
+}

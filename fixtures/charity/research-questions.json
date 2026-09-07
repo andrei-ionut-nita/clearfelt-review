@@ -1,0 +1,36 @@
+[
+  {
+    "id": "RQ-0001",
+    "question": "How does the donation ask compare against the benchmark charities?",
+    "module": "competitive_landscape",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "Both benchmark charities publish their donation form directly.",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
+    "confidence": "high",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0002",
+    "question": "What proof of impact does a donor see before being asked to give?",
+    "module": "credibility",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "The page order is directly observable without interpretation.",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "confidence": "medium",
+    "priority": 1
+  }
+]

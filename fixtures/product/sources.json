@@ -1,0 +1,50 @@
+[
+  {
+    "id": "S-0001",
+    "url": "https://trailmark-packs.example/products/flagship-pack",
+    "title": "Flagship 40L Pack",
+    "publisher": "Trailmark Packs",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0001.html",
+    "content_hash": "p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1p1",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0001"
+  },
+  {
+    "id": "S-0002",
+    "url": "https://comparable-pack-a.example/products/40l-pack",
+    "title": "40L Pack",
+    "publisher": "Comparable pack brand A",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0002.html",
+    "content_hash": "p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2p2",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0002"
+  },
+  {
+    "id": "S-0003",
+    "url": "https://comparable-pack-b.example/products/40l-pack",
+    "title": "40L Pack",
+    "publisher": "Comparable pack brand B",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0003.html",
+    "content_hash": "p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3p3",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0003"
+  }
+]

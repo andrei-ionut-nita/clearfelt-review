@@ -1,0 +1,35 @@
+[
+  {
+    "id": "RQ-0001",
+    "question": "What does each programme’s own reporting show about cost per beneficiary reached?",
+    "module": "credibility",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "Both programme reports state the figure directly for the same reporting period.",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002"
+    ],
+    "confidence": "medium",
+    "priority": 1
+  },
+  {
+    "id": "RQ-0002",
+    "question": "What operational capacity exists to scale either programme without degrading delivery?",
+    "module": "operations",
+    "state": "ANSWERED",
+    "stop_reason": "sufficient",
+    "stop_detail": "The water programme’s report states current staffing headroom directly.",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "confidence": "medium",
+    "priority": 1
+  }
+]

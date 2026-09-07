@@ -1,0 +1,50 @@
+[
+  {
+    "id": "E-0001",
+    "observation_ids": [
+      "OBS-0001",
+      "OBS-0002",
+      "OBS-0003"
+    ],
+    "source_ids": [
+      "S-0001",
+      "S-0002",
+      "S-0003"
+    ],
+    "claim": "The subject defaults its donation form to one-time while both benchmark charities default to monthly.",
+    "research_question_ids": [
+      "RQ-0001"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [
+      "F-0001"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0002",
+    "observation_ids": [
+      "OBS-0004"
+    ],
+    "source_ids": [
+      "S-0001"
+    ],
+    "claim": "A prospective donor is asked to give before seeing any statement of what the gift funds.",
+    "research_question_ids": [
+      "RQ-0002"
+    ],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [
+      "F-0002"
+    ],
+    "contradicts": [],
+    "temporal_scope": "current"
+  }
+]

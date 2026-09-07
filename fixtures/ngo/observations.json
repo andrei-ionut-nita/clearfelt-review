@@ -1,0 +1,26 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The water programme report states a cost of 42 per beneficiary reached for the last reporting year.",
+    "locator": "section 3, cost table",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0002",
+    "observation_type": "positive",
+    "statement": "The nutrition programme report states a cost of 96 per beneficiary reached for the last reporting year.",
+    "locator": "section 2, cost table",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0003",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The water programme report states current field staff are operating at 70 percent of rated capacity.",
+    "locator": "section 5, staffing",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  }
+]

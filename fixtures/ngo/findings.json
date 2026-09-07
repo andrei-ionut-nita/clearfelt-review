@@ -1,0 +1,38 @@
+[
+  {
+    "id": "F-0001",
+    "category": "credibility",
+    "title": "The water programme reports a substantially lower cost per beneficiary",
+    "statement": "The water programme reaches a beneficiary at roughly a fifth of the nutrition programme’s reported cost for the same reporting period.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "confidence": "medium",
+    "importance": "high",
+    "implication": "Marginal funding directed to the water programme would reach more beneficiaries at the same spend, on the reported figures alone.",
+    "temporal_scope": "historical",
+    "contradicted_by": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "audience_relevance": "An institutional funder comparing cost-effectiveness across programmes weighs this figure directly."
+  },
+  {
+    "id": "F-0002",
+    "category": "operations",
+    "title": "The water programme has unused delivery capacity",
+    "statement": "The water programme has unused staffing capacity that would allow it to scale without new hiring.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "confidence": "medium",
+    "importance": "high",
+    "implication": "Scaling the water programme would not require the lead time or cost of building new operational capacity first.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [],
+    "audience_relevance": "The programme director weighing what can realistically scale this cycle weighs this directly."
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "F-0001",
+    "category": "pricing",
+    "title": "Review count is absent, and free shipping has a minimum, unlike both qualified comparisons",
+    "statement": "The subject shows no visible review count and requires a 100 minimum for free shipping, while both qualified comparisons show review counts in the hundreds or thousands and ship free with no minimum.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0001"
+    ],
+    "confidence": "high",
+    "importance": "high",
+    "implication": "A buyer comparing three packs sees proof and a shipping term on two of them and neither on this one.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [],
+    "audience_relevance": "First-time buyers comparing packs before purchase weigh review count and shipping terms directly."
+  },
+  {
+    "id": "F-0002",
+    "category": "conversion",
+    "title": "Account creation is required before checkout can begin",
+    "statement": "A buyer must create an account before entering a shipping address at checkout.",
+    "claim_type": "derived",
+    "evidence_ids": [
+      "E-0002"
+    ],
+    "confidence": "high",
+    "importance": "medium",
+    "implication": "A buyer who wanted to check the total cost with shipping cannot do so without first creating an account.",
+    "temporal_scope": "current",
+    "contradicted_by": [],
+    "assumption_ids": [
+      "ASM-0001"
+    ],
+    "audience_relevance": "First-time buyers unwilling to commit to an account before seeing the final price are the ones this blocks."
+  }
+]

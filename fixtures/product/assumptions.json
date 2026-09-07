@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ASM-0001",
+    "statement": "Allowing guest checkout through the shipping-cost step will not materially increase abandoned, low-quality orders at payment.",
+    "why_assumed": "No historical guest-checkout data exists for this store to check against.",
+    "status": "unvalidated",
+    "validation_method": "Run guest checkout for one cohort and compare completed-order quality against the existing account-first cohort.",
+    "evidence_ids": []
+  }
+]

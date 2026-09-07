@@ -1,0 +1,9 @@
+[
+  {
+    "id": "UNK-0001",
+    "statement": "Whether donors who would have given one-time simply abandon the form when monthly is the default is not established.",
+    "why_unknown": "No analytics access; only the current form default is observable from outside.",
+    "how_to_resolve": "Instrument the form and compare abandonment before and after the default change.",
+    "blocks_finding_ids": []
+  }
+]

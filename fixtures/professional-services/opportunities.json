@@ -1,0 +1,34 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Named outcomes are proof this firm has and has not yet published",
+    "description": "Both qualified comparisons already publish named client outcomes. Publishing the firm’s own, which exist internally but are not yet on the site, closes a proof gap the comparison set makes visible.",
+    "supporting_finding_ids": [
+      "F-0001"
+    ],
+    "supporting_evidence_ids": [
+      "E-0001"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "medium",
+    "white_space": {
+      "territory": "Named client outcomes with measured results",
+      "current_position": "low"
+    }
+  },
+  {
+    "id": "O-0002",
+    "title": "Improving search visibility reaches prospects with no referral relationship",
+    "description": "A prospect searching cold for this specialism currently has to find the firm some other way; appearing on the first page opens a channel referral alone does not cover.",
+    "supporting_finding_ids": [
+      "F-0002"
+    ],
+    "supporting_evidence_ids": [
+      "E-0002"
+    ],
+    "strategic_value": "medium",
+    "audience_value": "medium",
+    "confidence": "low"
+  }
+]

@@ -1,0 +1,108 @@
+{
+  "id": "PLAN-0001",
+  "created_at": "2026-09-07T09:00:00.000Z",
+  "objective_interpretation": "The review treats the product page and checkout as a purchase-conversion decision for a comparison-shopping buyer, not as a general brand review.",
+  "activated_modules": [
+    {
+      "key": "positioning",
+      "reason": "How the pack is framed against comparable packs is itself a positioning choice.",
+      "research_question_ids": []
+    },
+    {
+      "key": "audience",
+      "reason": "A first-time buyer and a returning customer weigh the same page differently.",
+      "research_question_ids": []
+    },
+    {
+      "key": "messaging",
+      "reason": "The product page has to justify the price, not just state it.",
+      "research_question_ids": []
+    },
+    {
+      "key": "competitive_landscape",
+      "reason": "Price and shipping terms only read as a choice against what comparable packs offer.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "offer",
+      "reason": "The pack itself, and what is included with it, is the subject of the purchase decision.",
+      "research_question_ids": []
+    },
+    {
+      "key": "pricing",
+      "reason": "The decision is explicitly about purchase conversion at the current price.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "acquisition",
+      "reason": "The product page is what a comparison-shopping visitor lands on before purchase.",
+      "research_question_ids": []
+    },
+    {
+      "key": "conversion",
+      "reason": "Checkout friction is the second half of the stated decision.",
+      "research_question_ids": [
+        "RQ-0002"
+      ]
+    },
+    {
+      "key": "digital_experience",
+      "reason": "The product page and checkout are both web pages.",
+      "research_question_ids": []
+    },
+    {
+      "key": "operations",
+      "reason": "Shipping cost and delivery time are part of what a buyer weighs before purchase.",
+      "research_question_ids": [
+        "RQ-0001"
+      ]
+    },
+    {
+      "key": "reputation",
+      "reason": "Published reviews are a visible input to a comparison-shopping buyer’s decision.",
+      "research_question_ids": []
+    }
+  ],
+  "dormant_modules": [
+    {
+      "key": "market",
+      "reason": "Broader outdoor-gear market trends are not what this quarter’s conversion decision turns on."
+    },
+    {
+      "key": "content",
+      "reason": "No blog or writing corpus bears on a single product page decision."
+    },
+    {
+      "key": "credibility",
+      "reason": "Reputation, not credibility, covers third-party proof for this decision; no separate case-study or endorsement signal was raised."
+    },
+    {
+      "key": "accessibility",
+      "reason": "No compliance driver was raised for this specific page."
+    },
+    {
+      "key": "discoverability",
+      "reason": "The decision concerns visitors who already arrived at the product page, not being found."
+    },
+    {
+      "key": "trust",
+      "reason": "No security, privacy or compliance concern was raised for this purchase flow."
+    },
+    {
+      "key": "external_environment",
+      "reason": "No regulatory or macro-economic driver bears on this decision."
+    }
+  ],
+  "comparison_plan": {
+    "supplied_count": 0,
+    "to_discover": true,
+    "rationale": "No comparisons were supplied, so the qualified set had to be discovered by category."
+  },
+  "anticipated_gaps": [
+    "No analytics access, so the actual checkout drop-off step cannot be observed directly."
+  ]
+}

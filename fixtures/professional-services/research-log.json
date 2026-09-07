@@ -1,0 +1,65 @@
+{
+  "actions": [
+    {
+      "id": "RA-0001",
+      "research_question_id": "RQ-0001",
+      "action": "retrieve",
+      "rationale": "The client work page states what proof exists directly, so it is the primary source for this question.",
+      "target": "https://waymark-advisory.example/work",
+      "result_event_ids": [
+        "RE-0001"
+      ]
+    },
+    {
+      "id": "RA-0002",
+      "research_question_id": "RQ-0001",
+      "action": "compare",
+      "rationale": "Both qualified comparisons needed their own proof pages retrieved to compare what they publish.",
+      "target": "qualified comparison case-study pages",
+      "result_event_ids": [
+        "RE-0002",
+        "RE-0003"
+      ]
+    },
+    {
+      "id": "RA-0003",
+      "research_question_id": "RQ-0002",
+      "action": "search",
+      "rationale": "A direct search for the firm’s specialism and region is the most direct way to check first-page visibility.",
+      "target": "search results for the firm’s core specialism and region",
+      "result_event_ids": [
+        "RE-0004"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "RE-0001",
+      "action_id": "RA-0001",
+      "outcome": "succeeded",
+      "detail": "Client work page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0002",
+      "action_id": "RA-0002",
+      "outcome": "succeeded",
+      "detail": "Comparable firm A case-studies page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0003",
+      "action_id": "RA-0002",
+      "outcome": "succeeded",
+      "detail": "Comparable firm B results page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0004",
+      "action_id": "RA-0003",
+      "outcome": "insufficient",
+      "detail": "One search term checked; budget exhausted before a fuller sweep could run.",
+      "at": "2026-09-07T09:00:00.000Z"
+    }
+  ]
+}

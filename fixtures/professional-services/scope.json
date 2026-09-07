@@ -1,0 +1,56 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Increase qualified inbound enquiries for the advisory service.",
+  "entity_ids": [
+    "ENT-0001"
+  ],
+  "asset_ids": [
+    "AST-0001",
+    "AST-0002"
+  ],
+  "decision": {
+    "statement": "Which change to the site’s proof and enquiry path would most increase qualified inbound enquiries this quarter?",
+    "decision_maker": "Managing partner",
+    "horizon": "One quarter",
+    "evidence_required": [
+      "How the firm’s stated track record compares against the qualified comparison set",
+      "How findable the firm is for a prospect who does not already know its name"
+    ]
+  },
+  "audiences": [
+    {
+      "name": "Prospective clients evaluating advisors before a first call",
+      "priority": 1,
+      "decision_role": "Buyer"
+    },
+    {
+      "name": "Referral sources deciding whether to recommend the firm",
+      "priority": 2,
+      "decision_role": "Referrer"
+    }
+  ],
+  "geography": [
+    "United States"
+  ],
+  "languages": [
+    "en"
+  ],
+  "channels": [
+    "website"
+  ],
+  "exclusions": [
+    "Existing client relationships, which are managed directly rather than through the site"
+  ],
+  "depth": "standard",
+  "comparison_applicable": true,
+  "budget": {
+    "max_sources": 15,
+    "max_search_iterations": 6,
+    "max_depth": 2,
+    "min_evidence_per_question": 1,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": [
+      "RQ-0001"
+    ]
+  }
+}

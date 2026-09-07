@@ -1,0 +1,34 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Free shipping with no minimum is occupied territory this page does not yet claim",
+    "description": "Both qualified comparisons already ship free with no minimum and display review counts prominently. Matching both closes a visible gap in the same comparison a buyer is already making.",
+    "supporting_finding_ids": [
+      "F-0001"
+    ],
+    "supporting_evidence_ids": [
+      "E-0001"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "medium",
+    "white_space": {
+      "territory": "Free shipping with no minimum",
+      "current_position": "low"
+    }
+  },
+  {
+    "id": "O-0002",
+    "title": "Guest checkout removes a commitment step before the buyer sees total cost",
+    "description": "Letting a buyer reach the shipping-cost total before being asked to create an account removes a reason to abandon before ever seeing the final price.",
+    "supporting_finding_ids": [
+      "F-0002"
+    ],
+    "supporting_evidence_ids": [
+      "E-0002"
+    ],
+    "strategic_value": "medium",
+    "audience_value": "medium",
+    "confidence": "medium"
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "actions": [
+    {
+      "id": "RA-0001",
+      "research_question_id": "RQ-0001",
+      "action": "compare",
+      "rationale": "Navigation placement is directly observable on both the subject and the benchmark council’s site.",
+      "target": "housing section navigation, subject and benchmark",
+      "result_event_ids": [
+        "RE-0001",
+        "RE-0002"
+      ]
+    },
+    {
+      "id": "RA-0002",
+      "research_question_id": "RQ-0002",
+      "action": "inspect",
+      "rationale": "Field labelling is directly inspectable in the page markup; no external source was needed.",
+      "target": "https://parkside-council.example/services/repair-grant/apply",
+      "result_event_ids": [
+        "RE-0003"
+      ]
+    },
+    {
+      "id": "RA-0003",
+      "research_question_id": "RQ-0003",
+      "action": "search",
+      "rationale": "Checked for existing resident feedback or user testing data on the financial-information step before concluding none exists.",
+      "target": "internal research repository",
+      "result_event_ids": [
+        "RE-0004"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "RE-0001",
+      "action_id": "RA-0001",
+      "outcome": "succeeded",
+      "detail": "Subject page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0002",
+      "action_id": "RA-0001",
+      "outcome": "succeeded",
+      "detail": "Benchmark council page retrieved and snapshotted.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0003",
+      "action_id": "RA-0002",
+      "outcome": "succeeded",
+      "detail": "Form markup inspected directly; no retrieval needed.",
+      "at": "2026-09-07T09:00:00.000Z"
+    },
+    {
+      "id": "RE-0004",
+      "action_id": "RA-0003",
+      "outcome": "insufficient",
+      "detail": "No user testing or resident feedback data exists on this specific step.",
+      "at": "2026-09-07T09:00:00.000Z"
+    }
+  ]
+}

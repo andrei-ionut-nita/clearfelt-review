@@ -1,0 +1,34 @@
+[
+  {
+    "id": "S-0001",
+    "url": "https://parkside-council.example/services/repair-grant",
+    "title": "Household repair grant",
+    "publisher": "Parkside Council",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0001.html",
+    "content_hash": "g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1g1",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0001"
+  },
+  {
+    "id": "S-0002",
+    "url": "https://benchmark-council-a.example/services/repair-grant",
+    "title": "Repair grant",
+    "publisher": "Benchmark council A",
+    "source_type": "website",
+    "accessed_at": "2026-09-07T09:00:00.000Z",
+    "retrieval_method": "fetch",
+    "snapshot_path": "snapshots/S-0002.html",
+    "content_hash": "g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2g2",
+    "authority": "high",
+    "independence": {
+      "type": "independent"
+    },
+    "entity_id": "ENT-0002"
+  }
+]

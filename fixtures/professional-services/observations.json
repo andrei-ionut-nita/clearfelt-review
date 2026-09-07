@@ -1,0 +1,44 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "absence",
+    "statement": "No named client or measured outcome appears on the client work page after checking /work, /about and /contact.",
+    "search_scope": [
+      "/work",
+      "/about",
+      "/contact"
+    ],
+    "scanned_source_ids": [
+      "S-0001",
+      "S-0004",
+      "S-0005"
+    ],
+    "locator": "main#client-work",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0002",
+    "observation_type": "positive",
+    "statement": "Comparable firm A names three clients and states a measured percentage improvement for each.",
+    "locator": "section.case-studies",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0003",
+    "source_id": "S-0003",
+    "observation_type": "positive",
+    "statement": "Comparable firm B names two clients and states a measured outcome for each.",
+    "locator": "section.results",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0004",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "A direct search for the firm’s specialism and region returns the firm’s homepage on the second results page, not the first.",
+    "locator": "search results, position 14",
+    "observed_at": "2026-09-07T09:00:00.000Z"
+  }
+]

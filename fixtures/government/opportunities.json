@@ -1,0 +1,34 @@
+[
+  {
+    "id": "O-0001",
+    "title": "Section navigation is an unoccupied route to the grant page",
+    "description": "Linking the grant from the housing section navigation, as the benchmark council already does, closes a findability gap the comparison set makes visible.",
+    "supporting_finding_ids": [
+      "F-0001"
+    ],
+    "supporting_evidence_ids": [
+      "E-0001"
+    ],
+    "strategic_value": "medium",
+    "audience_value": "high",
+    "confidence": "medium",
+    "white_space": {
+      "territory": "Repair grant reachable from housing navigation",
+      "current_position": "low"
+    }
+  },
+  {
+    "id": "O-0002",
+    "title": "Labelling the three fields removes a hard block for assistive-technology users",
+    "description": "Adding accessible labels is a small, mechanical fix that removes a barrier rather than merely reducing it.",
+    "supporting_finding_ids": [
+      "F-0002"
+    ],
+    "supporting_evidence_ids": [
+      "E-0002"
+    ],
+    "strategic_value": "high",
+    "audience_value": "high",
+    "confidence": "high"
+  }
+]

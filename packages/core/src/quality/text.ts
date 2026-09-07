@@ -232,6 +232,20 @@ export const GENERIC_PHRASES: readonly string[] = [
   'enhance the user experience',
   'improve seo',
   'raise brand awareness',
+  // Widened in Phase 6 by adding the consultant-theatre phrases the original
+  // list happened not to cover, rather than raising a threshold: the same
+  // calibration method as Phase 2, applied without a fresh real run to check
+  // against, so this list is the part most worth widening again next time one
+  // is available.
+  'unlock synergies',
+  'move the needle',
+  'best in class',
+  'drive growth',
+  'low hanging fruit',
+  'unlock the full potential',
+  'maximise value',
+  'maximize value',
+  'take it to the next level',
 ] as const;
 
 /** Generic phrases present in a piece of text, normalised for matching. */

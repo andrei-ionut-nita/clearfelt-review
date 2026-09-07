@@ -2,6 +2,11 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { COLLECTIONS, type Review } from '../model/index.ts';
 import { ADVERSARIAL_CASES } from './adversarial.ts';
+import { makeCharityExample } from './worked-example-charity.ts';
+import { makeGovernmentExample } from './worked-example-government.ts';
+import { makeNgoExample } from './worked-example-ngo.ts';
+import { makeProductExample } from './worked-example-product.ts';
+import { makeProfessionalServicesExample } from './worked-example-professional-services.ts';
 import { makeCommercialSaasExample } from './worked-example-saas.ts';
 import { makeWorkedExample } from './worked-example.ts';
 
@@ -38,6 +43,26 @@ export async function writeFixtures(root: string = ROOT): Promise<string[]> {
   const commercialSaas = join(root, 'commercial-saas');
   await writeReview(commercialSaas, makeCommercialSaasExample());
   written.push(commercialSaas);
+
+  const charity = join(root, 'charity');
+  await writeReview(charity, makeCharityExample());
+  written.push(charity);
+
+  const ngo = join(root, 'ngo');
+  await writeReview(ngo, makeNgoExample());
+  written.push(ngo);
+
+  const government = join(root, 'government');
+  await writeReview(government, makeGovernmentExample());
+  written.push(government);
+
+  const product = join(root, 'product');
+  await writeReview(product, makeProductExample());
+  written.push(product);
+
+  const professionalServices = join(root, 'professional-services');
+  await writeReview(professionalServices, makeProfessionalServicesExample());
+  written.push(professionalServices);
 
   for (const testCase of ADVERSARIAL_CASES) {
     const dir = join(root, 'adversarial', testCase.name);

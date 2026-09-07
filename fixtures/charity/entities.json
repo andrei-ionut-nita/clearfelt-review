@@ -1,0 +1,31 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "charity",
+    "role": "subject",
+    "name": "Riverbank Relief",
+    "description": "A regional charity funding emergency food and shelter support.",
+    "canonical_url": "https://riverbank-relief.example",
+    "industry": "Charity",
+    "asset_ids": [
+      "AST-0001",
+      "AST-0002"
+    ]
+  },
+  {
+    "id": "ENT-0002",
+    "type": "charity",
+    "role": "comparison",
+    "name": "Benchmark relief charity A",
+    "canonical_url": "https://benchmark-relief-a.example",
+    "asset_ids": []
+  },
+  {
+    "id": "ENT-0003",
+    "type": "charity",
+    "role": "comparison",
+    "name": "Benchmark relief charity B",
+    "canonical_url": "https://benchmark-relief-b.example",
+    "asset_ids": []
+  }
+]

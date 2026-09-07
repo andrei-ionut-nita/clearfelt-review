@@ -1,4 +1,5 @@
 import type { Review } from './model/index.ts';
+import { similarity } from './quality/text.ts';
 
 /**
  * What changed between two runs of the same subject: specification section
@@ -31,6 +32,21 @@ const DIFFABLE_COLLECTIONS = [
 ] as const;
 
 type DiffableCollection = (typeof DIFFABLE_COLLECTIONS)[number];
+
+/**
+ * The collections diffCollection deliberately does not diff, per the module
+ * comment above. A full item-by-item diff of these would be near-100% churn
+ * on every rerun; a one-line count per collection answers "did the evidence
+ * base move at all" without that noise. Added in Phase 6.
+ */
+const EVIDENTIARY_COLLECTIONS = [
+  'sources',
+  'observations',
+  'evidence',
+  'research_questions',
+] as const;
+
+type EvidentiaryCollection = (typeof EVIDENTIARY_COLLECTIONS)[number];
 
 interface Versioned {
   id: string;
@@ -70,14 +86,40 @@ export interface CollectionDiff {
   broken_links: { b_id: string; claims_to_supersede: string }[];
 }
 
+export interface EvidenceBaseCount {
+  collection: EvidentiaryCollection;
+  a_count: number;
+  b_count: number;
+}
+
+export interface FeedbackPossibleMatch {
+  feedback_id: string;
+  target_id: string;
+  candidate_id: string;
+  candidate_label: string;
+  similarity: number;
+}
+
 export interface DiffReport {
   a: { run_id: string; slug: string };
   b: { run_id: string; slug: string };
   /** True when b.run.previous_run_id does not point at a, which does not stop the diff but is worth saying. */
   unrelated_runs: boolean;
   collections: CollectionDiff[];
+  /** Item counts for the excluded evidentiary collections, per collection, added in Phase 6. */
+  evidence_base: EvidenceBaseCount[];
   /** Feedback ids from A whose correction is not visible as a supersedes link, a broken link, or a dropped item explained some other way. */
   feedback_still_open: { id: string; target_id: string; type: string; reason?: string }[];
+  /**
+   * A caution, not a claim: a still-open feedback item's target has a label
+   * closely matching some unlinked new item in B. ADR 0011 rules out same-id
+   * matching as identity, and this does not reopen that: it never marks
+   * anything carried or resolves feedback_still_open, it only surfaces a
+   * candidate worth a human glance. Added in Phase 6 to narrow, not close,
+   * the blind spot the ADR names: a re-proposed-and-rejected candidate under
+   * a fresh id looks identical to a genuinely new one without this.
+   */
+  feedback_possible_matches: FeedbackPossibleMatch[];
 }
 
 function diffCollection(collection: DiffableCollection, a: Review, b: Review): CollectionDiff {
@@ -120,6 +162,45 @@ function diffCollection(collection: DiffableCollection, a: Review, b: Review): C
   };
 }
 
+/** Where a feedback target's label lives, searched across every diffable collection in A. */
+function findLabelInA(a: Review, targetId: string): string | undefined {
+  for (const c of DIFFABLE_COLLECTIONS) {
+    const items = a[c] as unknown as Record<string, unknown>[];
+    const match = items.find((item) => item.id === targetId);
+    if (match) return labelFor(match);
+  }
+  return undefined;
+}
+
+/** A caution threshold, not an identity threshold: identity is supersedes-only, per ADR 0011. */
+const POSSIBLE_MATCH_THRESHOLD = 0.4;
+
+function findFeedbackPossibleMatches(
+  a: Review,
+  collections: CollectionDiff[],
+  feedbackStillOpen: { id: string; target_id: string; type: string }[],
+): FeedbackPossibleMatch[] {
+  const unlinkedCandidates = collections.flatMap((c) => c.new_in_b);
+  const matches: FeedbackPossibleMatch[] = [];
+  for (const fb of feedbackStillOpen) {
+    const targetLabel = findLabelInA(a, fb.target_id);
+    if (!targetLabel) continue;
+    for (const candidate of unlinkedCandidates) {
+      const score = similarity(targetLabel, candidate.label);
+      if (score >= POSSIBLE_MATCH_THRESHOLD) {
+        matches.push({
+          feedback_id: fb.id,
+          target_id: fb.target_id,
+          candidate_id: candidate.id,
+          candidate_label: candidate.label,
+          similarity: score,
+        });
+      }
+    }
+  }
+  return matches;
+}
+
 export function diffReviews(a: Review, b: Review): DiffReport {
   const collections = DIFFABLE_COLLECTIONS.map((c) => diffCollection(c, a, b));
 
@@ -132,12 +213,20 @@ export function diffReviews(a: Review, b: Review): DiffReport {
     .filter((fb) => fb.type !== 'accept' && !carriedTargets.has(fb.target_id))
     .map((fb) => ({ id: fb.id, target_id: fb.target_id, type: fb.type, reason: fb.reason }));
 
+  const evidenceBase = EVIDENTIARY_COLLECTIONS.map((collection) => ({
+    collection,
+    a_count: (a[collection] as unknown[]).length,
+    b_count: (b[collection] as unknown[]).length,
+  }));
+
   return {
     a: { run_id: a.run.id, slug: a.run.slug },
     b: { run_id: b.run.id, slug: b.run.slug },
     unrelated_runs: b.run.previous_run_id !== a.run.id,
     collections,
+    evidence_base: evidenceBase,
     feedback_still_open: feedbackStillOpen,
+    feedback_possible_matches: findFeedbackPossibleMatches(a, collections, feedbackStillOpen),
   };
 }
 
@@ -175,10 +264,30 @@ export function renderDiffAscii(report: DiffReport): string {
   }
   if (!anySection) out.push('No differences in the diffable collections.');
 
+  out.push(
+    'Evidence base (not diffed item by item; see docs/decisions/0011-cross-run-identity-is-supersedes-only.md):',
+  );
+  for (const e of report.evidence_base) {
+    out.push(`  ${e.collection}  ${e.a_count} -> ${e.b_count}`);
+  }
+  out.push('');
+
   if (report.feedback_still_open.length > 0) {
     out.push('Feedback from run A not visibly acted on in run B:');
     for (const fb of report.feedback_still_open) {
       out.push(`  ${fb.id}  ${fb.type} on ${fb.target_id}${fb.reason ? `: ${fb.reason}` : ''}`);
+    }
+    out.push('');
+  }
+
+  if (report.feedback_possible_matches.length > 0) {
+    out.push(
+      'Possibly related, unlinked (a caution, not a match: link with supersedes to confirm or dismiss by leaving it unlinked):',
+    );
+    for (const m of report.feedback_possible_matches) {
+      out.push(
+        `  ${m.feedback_id} on ${m.target_id}  ~  ${m.candidate_id}  ${m.candidate_label}  (similarity ${m.similarity.toFixed(2)})`,
+      );
     }
     out.push('');
   }
