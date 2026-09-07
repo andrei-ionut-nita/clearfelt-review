@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-07
+
+All six phases from the original plan, plus a Phase 6 hardening pass. First tagged release.
+
 ### Added
 
 - **Canonical intelligence model** (`packages/core/src/model/`). Eighteen collections covering the chain from source through observation, evidence, finding, opportunity and recommendation to action, plus scope, entities, assets, user assertions, comparisons, assumptions, unknowns, hypotheses, feedback and the research ledger. `COLLECTIONS` in `model/index.ts` is the single registry that storage, id allocation, lifecycle and integrity all key off, so no module keeps its own list of filenames to fall out of sync with.
