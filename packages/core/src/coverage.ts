@@ -19,7 +19,7 @@ export interface ModuleCoverage {
   source_count: number;
   independent_source_count: number;
   /** Questions closed without an answer, which is a gap and not a silence. */
-  unresolved: { id: string; question: string; stop_reason?: StopReason }[];
+  unresolved: { id: string; question: string; stop_reason?: StopReason; stop_detail?: string }[];
   confidence: Level | 'none';
 }
 
@@ -108,6 +108,9 @@ export function computeCoverage(review: Review): CoverageReport {
         id: question.id,
         question: question.question,
         stop_reason: question.stop_reason,
+        // The detail is what turns "insufficient evidence" from a label into
+        // something a reader can act on or disagree with.
+        stop_detail: question.stop_detail,
       });
     }
   }

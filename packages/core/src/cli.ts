@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { existsSync } from 'node:fs';
+import { writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { buildChangeTree, renderChangeTreeAscii } from './change-tree.ts';
 import { computeCoverage } from './coverage.ts';
@@ -7,6 +8,10 @@ import { assertTransition, gateForStage, stageForGate } from './lifecycle.ts';
 import { GATE_NAMES, REVIEW_DEPTHS, RUN_STAGES } from './model/index.ts';
 import type { GateName, ReviewDepth, RunStage } from './model/index.ts';
 import { prioritise } from './prioritise.ts';
+import { renderBrief } from './render/brief.ts';
+import { renderJson } from './render/json.ts';
+import { renderPlan } from './render/plan.ts';
+import { buildView } from './render/view.ts';
 import {
   initRun,
   listRuns,
@@ -39,6 +44,7 @@ const USAGE = [
   '  clearfelt-review prioritise <run>             computed P0..P3 with reasoning',
   '  clearfelt-review change-tree <run> [--json]   derived from actions and assets',
   '  clearfelt-review trace <run> <id> [--reverse] why does this exist?',
+  '  clearfelt-review render <run> --format brief|plan|json [--out <path>]',
   '',
   'A <run> is a path to a run directory, for example reviews/acme/r-20260907-001.',
 ].join('\n');
@@ -177,6 +183,7 @@ async function coverageCommand(args: string[]): Promise<void> {
       console.log(
         `    unresolved ${item.id}: ${item.question} [${item.stop_reason ?? 'no reason recorded'}]`,
       );
+      if (item.stop_detail) console.log(`      ${item.stop_detail}`);
     }
   }
   console.log('');
@@ -235,6 +242,39 @@ async function traceCommand(args: string[]): Promise<void> {
   console.log(renderTraceAscii(trace(review, id, direction)));
 }
 
+const RENDERERS = {
+  brief: renderBrief,
+  plan: renderPlan,
+  json: renderJson,
+} as const;
+
+type Format = keyof typeof RENDERERS;
+
+async function renderCommand(args: string[]): Promise<void> {
+  const dir = requireRunDir(args[0]);
+  const format = (flagValue(args, '--format') ?? 'brief') as Format;
+  if (!(format in RENDERERS)) {
+    fail(`--format must be one of: ${Object.keys(RENDERERS).join(', ')}`);
+  }
+  const review = await loadReview(dir);
+  // Nothing renders from an invalid run. A report built on a broken model
+  // would carry traceability that silently does not resolve, which is worse
+  // than no report: it looks checkable and is not.
+  const validation = validateReview(review);
+  if (!validation.ok) {
+    console.error(formatIssues(validation.errors));
+    fail(`\nRefusing to render: the run has ${validation.errors.length} validation error(s).`);
+  }
+  const output = RENDERERS[format](buildView(review));
+  const out = flagValue(args, '--out');
+  if (out) {
+    await writeFile(resolve(out), output, 'utf8');
+    console.log(resolve(out));
+    return;
+  }
+  process.stdout.write(output);
+}
+
 async function main(): Promise<void> {
   const [command, ...rest] = process.argv.slice(2);
   switch (command) {
@@ -261,6 +301,9 @@ async function main(): Promise<void> {
       break;
     case 'trace':
       await traceCommand(rest);
+      break;
+    case 'render':
+      await renderCommand(rest);
       break;
     default:
       console.log(USAGE);
