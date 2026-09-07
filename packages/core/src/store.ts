@@ -53,7 +53,12 @@ export function emptyReview(run: ReviewRun): Review {
   };
 }
 
-export function newRun(slug: string, runId: string, now: string): ReviewRun {
+export function newRun(
+  slug: string,
+  runId: string,
+  now: string,
+  previousRunId?: string,
+): ReviewRun {
   return {
     id: runId,
     slug,
@@ -61,6 +66,7 @@ export function newRun(slug: string, runId: string, now: string): ReviewRun {
     updated_at: now,
     stage: 'initialized',
     approved_gates: {},
+    ...(previousRunId ? { previous_run_id: previousRunId } : {}),
     observability: {
       started_at: now,
       sources_discovered: 0,
@@ -171,6 +177,24 @@ export async function initRun(dir: string, run: ReviewRun): Promise<void> {
     if (spec.key === 'run') continue;
     await writeJsonAtomic(join(dir, spec.file), defaultFor(spec));
   }
+}
+
+/**
+ * Copies a previous run's corrections into a freshly initialised one.
+ *
+ * feedback.json is append-only and carried into a rerun by design, so
+ * "COMP-004 is not actually a competitor" stays true the second time. The
+ * ids in the copy still name entities from the old run, which is fine: this
+ * is a lookaside list for the reasoning layer to check candidates against by
+ * name before re-proposing something already rejected, not a set of live
+ * references the new run's validator resolves. Returns how many entries were
+ * carried, so the caller can tell a real user there is something to read.
+ */
+export async function carryForwardFeedback(previousDir: string, dir: string): Promise<number> {
+  const previous = await readJsonIfPresent<unknown[]>(join(previousDir, 'feedback.json'));
+  if (!previous || previous.length === 0) return 0;
+  await writeJsonAtomic(join(dir, 'feedback.json'), previous);
+  return previous.length;
 }
 
 export function hashContent(content: string | Buffer): string {

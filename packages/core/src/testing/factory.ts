@@ -5,6 +5,7 @@ import type {
   Comparison,
   Entity,
   Evidence,
+  Feedback,
   Finding,
   Observation,
   Opportunity,
@@ -166,6 +167,17 @@ export function makeUserAssertion(over: Partial<UserAssertion> = {}): UserAssert
     research_question_ids: [],
     evidence_ids: [],
     created_at: NOW,
+    ...over,
+  };
+}
+
+export function makeFeedback(over: Partial<Feedback> = {}): Feedback {
+  return {
+    id: 'FB-0001',
+    target_id: 'COMP-0001',
+    type: 'reject',
+    reason: 'Not actually a competitor for this decision.',
+    at: NOW,
     ...over,
   };
 }

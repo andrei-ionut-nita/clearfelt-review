@@ -46,7 +46,7 @@ $ clearfelt-review trace reviews/acme/r-20260907-001 S-0001 --reverse
 
 ## Status
 
-Phases 0 through 4 complete. 293 tests.
+Phases 0 through 5 complete. 306 tests.
 
 The deterministic layer: canonical model, id allocation, run lifecycle, stage-gated storage, validation and integrity, priority computation, change tree derivation, coverage, traceability, and four renderers over one shared view.
 
@@ -58,7 +58,9 @@ The reasoning layer: four Claude Code skills under `.claude/skills/`, one per st
 
 **Generalisation, checked rather than assumed.** `modules/registry.ts` did not exist before Phase 4; module selection was a free-form key and reason the reasoning layer wrote from nothing. It is now eighteen predicates over signals derived from the objective, decision, audience text and captured assets, never from `Entity.type`. `validate` now rejects a plan that leaves any registry module undecided, uses an unknown key, or lists one as both activated and dormant. A second fixture, `fixtures/commercial-saas`, proves the registry actually adapts: it activates `pricing`, `offer` and `acquisition` where the personal-brand fixture leaves them dormant, and vice versa for `content`, `credibility` and `discoverability`, checked directly by a test rather than asserted in prose. `invariant-19.test.ts` greps production source for the entity-type branch the whole design exists to forbid. See `docs/decisions/0010-signal-based-module-activation.md`.
 
-Phase 5 next: iteration, diffing a run against its predecessor.
+**Iteration.** `clearfelt-review init <slug> --previous <run>` carries a previous run's `feedback.json` forward, so a rejected comparison stays rejected the second time. `clearfelt-review diff <run-a> <run-b>` shows what carried forward, what is new, and what quietly disappeared, and it never trusts a matching id as evidence of anything: `ids.ts` allocates fresh within every run, so identity across runs exists only where the newer run explicitly claims it with `supersedes`. Verified by hand against a constructed rerun of the personal-brand fixture: leaving `supersedes` unset made everything read as dropped and replaced, which is the correct, if unforgiving, default. See `docs/decisions/0011-cross-run-identity-is-supersedes-only.md`.
+
+All six phases from the original plan are now built. `docs/ROADMAP.md` records what stays deliberately out of scope and why.
 
 ## Getting started
 
@@ -73,7 +75,7 @@ node packages/core/dist/cli.js init acme
 ## Commands
 
 ```
-clearfelt-review init <slug> [--depth quick|standard|deep] [--root <dir>]
+clearfelt-review init <slug> [--depth quick|standard|deep] [--root <dir>] [--previous <run>]
 clearfelt-review stage <run> <stage>
 clearfelt-review approve <run> scope|research-plan|findings
 clearfelt-review validate <run>
@@ -84,6 +86,7 @@ clearfelt-review prioritise <run>
 clearfelt-review change-tree <run> [--json]
 clearfelt-review trace <run> <id> [--reverse]
 clearfelt-review render <run> --format brief|plan|html|json [--out <path>]
+clearfelt-review diff <run-a> <run-b>
 ```
 
 ## Documentation

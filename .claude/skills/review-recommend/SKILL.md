@@ -19,6 +19,8 @@ The four dimensions are independent. `confidence` here is confidence that this a
 
 `assumption_ids` must list any unvalidated assumption the recommendation depends on. Every renderer surfaces these, so a reader can see that a confident-looking recommendation rests on something nobody checked.
 
+On a rerun, set `supersedes` naming the previous run's recommendation id whenever this one continues, revises or closes it out, including when the honest content is "this was implemented, here is what the evidence in this run says about whether it worked." `clearfelt-review diff` cannot tell a genuinely closed loop from a silently dropped recommendation any other way: without `supersedes`, the earlier recommendation just reads as abandoned.
+
 ## Measurement, and the falsifier
 
 Every recommendation carries a `measurement` block. The field that matters most is `falsifier`: what result would show this recommendation was wrong.
@@ -99,6 +101,14 @@ clearfelt-review trace <run> S-0001 --reverse
 ```
 
 If a recommendation cannot be walked back to a real source, the pipeline is incomplete for that recommendation, whatever the report looks like. Fix it before handing over.
+
+## If this is a rerun
+
+```bash
+clearfelt-review diff <previous-run> <this-run>
+```
+
+Read the "dropped" section of every collection before handing over. Anything there either genuinely disappeared and that is worth a sentence in the brief, or it should have carried a `supersedes` link and does not yet. Read "Feedback from run A not visibly acted on" too: it names corrections the previous run recorded that this run has not visibly addressed.
 
 ## Rules
 

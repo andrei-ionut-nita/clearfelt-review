@@ -10,10 +10,12 @@ Turn a request into a scoped, gated research plan. Nothing is researched until t
 ## Before anything
 
 ```bash
-clearfelt-review init <slug> [--depth quick|standard|deep]
+clearfelt-review init <slug> [--depth quick|standard|deep] [--previous <run>]
 ```
 
 This prints the run directory. Every path below is relative to it. Stage is `initialized`.
+
+If this subject has been reviewed before, pass `--previous <run>` naming the earlier run directory. It stamps `previous_run_id` and copies that run's `feedback.json` into the new one. **Read it before writing anything else.** A correction like "COMP-004 is not actually a competitor" only survives a rerun if you actually check candidates against it; carrying the file forward does not enforce that on its own, since a fresh comparison gets a fresh id and no mechanical check can catch you proposing the same name again under a new one. Match by name, not by id: the ids in the carried file belong to the old run and mean nothing in this one.
 
 ## What you must establish
 
@@ -64,6 +66,8 @@ clearfelt-review approve <run> scope
 **`research-questions.json`.** Explicit questions, one `module` each, state `OPEN`. Derive them from `decision.evidence_required`: a question that does not help make the decision does not belong.
 
 **`comparisons.json`.** Candidates only, status `proposed`. Anything the user named carries `proposed_by: 'user'` and the `user_assertion_id` it came from. Anything you propose carries `proposed_by: 'system'` and a real reason in `why_included`. Do not silently add competitors.
+
+On a rerun, set `supersedes` on any comparison, entity or asset that is genuinely a continuation of something from the previous run, naming its id there. This is not optional bookkeeping: `clearfelt-review diff` treats identity across runs as nonexistent unless `supersedes` says otherwise, because ids are allocated fresh every run and an identical id in two runs means nothing. Leaving it unset does not keep things neutral, it makes the diff report everything as dropped and replaced, which is misleading if the substance carried forward.
 
 **`plan.json`.** Your interpretation of the objective, the modules you activated with reasons, the modules you left dormant with reasons, the comparison plan, and the gaps you already expect. Dormant modules matter: a reader should see what you chose not to look at.
 

@@ -4,6 +4,7 @@ import { writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { buildChangeTree, renderChangeTreeAscii } from './change-tree.ts';
 import { computeCoverage } from './coverage.ts';
+import { diffReviews, renderDiffAscii } from './diff.ts';
 import { assertTransition, gateForStage, stageForGate } from './lifecycle.ts';
 import { GATE_NAMES, REVIEW_DEPTHS, RUN_STAGES } from './model/index.ts';
 import type { GateName, ReviewDepth, RunStage } from './model/index.ts';
@@ -16,6 +17,7 @@ import { renderJson } from './render/json.ts';
 import { renderPlan } from './render/plan.ts';
 import { buildView } from './render/view.ts';
 import {
+  carryForwardFeedback,
   initRun,
   listRuns,
   loadReview,
@@ -39,7 +41,7 @@ const USAGE = [
   'clearfelt-review - evidence-backed strategic intelligence',
   '',
   'Usage:',
-  '  clearfelt-review init <slug> [--depth quick|standard|deep] [--root <dir>]',
+  '  clearfelt-review init <slug> [--depth quick|standard|deep] [--root <dir>] [--previous <run>]',
   '  clearfelt-review stage <run> <stage>          advance a non-gate transition',
   '  clearfelt-review approve <run> <gate>         scope | research-plan | findings',
   '  clearfelt-review validate <run>               schema, integrity and lifecycle',
@@ -50,6 +52,7 @@ const USAGE = [
   '  clearfelt-review change-tree <run> [--json]   derived from actions and assets',
   '  clearfelt-review trace <run> <id> [--reverse] why does this exist?',
   '  clearfelt-review render <run> --format brief|plan|html|json [--out <path>]',
+  '  clearfelt-review diff <run-a> <run-b>         what carried, dropped or is new',
   '',
   'A <run> is a path to a run directory, for example reviews/acme/r-20260907-001.',
 ].join('\n');
@@ -96,10 +99,21 @@ async function initCommand(args: string[]): Promise<void> {
   const slugDir = join(root, slug);
   const runId = makeRunId(await listRuns(slugDir));
   const dir = join(slugDir, runId);
-  const run = newRun(slug, runId, nowIso());
+  const previous = flagValue(args, '--previous');
+  const previousDir = previous ? requireRunDir(previous) : undefined;
+  const previousRun = previousDir ? await loadRun(previousDir) : undefined;
+  const run = newRun(slug, runId, nowIso(), previousRun?.id);
   await initRun(dir, run);
   console.log(dir);
   console.log(`Stage: ${run.stage}. Depth: ${depth}.`);
+  if (previousDir) {
+    const carried = await carryForwardFeedback(previousDir, dir);
+    console.log(
+      carried > 0
+        ? `Carried ${carried} feedback entr${carried === 1 ? 'y' : 'ies'} forward from ${previous}. Read feedback.json before re-proposing anything it corrected.`
+        : `${previous} had no feedback to carry forward.`,
+    );
+  }
   console.log('Next: the review-onboard skill drafts scope.json, then approve the scope gate.');
 }
 
@@ -319,6 +333,13 @@ async function renderCommand(args: string[]): Promise<void> {
   process.stdout.write(output);
 }
 
+async function diffCommand(args: string[]): Promise<void> {
+  const dirA = requireRunDir(args[0]);
+  const dirB = requireRunDir(args[1]);
+  const [a, b] = await Promise.all([loadReview(dirA), loadReview(dirB)]);
+  console.log(renderDiffAscii(diffReviews(a, b)));
+}
+
 async function main(): Promise<void> {
   const [command, ...rest] = process.argv.slice(2);
   switch (command) {
@@ -354,6 +375,9 @@ async function main(): Promise<void> {
       break;
     case 'render':
       await renderCommand(rest);
+      break;
+    case 'diff':
+      await diffCommand(rest);
       break;
     default:
       console.log(USAGE);

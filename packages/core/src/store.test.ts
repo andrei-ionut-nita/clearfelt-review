@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LifecycleError } from './lifecycle.ts';
 import {
   StoreError,
+  carryForwardFeedback,
   hashContent,
   initRun,
   loadReview,
@@ -125,5 +126,58 @@ describe('writeSnapshot', () => {
   it('hashes content so a later claim about it is checkable', () => {
     expect(hashContent('a')).not.toBe(hashContent('b'));
     expect(hashContent('a')).toBe(hashContent('a'));
+  });
+});
+
+describe('newRun with a previous run', () => {
+  it('records previous_run_id only when one is given', () => {
+    expect(newRun('acme', 'r-002', NOW, 'r-001').previous_run_id).toBe('r-001');
+    expect(newRun('acme', 'r-001', NOW).previous_run_id).toBeUndefined();
+  });
+});
+
+describe('carryForwardFeedback', () => {
+  it("copies a previous run's corrections into the new run", async () => {
+    const previousDir = await mkdtemp(join(tmpdir(), 'clearfelt-review-'));
+    try {
+      await initRun(previousDir, newRun('acme', 'r-001', NOW));
+      await writeCollection(previousDir, 'feedback', [
+        {
+          id: 'FB-0001',
+          target_id: 'COMP-0004',
+          type: 'reject',
+          reason: 'Not a competitor.',
+          at: NOW,
+        },
+      ]);
+
+      await initRun(dir, newRun('acme', 'r-002', NOW, 'r-001'));
+      const carried = await carryForwardFeedback(previousDir, dir);
+      expect(carried).toBe(1);
+
+      const review = await loadReview(dir);
+      expect(review.feedback).toEqual([
+        {
+          id: 'FB-0001',
+          target_id: 'COMP-0004',
+          type: 'reject',
+          reason: 'Not a competitor.',
+          at: NOW,
+        },
+      ]);
+    } finally {
+      await rm(previousDir, { recursive: true, force: true });
+    }
+  });
+
+  it('carries nothing, and says so, when the previous run had no feedback', async () => {
+    const previousDir = await mkdtemp(join(tmpdir(), 'clearfelt-review-'));
+    try {
+      await initRun(previousDir, newRun('acme', 'r-001', NOW));
+      await initRun(dir, newRun('acme', 'r-002', NOW, 'r-001'));
+      expect(await carryForwardFeedback(previousDir, dir)).toBe(0);
+    } finally {
+      await rm(previousDir, { recursive: true, force: true });
+    }
   });
 });

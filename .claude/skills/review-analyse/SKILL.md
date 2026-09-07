@@ -33,6 +33,8 @@ Set `contradicted_by` where evidence cuts against the finding. Do not resolve a 
 
 Set `temporal_scope` so a historical pattern is not stated as a current fact.
 
+On a rerun, set `supersedes` on a finding, opportunity or assumption that continues one from the previous run, naming its id. `clearfelt-review diff` only recognises continuity through this field, never through matching ids across runs, since ids are allocated fresh every time. If new evidence confirms, revises or overturns a previous finding, say which finding in `supersedes`, and say in the statement itself whether this run corroborates or contradicts it.
+
 ## Opportunities
 
 An opportunity is a strategically useful possibility, not a restated weakness. "No case studies" is a finding. "The existing writing already contains the substance a proof page needs" is an opportunity.

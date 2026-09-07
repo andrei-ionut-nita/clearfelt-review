@@ -132,3 +132,7 @@ Section 19's saturation table, computed from the comparison landscape rather tha
 ### `modules/registry.ts`
 
 Eighteen predicates over signals derived from the objective, decision, audience text and captured assets, never from `Entity.type`. Three modules activate unconditionally; the rest read keyword and asset-type matches. Only suggests: `review-onboard` decides for real and `validate` checks the result is complete. See `decisions/0010-signal-based-module-activation.md`.
+
+### `diff.ts`
+
+What changed between two runs of the same subject. Identity across runs exists only through an explicit `supersedes` pointer the newer run sets; same id in two runs means nothing, since `ids.ts` allocates fresh within each run. Scoped to the five analytical collections (comparisons, findings, opportunities, assumptions, recommendations); sources, observations, evidence and research questions are re-collected every run and would report near-total churn regardless of what actually changed. See `decisions/0011-cross-run-identity-is-supersedes-only.md`.
