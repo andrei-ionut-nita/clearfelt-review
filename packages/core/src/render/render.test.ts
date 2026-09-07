@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { makeValidReview } from '../testing/factory.ts';
 import { makeWorkedExample } from '../testing/worked-example.ts';
 import { renderBrief } from './brief.ts';
+import { renderHtml } from './html/index.ts';
 import { renderJson } from './json.ts';
 import { renderPlan } from './plan.ts';
 import { ID_IN_TEXT, allIds, buildView } from './view.ts';
@@ -25,6 +26,7 @@ describe('every renderer', () => {
     ['json', renderJson(view)],
     ['brief', renderBrief(view)],
     ['plan', renderPlan(view)],
+    ['html', renderHtml(view)],
   ];
 
   for (const [name, output] of outputs) {
@@ -51,6 +53,7 @@ describe('every renderer', () => {
         if (name === 'json') renderJson(empty);
         if (name === 'brief') renderBrief(empty);
         if (name === 'plan') renderPlan(empty);
+        if (name === 'html') renderHtml(empty);
       }).not.toThrow();
     });
   }
@@ -167,5 +170,115 @@ describe('renderPlan', () => {
   it('shows which findings use each evidence item', () => {
     expect(plan).toMatch(/\*\*Used by\.\*\* F-0001, F-0003/);
     expect(plan).toMatch(/F-0001 \(contradicts\)/);
+  });
+});
+
+describe('renderHtml', () => {
+  const html = renderHtml(view);
+
+  it('is a single self-contained file with no external resources', () => {
+    // The report has to keep working offline, emailed, or from a USB stick.
+    expect(html).not.toMatch(/<link[^>]+href=["']https?:/);
+    expect(html).not.toMatch(/<script[^>]+src=/);
+    expect(html).not.toMatch(/https?:\/\/(cdn|unpkg|fonts\.googleapis)/);
+  });
+
+  it('embeds the model so the drill-down can walk it in the browser', () => {
+    expect(html).toContain('id="review-data"');
+    const island = html.split('id="review-data">')[1]?.split('</script>')[0] ?? '';
+    const parsed = JSON.parse(island.replace(/\\u003c/g, '<'));
+    expect(parsed.findings).toHaveLength(view.review.findings.length);
+    expect(parsed.priorities[0].priority).toBe('P0');
+  });
+
+  it('escapes the closing script sequence so the island cannot break out', () => {
+    const hostile = buildView({
+      ...makeWorkedExample(),
+      unknowns: [
+        {
+          id: 'UNK-0009',
+          statement: 'A value containing </script><script>alert(1)</script>',
+          why_unknown: 'Testing escaping.',
+          blocks_finding_ids: [],
+        },
+      ],
+    });
+    const output = renderHtml(hostile);
+    const island = output.split('id="review-data">')[1]?.split('</script>')[0] ?? '';
+    // If the island terminated early, this would not parse.
+    expect(() => JSON.parse(island.replace(/\\u003c/g, '<'))).not.toThrow();
+  });
+
+  it('escapes model text rendered into markup', () => {
+    const hostile = buildView({
+      ...makeWorkedExample(),
+      unknowns: [
+        {
+          id: 'UNK-0009',
+          statement: '<img src=x onerror=alert(1)>',
+          why_unknown: 'Testing escaping.',
+          blocks_finding_ids: [],
+        },
+      ],
+    });
+    expect(renderHtml(hostile)).not.toContain('<img src=x onerror=');
+  });
+
+  it('marks an inferred finding distinctly from a derived one', () => {
+    expect(html).toMatch(/class="tag inferred"/);
+  });
+
+  it('marks a contested finding and shows what contradicts it', () => {
+    expect(html).toMatch(/class="tag contested"/);
+    expect(html).toContain('Contradicted by.');
+  });
+
+  it('renders an absence observation as an absence, with its search scope', () => {
+    expect(html).toMatch(/class="tag absence"/);
+    expect(html).toContain('Searched:');
+  });
+
+  it('shows the unvalidated assumption on the recommendation that rests on it', () => {
+    expect(html).toContain('Rests on an unvalidated assumption');
+    expect(html).toContain('ASM-0001');
+  });
+
+  it('plots every recommendation on the opportunity map', () => {
+    const quadrantItems = html.split('class="matrix"')[1]?.split('</section>')[0] ?? '';
+    for (const rec of view.review.recommendations) {
+      expect(quadrantItems).toContain(rec.id);
+    }
+  });
+
+  it('makes every id a drill-down chip', () => {
+    expect(html).toMatch(/class="chip" data-id="R-0001"/);
+    expect(html).toMatch(/class="chip" data-id="S-0001"/);
+  });
+
+  it('centres content via an inner wrapper, not by sizing the grid item', () => {
+    // Regression: max-width plus justify-self on <main> switched it to
+    // fit-content sizing, so on a narrow viewport it sized to its content and
+    // the whole page scrolled sideways. Verified in a browser at 390px.
+    expect(html).toContain('<div class="wrap">');
+    expect(html).toContain('main > .wrap { max-width: 900px; margin: 0 auto; }');
+    expect(html).not.toMatch(/main \{[^}]*justify-self/);
+  });
+
+  it('carries the search scope of an absence into the drill-down panel', () => {
+    // An absence must not read as a bare claim anywhere it surfaces, including
+    // one click away on the evidence item built from it.
+    expect(html).toContain("row('Searched', (obs.search_scope || []).join(', '))");
+  });
+
+  it('wraps every wide table so the page never scrolls sideways', () => {
+    const tables = html.match(/<table>/g) ?? [];
+    const wrapped = html.match(/<div class="scroll-x">/g) ?? [];
+    expect(tables.length).toBeGreaterThan(0);
+    expect(wrapped.length).toBeGreaterThan(0);
+  });
+
+  it('keeps a rejected comparison visible with its reason', () => {
+    expect(html).toContain('COMP-0003');
+    expect(html).toContain('was rejected');
   });
 });

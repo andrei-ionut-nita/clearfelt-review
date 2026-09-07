@@ -9,6 +9,7 @@ import { GATE_NAMES, REVIEW_DEPTHS, RUN_STAGES } from './model/index.ts';
 import type { GateName, ReviewDepth, RunStage } from './model/index.ts';
 import { prioritise } from './prioritise.ts';
 import { renderBrief } from './render/brief.ts';
+import { renderHtml } from './render/html/index.ts';
 import { renderJson } from './render/json.ts';
 import { renderPlan } from './render/plan.ts';
 import { buildView } from './render/view.ts';
@@ -44,7 +45,7 @@ const USAGE = [
   '  clearfelt-review prioritise <run>             computed P0..P3 with reasoning',
   '  clearfelt-review change-tree <run> [--json]   derived from actions and assets',
   '  clearfelt-review trace <run> <id> [--reverse] why does this exist?',
-  '  clearfelt-review render <run> --format brief|plan|json [--out <path>]',
+  '  clearfelt-review render <run> --format brief|plan|html|json [--out <path>]',
   '',
   'A <run> is a path to a run directory, for example reviews/acme/r-20260907-001.',
 ].join('\n');
@@ -246,6 +247,7 @@ const RENDERERS = {
   brief: renderBrief,
   plan: renderPlan,
   json: renderJson,
+  html: renderHtml,
 } as const;
 
 type Format = keyof typeof RENDERERS;
