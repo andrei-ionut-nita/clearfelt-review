@@ -56,6 +56,10 @@ Qualify the proposed candidates. For each, decide the relationship type, and rec
 
 The test for a competitor is whether they compete for the same decision by the same audience, not whether they look similar.
 
+Set `positioning_territories` on every qualified comparison: the territories it actually contests, in the entity's own language, not a fixed taxonomy ("technology economics" for a CTO, "impact per pound" for a charity). This is what makes the saturation table in `quality`-adjacent rendering computed rather than guessed: `comparison-synthesis.ts` counts how many qualified comparisons name a territory, so a reasoning stage cannot simply assert a territory is crowded or open. If you believe a territory is uncontested, the count has to actually be low, and that count is what a reader checks. Leave the array empty for a benchmark or aspirational comparison that is not contesting any positioning territory at all.
+
+A `proposed` or `rejected` comparison's territories do not count toward saturation, so there is no reason to skip naming them on a candidate you have not yet qualified; only qualification makes them count.
+
 ## Stopping
 
 Stop a question when one of these is true, and record which:

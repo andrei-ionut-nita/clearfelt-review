@@ -58,6 +58,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **Every renderer carries the run's own quality report.** `ReviewView.quality` is computed once and read by json, plan and html alongside priorities, the change tree and coverage, so no renderer can show a confident plan while the quality report says a recommendation is untestable. The plan and the HTML report both print the section even on a clean run, so its absence is never itself a signal.
 
+- **`Comparison.positioning_territories`**, the field that lets specification section 19's saturation table be computed rather than authored. `comparison-synthesis.ts` counts qualified comparisons contesting a territory, weighted by relevance, and bands the result into a four-valued `Intensity` scale that stretches to "very high" where three-valued `Level` cannot. Only `qualified` comparisons count, so a candidate that has not yet survived qualification cannot make a territory look crowded. See `docs/decisions/0009-computed-saturation.md`.
+
+- **Opportunity scored from saturation and position.** A fixed lookup table over the computed saturation and the authored `current_position` produces a four-valued opportunity rating and a one-word classification (`white_space`, `differentiation_opportunity`, `contested`, `weak_spot`, `table_stakes`, `underoccupied`). Two properties hold by construction rather than by the table's exact values: opportunity never falls as position improves at fixed saturation, and never rises as saturation worsens at fixed position.
+
+- **`Opportunity.white_space.saturation` removed.** It was an authored `Level` set by the same reasoning stage that decided the territory mattered, the same failure ADR 0003 already named for priority. `current_position` stays authored, because it is a judgement about the subject's own standing that the comparison landscape cannot settle.
+
+- **The saturation table in every renderer.** `plan.ts` and the HTML report both print positioning territories with saturation, current position, computed opportunity and a one-line rationale naming which comparisons produced the count, alongside the existing comparison landscape table.
+
 ### Fixed
 
 - An absence observation attributed to one source when it was established across five credited one page with work done across all of them, and made the finding built on it report as resting on a single source when it rested on five. A positive observation has one natural source and an absence does not; the model had quietly assumed every observation was the first kind. No fixture caught it, because the fixtures were written by the same reasoning that wrote the model.
@@ -73,6 +81,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The `derived`-finding-introduces-concepts check fired on every derived finding in the one real run available to test it against, because real analytical prose paraphrases constantly and the threshold was tuned against hand-written fixtures rather than real writing. Raised `NOVEL_TERM_LIMIT` from 3 to 5 against the real run's own novel-term counts, which cleared the paraphrase and kept the two genuinely borderline findings flagged.
 
 - The circular-falsifier check treated "outcome X does not happen" as circular against "outcome X happens" only when the negation itself was the sole difference; a falsifier phrased as a null result ("indistinguishable from the preceding quarter") was not recognised as a failure condition because the shortfall-word list did not contain it. Widened the list; the underlying lesson is that a hand-written word list calibrated against invented fixtures will always be missing real phrasing.
+
+- The andreinita.co run's one comparison predated `positioning_territories` and failed validation once the field became required. Named the territory it actually contests and removed the now-computed `saturation` from its opportunity's white-space block; the saturation table for that run now shows one contested-but-unassessed territory and the original run's flagship white-space claim, unchanged in substance.
 
 ### Notes
 

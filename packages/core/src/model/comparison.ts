@@ -52,4 +52,14 @@ export interface Comparison extends Identified {
   relevance: Level;
   confidence: Level;
   source_ids: string[];
+  /**
+   * Positioning territories this comparison contests, in the entity's own
+   * language rather than a fixed taxonomy. This is what lets saturation be
+   * computed instead of asserted: comparison-synthesis.ts counts qualified
+   * occupants of a territory rather than a reasoning stage declaring how
+   * crowded it feels. An empty array is legitimate for a benchmark or an
+   * aspirational comparison that is not contesting any positioning territory
+   * at all.
+   */
+  positioning_territories: string[];
 }

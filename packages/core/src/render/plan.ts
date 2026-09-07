@@ -221,8 +221,12 @@ function opportunities(view: ReviewView): string[] {
     );
     out.push('');
     if (opportunity.white_space) {
+      const territory = opportunity.white_space.territory;
+      const row = view.saturation.rows.find((r) => r.territory === territory);
       out.push(
-        `**White space.** Territory "${opportunity.white_space.territory}", saturation ${opportunity.white_space.saturation}, current position ${opportunity.white_space.current_position}.`,
+        `**White space.** Territory "${territory}", current position ${opportunity.white_space.current_position}${
+          row ? `, saturation ${row.saturation.replace('_', ' ')} (computed)` : ''
+        }.`,
       );
       out.push('');
     }
@@ -335,6 +339,37 @@ function comparisonLandscape(view: ReviewView): string[] {
       // run, and so a reader can disagree with the judgement.
       out.push(`  Rejected: ${c.why_rejected}`);
     }
+  }
+  out.push('');
+  out.push(...saturationTable(view));
+  return out;
+}
+
+/**
+ * Specification section 19's worked table, computed rather than authored: see
+ * comparison-synthesis.ts. Territories are the union of what qualified
+ * comparisons contest and what an opportunity's white_space named, so a
+ * territory with no comparison in it at all is not silently dropped.
+ */
+function saturationTable(view: ReviewView): string[] {
+  const { rows } = view.saturation;
+  if (rows.length === 0) return [];
+  const out = [
+    '### Positioning territories',
+    '',
+    'Saturation and opportunity are computed from the comparison landscape, not asserted. Current position is a judgement carried from the opportunity that named the territory.',
+    '',
+    '| Territory | Saturation | Current position | Opportunity | Reading |',
+    '| --- | --- | --- | --- | --- |',
+  ];
+  for (const row of rows) {
+    out.push(
+      `| ${row.territory} | ${row.saturation.replace('_', ' ')} | ${row.current_position} | ${row.opportunity.replace('_', ' ')} | ${row.classification.replace(/_/g, ' ')} |`,
+    );
+  }
+  out.push('');
+  for (const row of rows) {
+    out.push(`- **${row.territory}.** ${row.saturation_rationale}`);
   }
   out.push('');
   return out;

@@ -45,10 +45,17 @@ export interface Opportunity extends Identified {
   audience_value: Level;
   competitive_context?: string;
   confidence: Level;
-  /** Set when this opportunity is a white-space claim, per spec section 20. */
+  /**
+   * Set when this opportunity is a white-space claim, per spec section 20.
+   *
+   * saturation is deliberately absent here: comparison-synthesis.ts computes it
+   * from how many qualified comparisons contest this territory, per ADR 0009.
+   * current_position stays authored, because it is a judgement about the
+   * subject's own standing that only the evidence behind the finding can make,
+   * the same way Finding.importance is authored rather than derived.
+   */
   white_space?: {
     territory: string;
-    saturation: Level;
     current_position: Level;
   };
 }

@@ -332,6 +332,7 @@ export function validateComparison(value: unknown, issues: Issue[]): void {
     requireEnum(ctx, comparison, field, LEVELS);
   }
   requireStringArray(ctx, comparison, 'source_ids');
+  requireStringArray(ctx, comparison, 'positioning_territories');
   if (comparison.status === 'rejected') {
     requireString(ctx, comparison, 'why_rejected');
   }
@@ -374,8 +375,9 @@ export function validateOpportunity(value: unknown, issues: Issue[]): void {
     const ws = requireObject(ctx, opportunity, 'white_space');
     if (ws) {
       requireString(ctx, ws, 'territory');
-      requireEnum(ctx, ws, 'saturation', LEVELS);
       requireEnum(ctx, ws, 'current_position', LEVELS);
+      // saturation is deliberately not a field here: comparison-synthesis.ts
+      // computes it from the comparison landscape. See ADR 0009.
     }
   }
 }

@@ -39,6 +39,7 @@ export function renderJson(view: ReviewView): string {
         change_tree: view.changeTree,
         coverage: view.coverage,
         quality: view.quality,
+        saturation: view.saturation,
       },
     },
     null,

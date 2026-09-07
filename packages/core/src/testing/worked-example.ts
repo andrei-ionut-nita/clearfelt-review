@@ -536,6 +536,7 @@ export function makeWorkedExample(): Review {
         relevance: 'high',
         confidence: 'high',
         source_ids: ['S-0004'],
+        positioning_territories: ['Technical transformation leadership'],
       },
       {
         id: 'COMP-0002',
@@ -551,6 +552,10 @@ export function makeWorkedExample(): Review {
         relevance: 'high',
         confidence: 'medium',
         source_ids: ['S-0005'],
+        positioning_territories: [
+          'Technical transformation leadership',
+          'Digital platform strategy',
+        ],
       },
       {
         id: 'COMP-0003',
@@ -569,6 +574,9 @@ export function makeWorkedExample(): Review {
         relevance: 'low',
         confidence: 'medium',
         source_ids: ['S-0006'],
+        // Named here to prove a rejected comparison does not crowd the
+        // saturation table: it never qualified, so it cannot count.
+        positioning_territories: ['Technology economics'],
       },
     ],
 
@@ -655,8 +663,7 @@ export function makeWorkedExample(): Review {
         confidence: 'medium',
         white_space: {
           territory: 'Technology economics',
-          saturation: 'low',
-          current_position: 'medium',
+          current_position: 'high',
         },
       },
       {

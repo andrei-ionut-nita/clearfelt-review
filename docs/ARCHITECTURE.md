@@ -120,3 +120,11 @@ Counts independent sources separately from all sources throughout.
 Two edge tables, forward and reverse. The graph is a DAG rendered as a tree, so a recommendation reachable both directly from a finding and through an opportunity appears on both paths. That is deliberate: collapsing it would hide that the support is doubled.
 
 Cycle protection exists even though a valid run has no cycles, because `trace` is the tool someone reaches for when something already looks wrong.
+
+### `quality/`
+
+Separate from `validate/` on purpose: `contract.ts` asks whether every recommendation answers the ten fixed questions of the output contract, against real reference chains rather than prose length. `checks.ts` runs nine mechanical checks against named failure categories rather than a score. `rubric.md` names the judgements neither can make. See `decisions/0008-validation-is-not-evaluation.md`.
+
+### `comparison-synthesis.ts`
+
+Section 19's saturation table, computed from the comparison landscape rather than authored by the reasoning stage that has the most reason to see a territory as open. Saturation is a weighted count of qualified comparisons naming a territory; opportunity is a fixed lookup from saturation and the subject's own stated position. See `decisions/0009-computed-saturation.md`.

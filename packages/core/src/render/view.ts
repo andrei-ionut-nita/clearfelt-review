@@ -1,4 +1,5 @@
 import { buildChangeTree } from '../change-tree.ts';
+import { type SaturationTable, buildSaturationTable } from '../comparison-synthesis.ts';
 import { type CoverageReport, computeCoverage } from '../coverage.ts';
 import type {
   Action,
@@ -36,6 +37,8 @@ export interface ReviewView {
    * recommendations are untestable: both come off the same object.
    */
   quality: QualityReport;
+  /** Specification section 19's saturation table, computed from the comparison set. */
+  saturation: SaturationTable;
 
   priorityOf(id: string): PriorityResult | undefined;
   findingOf(id: string): Finding | undefined;
@@ -75,6 +78,7 @@ export function buildView(review: Review): ReviewView {
     changeTree: buildChangeTree(review),
     coverage: computeCoverage(review),
     quality: evaluateQuality(review),
+    saturation: buildSaturationTable(review),
 
     priorityOf: (id) => priorityIndex.get(id),
     findingOf: (id) => findings.get(id),

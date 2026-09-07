@@ -46,7 +46,7 @@ $ clearfelt-review trace reviews/acme/r-20260907-001 S-0001 --reverse
 
 ## Status
 
-Phases 0 through 2 complete. 260 tests.
+Phases 0 through 3 complete. 272 tests.
 
 The deterministic layer: canonical model, id allocation, run lifecycle, stage-gated storage, validation and integrity, priority computation, change tree derivation, coverage, traceability, and four renderers over one shared view.
 
@@ -54,7 +54,9 @@ The reasoning layer: four Claude Code skills under `.claude/skills/`, one per st
 
 **Quality evaluation, separate from validation.** `quality/contract.ts` checks that every recommendation answers ten fixed questions, from what evidence proves it to what would prove it wrong. `quality/checks.ts` runs nine mechanical checks, from a recommendation restating its own finding to a falsifier that cannot fail, against named failure categories in `quality/rubric.md` rather than a score. Run against a real site, it found real gaps in the run, not in the tool: two recommendations that had dropped which audience they served, and two research questions that stopped without saying why. See `docs/ROADMAP.md`, "What Phase 2 found in the same run".
 
-Phase 3 next: comparison depth.
+**Comparison depth.** `comparison-synthesis.ts` computes specification section 19's saturation table from the comparison landscape rather than from a reasoning stage's impression: how crowded a positioning territory is comes from a weighted count of the qualified comparisons contesting it, so a claim that a territory is open has to survive the same count a reader can run themselves. See `docs/decisions/0009-computed-saturation.md`.
+
+Phase 4 next: generalisation across archetypes.
 
 ## Getting started
 

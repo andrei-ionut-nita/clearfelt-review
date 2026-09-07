@@ -1,5 +1,5 @@
 import { renderChangeTreeAscii } from '../../change-tree.ts';
-import type { Level } from '../../model/index.ts';
+import type { Level, Opportunity } from '../../model/index.ts';
 import { QUADRANT_LABELS, type Quadrant } from '../../prioritise.ts';
 import type { ReviewView } from '../view.ts';
 import { SCRIPT } from './script.ts';
@@ -244,7 +244,38 @@ ${comparisons
       `<div class="callout"><strong>${esc(c.name)}</strong> was rejected. ${esc(c.why_rejected ?? '')}</div>`,
   )
   .join('')}
+${saturationTable(view)}
 </section>`;
+}
+
+/**
+ * Specification section 19's saturation table, computed by
+ * comparison-synthesis.ts from the qualified comparison set rather than
+ * asserted by a reasoning stage. Current position stays a stated judgement,
+ * carried from whichever opportunity named the territory as white space.
+ */
+function saturationTable(view: ReviewView): string {
+  const { rows } = view.saturation;
+  if (rows.length === 0) return '';
+  return `<h3>Positioning territories</h3>
+<p class="meta">Saturation and opportunity are computed from the comparison landscape, not asserted.</p>
+<div class="scroll-x">
+<table>
+<tr><th>Territory</th><th>Saturation</th><th>Current position</th><th>Opportunity</th><th>Reading</th></tr>
+${rows
+  .map(
+    (row) =>
+      `<tr><td>${esc(row.territory)}</td><td>${esc(row.saturation.replace('_', ' '))}</td><td>${esc(row.current_position)}</td><td>${esc(row.opportunity.replace('_', ' '))}</td><td>${esc(row.classification.replace(/_/g, ' '))}</td></tr>`,
+  )
+  .join('')}
+</table>
+</div>
+${rows
+  .map(
+    (row) =>
+      `<div class="card"><h4>${esc(row.territory)}</h4><p class="meta">${esc(row.saturation_rationale)}</p>${row.occupants.length > 0 ? `<p class="meta">${chips(row.occupants.map((o) => o.comparison_id))}</p>` : ''}${row.opportunity_ids.length > 0 ? `<p class="meta">Named as white space by ${chips(row.opportunity_ids)}</p>` : ''}</div>`,
+  )
+  .join('')}`;
 }
 
 function findings(view: ReviewView): string {
@@ -285,6 +316,16 @@ ${sorted
 </section>`;
 }
 
+/** The computed saturation line for an opportunity's white-space territory, if any. */
+function whiteSpaceLine(
+  view: ReviewView,
+  whiteSpace: NonNullable<Opportunity['white_space']>,
+): string {
+  const row = view.saturation.rows.find((r) => r.territory === whiteSpace.territory);
+  const saturation = row ? `, saturation ${esc(row.saturation.replace('_', ' '))} (computed)` : '';
+  return `<p class="meta"><strong>White space.</strong> Territory "${esc(whiteSpace.territory)}", current position ${esc(whiteSpace.current_position)}${saturation}.</p>`;
+}
+
 function opportunities(view: ReviewView): string {
   const items = view.review.opportunities;
   if (items.length === 0)
@@ -297,11 +338,7 @@ ${items
     (o) => `<div class="card">
   <h4>${esc(o.id)}: ${esc(o.title)}</h4>
   <p>${esc(o.description)}</p>
-  ${
-    o.white_space
-      ? `<p class="meta"><strong>White space.</strong> Territory "${esc(o.white_space.territory)}", saturation ${esc(o.white_space.saturation)}, current position ${esc(o.white_space.current_position)}.</p>`
-      : ''
-  }
+  ${o.white_space ? whiteSpaceLine(view, o.white_space) : ''}
   <p class="meta"><strong>Strategic value.</strong> ${esc(o.strategic_value)} &nbsp; <strong>Confidence.</strong> ${esc(o.confidence)}</p>
   <p class="meta"><strong>Supported by.</strong> ${chips(o.supporting_finding_ids)}</p>
 </div>`,

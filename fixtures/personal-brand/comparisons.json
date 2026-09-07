@@ -14,6 +14,9 @@
     "confidence": "high",
     "source_ids": [
       "S-0004"
+    ],
+    "positioning_territories": [
+      "Technical transformation leadership"
     ]
   },
   {
@@ -31,6 +34,10 @@
     "confidence": "medium",
     "source_ids": [
       "S-0005"
+    ],
+    "positioning_territories": [
+      "Technical transformation leadership",
+      "Digital platform strategy"
     ]
   },
   {
@@ -50,6 +57,9 @@
     "confidence": "medium",
     "source_ids": [
       "S-0006"
+    ],
+    "positioning_territories": [
+      "Technology economics"
     ]
   }
 ]

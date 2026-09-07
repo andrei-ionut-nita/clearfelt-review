@@ -37,7 +37,9 @@ Set `temporal_scope` so a historical pattern is not stated as a current fact.
 
 An opportunity is a strategically useful possibility, not a restated weakness. "No case studies" is a finding. "The existing writing already contains the substance a proof page needs" is an opportunity.
 
-For white space, set the `white_space` block and be able to say what evidence supports the claim that the territory is unoccupied. "Nobody does this" needs the comparison set behind it, not an impression.
+For white space, set the `white_space` block: a `territory` in the same language the comparisons' `positioning_territories` use, and `current_position`, your judgement of where the subject stands there, grounded in the findings this opportunity cites. Do not set a saturation. `comparison-synthesis.ts` computes it from how many qualified comparisons contest that territory, per ADR 0009. "Nobody does this" is only as good as the comparison set behind it, and the count is exactly what makes it checkable rather than an impression: if research-comparisons.json shows three qualified competitors already naming that territory, the table will say so regardless of what this opportunity claims.
+
+Name the territory exactly as a qualified comparison's `positioning_territories` names it, or the saturation table will show it as a separate, uncontested row next to the real one. If review-research has not yet named a matching territory on any comparison, that is worth flagging rather than silently proceeding: the white-space claim may be real, but it is currently unchecked.
 
 ## Assumptions, unknowns, hypotheses
 

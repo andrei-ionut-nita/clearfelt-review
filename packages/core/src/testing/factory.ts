@@ -153,6 +153,7 @@ export function makeComparison(over: Partial<Comparison> = {}): Comparison {
     relevance: 'high',
     confidence: 'medium',
     source_ids: ['S-0001'],
+    positioning_territories: ['Technical leadership'],
     ...over,
   };
 }
