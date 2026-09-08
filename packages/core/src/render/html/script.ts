@@ -151,6 +151,29 @@ export const SCRIPT = String.raw`
   var panel = document.getElementById('panel');
   var backdrop = document.getElementById('backdrop');
   var body = document.getElementById('panel-body');
+  var panelClose = document.getElementById('panel-close');
+  var lastFocused = null;
+
+  function focusableIn(container) {
+    return [].slice.call(
+      container.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])')
+    ).filter(function (el) { return !el.disabled && el.offsetParent !== null; });
+  }
+
+  function trapFocus(event) {
+    if (event.key !== 'Tab' || !panel.classList.contains('open')) return;
+    var focusable = focusableIn(panel);
+    if (focusable.length === 0) return;
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 
   function detail(hit) {
     var it = hit.item;
@@ -228,7 +251,7 @@ export const SCRIPT = String.raw`
     var hit = find(id);
     if (!hit) return;
     var priority = byId(data.priorities, id);
-    var html = '<h3>' + esc(id) + '</h3>';
+    var html = '<h3 id="panel-title">' + esc(id) + '</h3>';
     html += '<p class="meta">' + esc(hit.collection.replace(/_/g, ' ')) + '</p>';
     if (priority) {
       html += '<p class="meta"><span class="tag ' + priority.priority.toLowerCase() + '">' +
@@ -240,13 +263,17 @@ export const SCRIPT = String.raw`
     html += '<h4>Why does this exist?</h4><div class="tree">' + fwd + '</div>';
     html += '<h4>What did this lead to?</h4><div class="tree">' + rev + '</div>';
     body.innerHTML = html;
+    lastFocused = document.activeElement;
     panel.classList.add('open');
     backdrop.classList.add('open');
+    if (panelClose) panelClose.focus();
   }
 
   function close() {
     panel.classList.remove('open');
     backdrop.classList.remove('open');
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    lastFocused = null;
   }
 
   document.addEventListener('click', function (event) {
@@ -261,7 +288,153 @@ export const SCRIPT = String.raw`
 
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') close();
+    trapFocus(event);
   });
+
+  /**
+   * Filtering is an enhancement, never a requirement: the .filter-bar itself
+   * is CSS-hidden until this class is added, so with JavaScript disabled no
+   * control appears and every card stays visible. With no chip pressed,
+   * "show everything" is the default here too.
+   */
+  document.documentElement.classList.add('js');
+
+  /**
+   * Theme toggle. An explicit choice is stored (guarded: some file:// and
+   * sandboxed contexts throw on storage access, and a preference that fails
+   * to persist there should not break the toggle itself, only its memory).
+   * Absent a stored choice, no data-theme attribute is set at all, so the
+   * report keeps following the OS preference live, including a change made
+   * while the page stays open.
+   */
+  function readStoredTheme() {
+    try {
+      var stored = localStorage.getItem('clearfelt-review-theme');
+      return stored === 'light' || stored === 'dark' ? stored : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeStoredTheme(theme) {
+    try {
+      localStorage.setItem('clearfelt-review-theme', theme);
+    } catch (e) {
+      // No persistence available; the toggle still works for this view.
+    }
+  }
+
+  function effectiveTheme() {
+    var explicit = document.documentElement.getAttribute('data-theme');
+    if (explicit === 'light' || explicit === 'dark') return explicit;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+
+  function updateToggleButton(theme) {
+    var button = document.getElementById('theme-toggle');
+    if (!button) return;
+    var next = theme === 'dark' ? 'light' : 'dark';
+    button.textContent = theme === 'dark' ? '☀' : '☾';
+    button.setAttribute('aria-label', 'Switch to ' + next + ' theme');
+  }
+
+  var storedTheme = readStoredTheme();
+  if (storedTheme) document.documentElement.setAttribute('data-theme', storedTheme);
+  updateToggleButton(effectiveTheme());
+
+  var themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      var next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      writeStoredTheme(next);
+      updateToggleButton(next);
+    });
+  }
+
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+      // Only follow a live OS change when the reader has not made an
+      // explicit choice; an explicit choice must not be silently overridden.
+      if (!document.documentElement.getAttribute('data-theme')) {
+        updateToggleButton(effectiveTheme());
+      }
+    });
+  }
+
+  function initFilters() {
+    var bars = [].slice.call(document.querySelectorAll('.filter-bar'));
+    bars.forEach(function (bar) {
+      var target = document.getElementById(bar.getAttribute('data-filter-target') || '');
+      var field = bar.getAttribute('data-filter-field');
+      if (!target || !field) return;
+      var chips = [].slice.call(bar.querySelectorAll('.filter-chip'));
+      function apply() {
+        var active = chips
+          .filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; })
+          .map(function (c) { return c.getAttribute('data-filter-value'); });
+        var cards = [].slice.call(target.children);
+        cards.forEach(function (card) {
+          var value = card.getAttribute('data-' + field);
+          // An element with no value for this field (e.g. a horizon heading
+          // mixed in among action cards) is never a filter target, only
+          // something that groups them, so it always stays visible.
+          if (value === null) return;
+          card.hidden = active.length > 0 && active.indexOf(value) < 0;
+        });
+      }
+      chips.forEach(function (c) {
+        c.addEventListener('click', function () {
+          var pressed = c.getAttribute('aria-pressed') === 'true';
+          c.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+          apply();
+        });
+      });
+    });
+  }
+  initFilters();
+
+  /**
+   * The P0 shortcut in the corner does two things on one click: it jumps to
+   * Recommendations (the href already does that) and it pre-presses that
+   * section's own P0 filter chip, so the reader lands on exactly the list
+   * the shortcut promised rather than the full, unfiltered section.
+   */
+  var jumpP0 = document.getElementById('jump-p0');
+  if (jumpP0) {
+    jumpP0.addEventListener('click', function () {
+      var p0Chip = document.querySelector(
+        '[data-filter-target="recommendations-list"] [data-filter-value="P0"]',
+      );
+      if (p0Chip && p0Chip.getAttribute('aria-pressed') !== 'true') p0Chip.click();
+    });
+  }
+
+  /**
+   * Reading progress: how far through the document the reader has scrolled.
+   * Recomputed on scroll and resize, throttled to one measurement per frame.
+   */
+  var progressFill = document.getElementById('progress-fill');
+  if (progressFill) {
+    var scheduled = false;
+    var updateProgress = function () {
+      scheduled = false;
+      var doc = document.documentElement;
+      var scrollable = doc.scrollHeight - doc.clientHeight;
+      var pct = scrollable > 0 ? (doc.scrollTop / scrollable) * 100 : 0;
+      progressFill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    };
+    var onScroll = function () {
+      if (scheduled) return;
+      scheduled = true;
+      window.requestAnimationFrame(updateProgress);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    updateProgress();
+  }
 
   var sections = [].slice.call(document.querySelectorAll('main section'));
   var links = {};

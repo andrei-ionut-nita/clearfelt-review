@@ -29,6 +29,17 @@ const BANDS: [number, Priority][] = [
   [9, 'P2'],
 ];
 
+/**
+ * The highest score `scoreOf` can produce: every dimension at its most
+ * favourable level. Exported so a renderer can show the score as a
+ * proportion of its ceiling without re-deriving the weights itself.
+ */
+export const MAX_SCORE =
+  POINTS.high * WEIGHTS.impact +
+  POINTS.high * WEIGHTS.urgency +
+  POINTS.high * WEIGHTS.confidence +
+  POINTS.low * WEIGHTS.effort;
+
 export interface PriorityResult {
   id: string;
   priority: Priority;

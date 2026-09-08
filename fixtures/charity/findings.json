@@ -30,9 +30,7 @@
     "implication": "A donor deciding whether to trust the cause has nothing to weigh before being asked.",
     "temporal_scope": "current",
     "contradicted_by": [],
-    "assumption_ids": [
-      "ASM-0001"
-    ],
+    "assumption_ids": [],
     "audience_relevance": "A donor converting from one-time to recurring is weighing continued trust, not first impressions."
   }
 ]

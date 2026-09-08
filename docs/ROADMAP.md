@@ -12,16 +12,16 @@ All six phases from the original plan are built, plus a Phase 6 hardening pass: 
 
 Roughly in priority order. Each of these is scoped, not speculative: the design question is understood, only the work is outstanding.
 
-Nothing is currently scoped here. The one item that was, moving `GENERIC_PHRASES` off literal string matching, shipped (`docs/decisions/0008-validation-is-not-evaluation.md`, Phase 4). The next entry belongs here once a real run turns up a gap concrete enough to scope the same way: the design question understood, only the work outstanding, not a speculative "would be nice."
-
-## Later
-
-Real, and not being actively worked toward, because something else has to be true first.
-
 - **Outcome measurement, fully closed.** A later run's finding can already `supersede` an earlier recommendation and state whether its falsifier held. What is still missing is closing that loop automatically rather than by a reasoning layer choosing to write the right finding. Revisit only after ADR 0005's immutability position has been re-examined on purpose, not worked around.
 - **Monitoring and alerting on rerun results.** Depends on `diff.ts` having been run enough times against real subjects to know what a meaningful change actually looks like, which depends on more real reruns existing than currently do.
 - **Hosted persistence, an API, team collaboration.** The canonical model is already architecturally compatible: plain JSON with versioning fields present from day one (ADR 0001, Note 0002). Nothing here requires a model change, only a decision that the product needs it.
 - **Caching and parallel research.** Performance work on a pipeline whose bottleneck is currently judgement, not throughput. Optimising it now would tune a system before knowing which parts of it produce good reviews.
+
+An external draft (ChatGPT, prompted blind with no view of this repo) also proposed a ~14-item plan for this section; audited against the actual codebase, twelve of those items were already built and shipped, one (near-duplicate territory merging) turned out to be a decision already closed on purpose rather than a gap, and one (property-based archetype expectations, `packages/core/src/testing/archetype-expectations.ts`) was real and has since been built.
+
+## Later
+
+Nothing is currently held back here.
 
 ## Won't build, unless the constraint changes
 

@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-08
+
+Property-based archetype expectations and a fixture defect they caught, plus a readability and actionability pass on the HTML report.
+
+### Added
+
+- **Property-based archetype expectations, evaluated without pinning exact output.** `packages/core/src/testing/archetype-expectations.ts` gives each of the seven committed archetype fixtures an `ArchetypeExpectation`: which module keys must activate and which must stay dormant, which comparison relationship types must appear among qualified comparisons (or, for `ngo`, that none legitimately should), whether genuine uncertainty (an unvalidated assumption, an inferred finding, a contradicted finding) survives into the output, and whether every recommendation clears the output contract with zero mechanical quality defects. `archetype-expectations.test.ts` runs the check against all seven fixtures and includes a negative-control case that points one archetype's expectations at another archetype's fixture, proving the harness actually fails when a property does not hold rather than only ever agreeing with whatever it is given. Closes the one real gap surfaced while auditing an external roadmap draft against the codebase (`docs/ROADMAP.md`, "Next"); the draft's other proposal in this area, auto-merging near-duplicate saturation territories, was found to be a decision `comparison-synthesis.ts` and the Phase 8 entry above already closed on purpose, not a gap.
+- **The HTML report leads with an answer, not prose.** `overviewHero()` (`packages/core/src/render/html/index.ts`) now renders three scannable cells, the P0 count, the top-priority recommendation, and the unresolved-question count, in place of stacked sentences a reader had to read in full to extract the same numbers. The original sentences survive as captions under each cell, so nothing said in words was removed, only made additionally scannable.
+- **Every card now carries its kind and severity as a border colour, not only as inline text.** A `data-kind` attribute (finding, recommendation, evidence, opportunity, action), a recommendation's own computed priority band, and a finding's contested state drive a left-border accent (`styles.ts`), so a reader scrolling a long report can tell what a card is and how urgent it is without reading its prose.
+- **A reading-progress bar and a "N P0 priorities" shortcut.** A long report now shows how much is left, and the shortcut jumps straight to Recommendations with that section's own P0 filter chip pre-pressed.
+- **Filtering, previously only on Findings and Recommendations, now also covers Evidence (by reliability), Opportunities (by strategic value) and Roadmap (by status).** The shared filter script was extended so an element carrying no value for the active filter field, a Roadmap horizon heading mixed in among its action cards, is never hidden by a filter; only the cards actually being filtered are.
+- **An action's `owner` field, present on the model since the beginning but never rendered anywhere, now shows on its Roadmap card** when set.
+
+### Changed
+
+- **A recommendation card now leads with the ask.** `recommendations()` renders priority, the priority meter and `Change`, the actual instruction, first; Problem/rationale and the measurement table move into disclosures, open by default only for P0/P1 and P0 respectively, following the same collapse-by-default precedent `findings()` already set for a derived, uncontested finding's evidence trail.
+- **The report canvas widened from 900px to 1200px**, and dense list sections (Overview's current-position and top-priority cards, Opportunities) now lay out as a responsive card grid instead of a single column, so a normal monitor is used rather than padded around a narrow centred column. Prose-heavy sections (the full Findings, Evidence and Recommendations lists) stay single-column at the existing readable measure.
+
+### Fixed
+
+- **The committed `charity` fixture carried a real, previously undetected quality defect.** Nothing before this change ran `evaluateQuality` against any archetype fixture besides `personal-brand`, so `F-0002`'s `assumption_ids: ['ASM-0001']`, a copy-paste from `F-0001`, went unnoticed: `ASM-0001` is specifically about the monthly-default assumption behind `R-0001`, not the impact-statement claim `F-0002` and `R-0002` make. `recommendation.drops_assumption` fired the moment the new archetype-expectations harness actually checked. `F-0002.assumption_ids` is now `[]`; `fixtures/charity/findings.json` was regenerated from the fixed builder via `pnpm run fixtures:write`.
+
 ## [0.2.0] - 2026-09-08
 
 Phase 7-9 cross-run cautions, plus the Phase 3 calibration run and the fuzzy generic-phrase matching it called for.

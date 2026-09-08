@@ -1,6 +1,7 @@
 import { renderChangeTreeAscii } from '../../change-tree.ts';
-import type { Level, Opportunity } from '../../model/index.ts';
-import { QUADRANT_LABELS, type Quadrant } from '../../prioritise.ts';
+import type { Intensity } from '../../comparison-synthesis.ts';
+import type { Action, Level, Opportunity } from '../../model/index.ts';
+import { MAX_SCORE, QUADRANT_LABELS, type Quadrant } from '../../prioritise.ts';
 import type { ReviewView } from '../view.ts';
 import { SCRIPT } from './script.ts';
 import { STYLES } from './styles.ts';
@@ -44,6 +45,57 @@ function levelRank(level: Level): number {
   return level === 'high' ? 3 : level === 'medium' ? 2 : 1;
 }
 
+/**
+ * The priority score as a proportion of its ceiling, next to the rationale
+ * sentence that already explains it in words (that sentence stays visible
+ * verbatim; this is additive). Reads MAX_SCORE from prioritise.ts rather than
+ * re-deriving the weights here, so the renderer cannot drift from the score
+ * it is drawing.
+ */
+function priorityMeter(priority: string, score: number): string {
+  const pct = Math.max(0, Math.min(100, Math.round((score / MAX_SCORE) * 100)));
+  return `<div class="meter" data-band="${esc(priority)}"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span class="label">${score}/${MAX_SCORE}</span></div>`;
+}
+
+const ACTION_STATUS_LABELS: Record<Action['status'], string> = {
+  todo: 'To do',
+  in_progress: 'In progress',
+  done: 'Done',
+  dropped: 'Dropped',
+};
+
+function actionStatusBadge(status: Action['status']): string {
+  return tag(ACTION_STATUS_LABELS[status], status);
+}
+
+/**
+ * Recommendation counts by priority band, re-encoded as a proportional bar.
+ * Purely a display of view.priorities, already computed; no new arithmetic
+ * beyond counting.
+ */
+function priorityDistribution(priorities: readonly { priority: string }[]): string {
+  const bands: readonly string[] = ['P0', 'P1', 'P2', 'P3'];
+  const counts = new Map(bands.map((b) => [b, 0]));
+  for (const p of priorities) counts.set(p.priority, (counts.get(p.priority) ?? 0) + 1);
+  const total = priorities.length;
+  if (total === 0) return '';
+  const segs = bands
+    .map((b) => {
+      const n = counts.get(b) ?? 0;
+      if (n === 0) return '';
+      const pct = Math.round((n / total) * 100);
+      return `<div class="seg ${b.toLowerCase()}" style="width:${pct}%" title="${esc(b)}: ${n}"></div>`;
+    })
+    .join('');
+  const legend = bands
+    .map(
+      (b) =>
+        `<span><span class="sw ${b.toLowerCase()}"></span>${esc(b)} (${counts.get(b) ?? 0})</span>`,
+    )
+    .join('');
+  return `<div class="dist">${segs}</div><div class="dist-legend">${legend}</div>`;
+}
+
 const NAV = [
   ['overview', 'Overview'],
   ['context', 'Context'],
@@ -57,6 +109,18 @@ const NAV = [
   ['limits', 'What we do not know'],
   ['quality', 'How this checks out'],
 ] as const;
+
+/**
+ * Visual grouping only, for the sidebar. Section order, ids and content in
+ * <main> are untouched: this labels the existing sequence, it does not
+ * reorder it. A group label is inserted in the sidebar before the first nav
+ * link whose id it names.
+ */
+const NAV_GROUP_LABELS: Partial<Record<(typeof NAV)[number][0], string>> = {
+  context: 'The evidence',
+  recommendations: 'The ask',
+  changes: 'The record',
+};
 
 export function renderHtml(view: ReviewView): string {
   const { review } = view;
@@ -84,6 +148,8 @@ export function renderHtml(view: ReviewView): string {
     priorities: view.priorities,
   };
 
+  const p0Count = view.priorities.filter((p) => p.priority === 'P0').length;
+
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -93,14 +159,45 @@ export function renderHtml(view: ReviewView): string {
 <style>${STYLES}</style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<div class="progress-bar" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+<div class="corner-controls">
+${p0Count > 0 ? `<a href="#recommendations" id="jump-p0" class="jump-p0 js-only" data-filter-value="P0">${p0Count} P0 ${p0Count === 1 ? 'priority' : 'priorities'}</a>` : ''}
+<button type="button" id="theme-toggle" class="theme-toggle js-only" aria-label="Switch to dark theme">&#9790;</button>
+</div>
 <div class="layout">
-<nav class="sidebar">
-  <h1>Clearfelt Review</h1>
+<nav class="sidebar" aria-label="Report navigation">
+  <div class="brand">Clearfelt Review</div>
   <div class="subject">${esc(subject?.name ?? review.run.slug)}</div>
-  ${NAV.map(([id, label]) => `<a href="#${id}">${esc(label)}</a>`).join('\n  ')}
+  ${(() => {
+    // A link is a group's child from its label onward, so it can be indented
+    // to read as one; Overview precedes every label and stays unindented, as
+    // the one item outside any group.
+    let underGroup = false;
+    return NAV.map(([id, label]) => {
+      const group = NAV_GROUP_LABELS[id];
+      if (group) underGroup = true;
+      const groupLabel = group ? `<div class="nav-group-label">${esc(group)}</div>` : '';
+      const childClass = underGroup ? ' class="nav-child"' : '';
+      return `${groupLabel}<a href="#${id}"${childClass}>${esc(label)}</a>`;
+    }).join('\n  ');
+  })()}
 </nav>
-<main>
+<main id="main-content" tabindex="-1">
 <div class="wrap">
+<header class="report-header">
+  <p class="eyebrow">Clearfelt Review</p>
+  <h1>${esc(subject?.name ?? review.run.slug)}</h1>
+  <p class="report-meta">${[
+    subject?.industry ? esc(subject.industry) : '',
+    subject?.canonical_url
+      ? `<a href="${esc(subject.canonical_url)}">${esc(subject.canonical_url)}</a>`
+      : '',
+    `${esc(review.run.created_at.slice(0, 10))}`,
+  ]
+    .filter(Boolean)
+    .join(' &nbsp;&middot;&nbsp; ')}</p>
+</header>
 ${overview(view)}
 ${context(view)}
 ${comparison(view)}
@@ -116,12 +213,67 @@ ${quality(view)}
 </main>
 </div>
 <div class="backdrop" id="backdrop"></div>
-<aside id="panel"><button class="close" id="panel-close">Close</button><div id="panel-body"></div></aside>
+<aside id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title"><button class="close" id="panel-close">Close</button><div id="panel-body"></div></aside>
 <script type="application/json" id="review-data">${JSON.stringify(island).replace(/</g, '\\u003c')}</script>
 <script>${SCRIPT}</script>
 </body>
 </html>
 `;
+}
+
+/**
+ * The executive-summary hero: real counts and real titles, templated, not
+ * invented prose. No judgment about whether the run is good, only what it
+ * contains, so it stays true even when the answer is "nothing yet".
+ *
+ * Laid out as three scannable cells rather than stacked prose, so the
+ * headline count, the one recommendation to read first, and the open-risk
+ * count are each legible at a glance instead of requiring the sentence to be
+ * read start to finish. The sentences a reader might want to quote verbatim
+ * still exist (as .meta lines under each cell); the numbers are additive.
+ */
+function overviewHero(view: ReviewView): string {
+  const { review, coverage, quality: qualityReport } = view;
+  const total = review.recommendations.length;
+  if (total === 0) {
+    return `<div class="hero"><p>No recommendations have been produced yet.</p></div>`;
+  }
+  const p0Count = view.priorities.filter((p) => p.priority === 'P0').length;
+  const top = view.priorities[0];
+  const topRec = top ? view.recommendationOf(top.id) : undefined;
+
+  const headline =
+    p0Count > 0
+      ? `${p0Count} of ${total} recommendation${total === 1 ? '' : 's'} ${p0Count === 1 ? 'is' : 'are'} P0.`
+      : `No recommendation is P0. The highest priority is ${esc(top?.priority ?? 'P3')}.`;
+
+  const unresolved = coverage.totals.unresolved;
+  const unresolvedLine = `${unresolved} research question${unresolved === 1 ? '' : 's'} remain${unresolved === 1 ? 's' : ''} open.`;
+  const qualityLine = qualityReport.ok
+    ? 'No mechanical quality defect was found on this run.'
+    : `${qualityReport.defects.length} quality defect${qualityReport.defects.length === 1 ? '' : 's'} ${qualityReport.defects.length === 1 ? 'was' : 'were'} found.`;
+
+  return `<div class="hero hero-grid">
+  <div class="hero-cell">
+    <div class="n">${p0Count > 0 ? p0Count : esc(top?.priority ?? 'P3')}</div>
+    <div class="l">${p0Count > 0 ? `of ${total} P0` : 'highest priority'}</div>
+    <p class="meta">${headline}</p>
+  </div>
+  <div class="hero-cell hero-top">
+    <div class="l">Read this first</div>
+    ${
+      topRec
+        ? `<a class="hero-link" href="#recommendations" data-id="${esc(topRec.id)}">${esc(topRec.title)}</a> ${chip(topRec.id)}`
+        : '<p class="meta">No recommendation yet.</p>'
+    }
+  </div>
+  <div class="hero-cell">
+    <div class="n">${unresolved}</div>
+    <div class="l">unresolved question${unresolved === 1 ? '' : 's'}</div>
+    <p class="meta">${qualityReport.ok ? 'No mechanical defect found.' : `${qualityReport.defects.length} quality defect${qualityReport.defects.length === 1 ? '' : 's'}.`}</p>
+  </div>
+</div>
+<p class="meta hero-summary">${unresolvedLine} ${qualityLine}</p>`;
 }
 
 function overview(view: ReviewView): string {
@@ -135,6 +287,8 @@ function overview(view: ReviewView): string {
   return `<section id="overview">
 <h2>Overview</h2>
 <p class="lede">Run ${esc(review.run.id)}, ${esc(review.run.created_at.slice(0, 10))}.</p>
+${overviewHero(view)}
+${priorityDistribution(view.priorities)}
 ${scope ? `<div class="card"><h4>The decision this supports</h4><p>${esc(scope.decision.statement)}</p><p class="meta"><strong>Objective.</strong> ${esc(scope.objective)}</p></div>` : ''}
 <div class="stat-row">
   <div class="stat"><div class="n">${review.findings.length}</div><div class="l">Findings</div></div>
@@ -144,22 +298,25 @@ ${scope ? `<div class="card"><h4>The decision this supports</h4><p>${esc(scope.d
   <div class="stat"><div class="n">${coverage.totals.unresolved}</div><div class="l">Unresolved</div></div>
 </div>
 <h3>Current position</h3>
+<div class="card-grid">
 ${topFindings
   .map(
-    (f) => `<div class="card">
+    (f) => `<div class="card" data-kind="finding" data-contested="${f.contradicted_by.length > 0}">
   <h4>${esc(f.title)} ${f.claim_type === 'inferred' ? tag('inferred', 'inferred') : ''} ${f.contradicted_by.length > 0 ? tag('contested', 'contested') : ''}</h4>
   <p>${esc(f.statement)}</p>
   <p class="meta"><strong>Confidence.</strong> ${esc(f.confidence)} &nbsp; ${chip(f.id)}</p>
 </div>`,
   )
   .join('\n')}
+</div>
 <h3>Top priorities</h3>
+<div class="card-grid">
 ${top
   .map((result) => {
     const rec = view.recommendationOf(result.id);
     if (!rec) return '';
     const unvalidated = view.unvalidatedAssumptions(rec);
-    return `<div class="card">
+    return `<div class="card" data-kind="recommendation" data-priority="${esc(result.priority)}">
   <h4>${tag(result.priority, result.priority.toLowerCase())} ${esc(rec.title)}</h4>
   <p>${esc(rec.why_it_matters)}</p>
   ${unvalidated.length > 0 ? `<div class="callout">Depends on an unvalidated assumption: ${unvalidated.map((a) => `${esc(a.statement)} ${chip(a.id)}`).join('; ')}</div>` : ''}
@@ -167,6 +324,7 @@ ${top
 </div>`;
   })
   .join('\n')}
+</div>
 </section>`;
 }
 
@@ -254,11 +412,26 @@ ${saturationTable(view)}
  * asserted by a reasoning stage. Current position stays a stated judgement,
  * carried from whichever opportunity named the territory as white space.
  */
+/**
+ * Territory x saturation, coloured by intensity: the same rows the table
+ * above already prints as text, re-encoded so a crowded territory is visible
+ * at a glance rather than only readable one row at a time.
+ */
+function saturationHeat(rows: readonly { territory: string; saturation: Intensity }[]): string {
+  return `<div class="heat">${rows
+    .map(
+      (row) =>
+        `<div class="heat-row"><span>${esc(row.territory)}</span><span class="swatch ${row.saturation}">${esc(row.saturation.replace('_', ' '))}</span></div>`,
+    )
+    .join('')}</div>`;
+}
+
 function saturationTable(view: ReviewView): string {
   const { rows } = view.saturation;
   if (rows.length === 0) return '';
   return `<h3>Positioning territories</h3>
 <p class="meta">Saturation and opportunity are computed from the comparison landscape, not asserted.</p>
+${saturationHeat(rows)}
 <div class="scroll-x">
 <table>
 <tr><th>Territory</th><th>Saturation</th><th>Current position</th><th>Opportunity</th><th>Reading</th></tr>
@@ -297,10 +470,24 @@ function findings(view: ReviewView): string {
   return `<section id="findings">
 <h2>Findings</h2>
 <p class="lede">A finding marked <em>inferred</em> goes beyond what its evidence directly shows.</p>
+<div class="filter-bar js-only" role="group" aria-label="Filter findings by confidence" data-filter-target="findings-list" data-filter-field="confidence">
+  <button type="button" class="filter-chip" data-filter-value="high" aria-pressed="false">High confidence</button>
+  <button type="button" class="filter-chip" data-filter-value="medium" aria-pressed="false">Medium confidence</button>
+  <button type="button" class="filter-chip" data-filter-value="low" aria-pressed="false">Low confidence</button>
+</div>
+<div id="findings-list">
 ${sorted
   .map((f) => {
     const sources = view.sourcesBehind(f);
-    return `<div class="card">
+    const evidenceLine = `<p class="meta"><strong>Evidence.</strong> ${chips(f.evidence_ids)} from ${sources.map((s) => `${esc(s.title ?? s.url ?? s.source_type)} ${chip(s.id)}`).join(', ') || 'no recorded source'}</p>`;
+    // A derived, uncontested finding's evidence trail is the least likely
+    // thing a reader needs open by default; an inferred or contested one
+    // stays expanded, since that is exactly what a reader should check.
+    const collapsible = f.claim_type === 'derived' && f.contradicted_by.length === 0;
+    const evidenceBlock = collapsible
+      ? `<details><summary>${f.evidence_ids.length} evidence item${f.evidence_ids.length === 1 ? '' : 's'}</summary><div class="disclosure-body">${evidenceLine}</div></details>`
+      : evidenceLine;
+    return `<div class="card" data-kind="finding" data-confidence="${esc(f.confidence)}" data-contested="${f.contradicted_by.length > 0}">
   <h4>${esc(f.id)}: ${esc(f.title)} ${f.claim_type === 'inferred' ? tag('inferred', 'inferred') : tag(f.claim_type)} ${f.contradicted_by.length > 0 ? tag('contested', 'contested') : ''}</h4>
   <p>${esc(f.statement)}</p>
   <p class="meta"><strong>Implication.</strong> ${esc(f.implication)}</p>
@@ -319,10 +506,11 @@ ${sorted
       : ''
   }
   <p class="meta"><strong>Confidence.</strong> ${esc(f.confidence)} &nbsp; <strong>Importance.</strong> ${esc(f.importance)} &nbsp; <strong>Time frame.</strong> ${esc(f.temporal_scope)}</p>
-  <p class="meta"><strong>Evidence.</strong> ${chips(f.evidence_ids)} from ${sources.map((s) => `${esc(s.title ?? s.url ?? s.source_type)} ${chip(s.id)}`).join(', ') || 'no recorded source'}</p>
+  ${evidenceBlock}
 </div>`;
   })
   .join('\n')}
+</div>
 </section>`;
 }
 
@@ -343,9 +531,15 @@ function opportunities(view: ReviewView): string {
   return `<section id="opportunities">
 <h2>Opportunities</h2>
 <p class="lede">A gap that is worth pursuing, not merely a weakness.</p>
+<div class="filter-bar js-only" role="group" aria-label="Filter opportunities by strategic value" data-filter-target="opportunities-list" data-filter-field="value">
+  <button type="button" class="filter-chip" data-filter-value="high" aria-pressed="false">High value</button>
+  <button type="button" class="filter-chip" data-filter-value="medium" aria-pressed="false">Medium value</button>
+  <button type="button" class="filter-chip" data-filter-value="low" aria-pressed="false">Low value</button>
+</div>
+<div id="opportunities-list" class="card-grid">
 ${items
   .map(
-    (o) => `<div class="card">
+    (o) => `<div class="card" data-kind="opportunity" data-value="${esc(o.strategic_value)}">
   <h4>${esc(o.id)}: ${esc(o.title)}</h4>
   <p>${esc(o.description)}</p>
   ${o.white_space ? whiteSpaceLine(view, o.white_space) : ''}
@@ -354,6 +548,7 @@ ${items
 </div>`,
   )
   .join('\n')}
+</div>
 </section>`;
 }
 
@@ -384,30 +579,50 @@ function recommendations(view: ReviewView): string {
   <div class="quad"><h5>${esc(QUADRANT_LABELS.defer)} (high effort)</h5>${quadrant('defer')}</div>
 </div>
 
+<div class="filter-bar js-only" role="group" aria-label="Filter recommendations by priority" data-filter-target="recommendations-list" data-filter-field="priority">
+  <button type="button" class="filter-chip" data-filter-value="P0" aria-pressed="false">P0</button>
+  <button type="button" class="filter-chip" data-filter-value="P1" aria-pressed="false">P1</button>
+  <button type="button" class="filter-chip" data-filter-value="P2" aria-pressed="false">P2</button>
+  <button type="button" class="filter-chip" data-filter-value="P3" aria-pressed="false">P3</button>
+</div>
+<div id="recommendations-list">
 ${view.priorities
   .map((result) => {
     const rec = view.recommendationOf(result.id);
     if (!rec) return '';
     const unvalidated = view.unvalidatedAssumptions(rec);
     const actions = view.actionsFor(rec.id);
-    return `<div class="card">
+    // The ask (Change) leads, because it is the one thing a reader has to
+    // decide about; the rationale is one click away for whoever wants to
+    // argue with it, not a paragraph everyone has to read past first. A P0 or
+    // P1 opens with the rationale showing, since that is exactly the case
+    // where a reader is most likely to want to check it before acting.
+    const openRationale = result.priority === 'P0' || result.priority === 'P1' ? ' open' : '';
+    const openMeasurement = result.priority === 'P0' ? ' open' : '';
+    return `<div class="card" data-kind="recommendation" data-priority="${esc(result.priority)}">
   <h4>${tag(result.priority, result.priority.toLowerCase())} ${esc(rec.id)}: ${esc(rec.title)}</h4>
-  <p class="meta">${esc(result.rationale)}</p>
-  <p><strong>Problem.</strong> ${esc(rec.problem)}</p>
-  <p><strong>Why it matters.</strong> ${esc(rec.why_it_matters)}</p>
-  <p><strong>Change.</strong> ${esc(rec.recommended_change)}</p>
+  ${priorityMeter(result.priority, result.score)}
+  <p class="ask"><strong>Change.</strong> ${esc(rec.recommended_change)}</p>
   ${unvalidated.length > 0 ? `<div class="callout">Rests on an unvalidated assumption: ${unvalidated.map((a) => `${esc(a.statement)} ${chip(a.id)}`).join('; ')}</div>` : ''}
+  <details${openRationale}><summary>Problem and rationale</summary><div class="disclosure-body">
+    <p class="meta">${esc(result.rationale)}</p>
+    <p><strong>Problem.</strong> ${esc(rec.problem)}</p>
+    <p><strong>Why it matters.</strong> ${esc(rec.why_it_matters)}</p>
+  </div></details>
+  <details${openMeasurement}><summary>Measurement</summary><div class="disclosure-body">
   <table>
     <tr><th>Metric</th><td>${esc(rec.measurement.success_metric)} (${esc(rec.measurement.kind)})</td></tr>
     <tr><th>Baseline</th><td>${esc(rec.measurement.baseline ?? 'not established')}</td></tr>
     <tr><th>Target</th><td>${esc(rec.measurement.target ?? 'not set')}</td></tr>
     <tr><th>Proved wrong by</th><td>${esc(rec.measurement.falsifier)}</td></tr>
   </table>
+  </div></details>
   <p class="meta"><strong>Supported by.</strong> ${chips(rec.finding_ids)} ${chips(rec.opportunity_ids)}</p>
   ${actions.length > 0 ? `<p class="meta"><strong>Actions.</strong> ${actions.map((a) => `${esc(a.description)} ${chip(a.id)}`).join('<br>')}</p>` : ''}
 </div>`;
   })
   .join('\n')}
+</div>
 </section>`;
 }
 
@@ -424,16 +639,30 @@ function roadmap(view: ReviewView): string {
       return `<h3>${esc(label)}</h3>
 ${actions
   .map(
-    (a) => `<div class="card">
-  <h4>${esc(a.description)}</h4>
-  <p class="meta"><strong>Effort.</strong> ${esc(a.effort)} &nbsp; <strong>Done when.</strong> ${esc(a.validation)}</p>
+    (
+      a,
+    ) => `<div class="card" data-kind="action" data-status="${esc(a.status)}" data-horizon="${esc(a.horizon ?? '')}">
+  <h4>${actionStatusBadge(a.status)} ${esc(a.description)}</h4>
+  <p class="meta"><strong>Effort.</strong> ${esc(a.effort)}${a.owner ? ` &nbsp; <strong>Owner.</strong> ${esc(a.owner)}` : ''} &nbsp; <strong>Done when.</strong> ${esc(a.validation)}</p>
   <p class="meta">${chip(a.id)} serves ${chip(a.recommendation_id)}${a.dependencies.length > 0 ? ` &nbsp; after ${chips(a.dependencies)}` : ''}</p>
 </div>`,
   )
   .join('')}`;
     })
     .join('');
-  return `<section id="roadmap"><h2>Roadmap</h2><p class="lede">Sequenced by dependency, not by calendar.</p>${blocks || '<p>No actions scheduled.</p>'}</section>`;
+  return `<section id="roadmap"><h2>Roadmap</h2><p class="lede">Sequenced by dependency, not by calendar.</p>
+${
+  view.review.actions.length > 0
+    ? `<div class="filter-bar js-only" role="group" aria-label="Filter actions by status" data-filter-target="roadmap-list" data-filter-field="status">
+  <button type="button" class="filter-chip" data-filter-value="todo" aria-pressed="false">To do</button>
+  <button type="button" class="filter-chip" data-filter-value="in_progress" aria-pressed="false">In progress</button>
+  <button type="button" class="filter-chip" data-filter-value="done" aria-pressed="false">Done</button>
+  <button type="button" class="filter-chip" data-filter-value="dropped" aria-pressed="false">Dropped</button>
+</div>`
+    : ''
+}
+<div id="roadmap-list">${blocks || '<p>No actions scheduled.</p>'}</div>
+</section>`;
 }
 
 function changes(view: ReviewView): string {
@@ -470,16 +699,28 @@ function evidence(view: ReviewView): string {
   return `<section id="evidence">
 <h2>Evidence</h2>
 <p class="lede">Every conclusion in this report resolves to something here. An absence is recorded with the scope searched.</p>
+<div class="filter-bar js-only" role="group" aria-label="Filter evidence by reliability" data-filter-target="evidence-list" data-filter-field="reliability">
+  <button type="button" class="filter-chip" data-filter-value="high" aria-pressed="false">High reliability</button>
+  <button type="button" class="filter-chip" data-filter-value="medium" aria-pressed="false">Medium reliability</button>
+  <button type="button" class="filter-chip" data-filter-value="low" aria-pressed="false">Low reliability</button>
+</div>
+<div id="evidence-list">
 ${review.evidence
   .map((e) => {
     const usedBy = [
       ...review.findings.filter((f) => f.evidence_ids.includes(e.id)).map((f) => f.id),
       ...review.findings.filter((f) => f.contradicted_by.includes(e.id)).map((f) => f.id),
     ];
-    return `<div class="card">
-  <h4>${esc(e.id)}</h4>
-  <p>${esc(e.claim)}</p>
-  <p class="meta"><strong>Observations.</strong></p>
+    const feedsContested = review.findings.some(
+      (f) =>
+        f.contradicted_by.length > 0 &&
+        (f.evidence_ids.includes(e.id) || f.contradicted_by.includes(e.id)),
+    );
+    // Collapsed by default only when there is nothing here a reader is
+    // likely to need to check: reliable evidence feeding no contested
+    // finding. Anything weaker or contested stays open.
+    const openByDefault = e.reliability !== 'high' || feedsContested;
+    const detailBody = `<p class="meta"><strong>Observations.</strong></p>
   <ul>${e.observation_ids
     .map((id) => {
       const o = view.observationOf(id);
@@ -497,11 +738,16 @@ ${review.evidence
       if (!s) return chip(id);
       return `${esc(s.title ?? s.source_type)} ${chip(id)} <span class="meta">(${esc(s.retrieval_method)}, authority ${esc(s.authority)}, ${esc(s.independence.type)})</span>`;
     })
-    .join('<br>')}</p>
+    .join('<br>')}</p>`;
+    return `<div class="card" data-kind="evidence" data-reliability="${esc(e.reliability)}">
+  <h4>${esc(e.id)}</h4>
+  <p>${esc(e.claim)}</p>
+  <details${openByDefault ? ' open' : ''}><summary>${e.observation_ids.length} observation${e.observation_ids.length === 1 ? '' : 's'}, ${e.source_ids.length} source${e.source_ids.length === 1 ? '' : 's'}</summary><div class="disclosure-body">${detailBody}</div></details>
   <p class="meta"><strong>Reliability.</strong> ${esc(e.reliability)} &nbsp; <strong>Relevance.</strong> ${esc(e.relevance)} &nbsp; <strong>Used by.</strong> ${usedBy.length > 0 ? chips([...new Set(usedBy)]) : 'nothing yet'}</p>
 </div>`;
   })
   .join('\n')}
+</div>
 </section>`;
 }
 
@@ -518,10 +764,10 @@ ${
 <div class="scroll-x"><table>
 <tr><th>Area</th><th>Answered</th><th>Evidence</th><th>Independent sources</th><th>Confidence</th></tr>
 ${coverage.modules
-  .map(
-    (m) =>
-      `<tr><td>${esc(m.module)}</td><td>${m.by_state.ANSWERED}/${m.questions}</td><td>${m.evidence_count}</td><td>${m.independent_source_count}</td><td>${esc(m.confidence)}</td></tr>`,
-  )
+  .map((m) => {
+    const pct = m.questions > 0 ? Math.round((m.by_state.ANSWERED / m.questions) * 100) : 0;
+    return `<tr><td>${esc(m.module)}</td><td><span class="bar"><span class="fill" style="width:${pct}%"></span></span>${m.by_state.ANSWERED}/${m.questions}</td><td>${m.evidence_count}</td><td>${m.independent_source_count}</td><td>${esc(m.confidence)}</td></tr>`;
+  })
   .join('')}
 </table></div>
 <p class="meta">Confidence is the weakest answer in the area, not an average.</p>`

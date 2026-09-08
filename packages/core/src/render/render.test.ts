@@ -261,7 +261,7 @@ describe('renderHtml', () => {
     // fit-content sizing, so on a narrow viewport it sized to its content and
     // the whole page scrolled sideways. Verified in a browser at 390px.
     expect(html).toContain('<div class="wrap">');
-    expect(html).toContain('main > .wrap { max-width: 900px; margin: 0 auto; }');
+    expect(html).toContain('main > .wrap { max-width: 1200px; margin: 0 auto; }');
     expect(html).not.toMatch(/main \{[^}]*justify-self/);
   });
 
@@ -281,6 +281,32 @@ describe('renderHtml', () => {
   it('keeps a rejected comparison visible with its reason', () => {
     expect(html).toContain('COMP-0003');
     expect(html).toContain('was rejected');
+  });
+
+  it('marks a card with its kind, so a reader can tell what it is while scrolling', () => {
+    expect(html).toMatch(/data-kind="finding"/);
+    expect(html).toMatch(/data-kind="recommendation"/);
+    expect(html).toMatch(/data-kind="evidence"/);
+  });
+
+  it('leads a recommendation with the change it asks for, before the rationale', () => {
+    const section = html.split('<section id="recommendations">')[1] ?? '';
+    const askIndex = section.indexOf('class="ask"');
+    const rationaleIndex = section.indexOf('Problem and rationale');
+    expect(askIndex).toBeGreaterThan(-1);
+    expect(rationaleIndex).toBeGreaterThan(-1);
+    expect(askIndex).toBeLessThan(rationaleIndex);
+  });
+
+  it('offers a filter on every long list, not only findings and recommendations', () => {
+    expect(html).toMatch(/data-filter-target="evidence-list"/);
+    expect(html).toMatch(/data-filter-target="opportunities-list"/);
+    expect(html).toMatch(/data-filter-target="roadmap-list"/);
+  });
+
+  it('shows a P0 shortcut and a reading-progress indicator', () => {
+    expect(html).toContain('id="jump-p0"');
+    expect(html).toContain('id="progress-fill"');
   });
 });
 
