@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildAdversarial } from '../testing/adversarial.ts';
-import { makeValidReview } from '../testing/factory.ts';
+import { makeOutcomeAssessment, makeValidReview } from '../testing/factory.ts';
 import { makeWorkedExample } from '../testing/worked-example.ts';
 import { renderBrief } from './brief.ts';
 import { renderHtml } from './html/index.ts';
@@ -15,8 +15,8 @@ const view = buildView(makeWorkedExample());
  * invents a reference produces a report whose traceability silently does not
  * resolve, which is worse than one that omits the reference entirely.
  */
-function assertNoInventedIds(output: string): void {
-  const known = allIds(view.review);
+function assertNoInventedIds(output: string, forView: typeof view = view): void {
+  const known = allIds(forView.review);
   const found = output.match(ID_IN_TEXT) ?? [];
   const invented = [...new Set(found)].filter((id) => !known.has(id));
   expect(invented).toEqual([]);
@@ -342,4 +342,59 @@ describe('the report criticising itself', () => {
     expect(renderPlan(view)).toContain('judgments only a reader can make');
     expect(renderHtml(view)).toContain('judgments only a reader can make');
   });
+});
+
+describe('a rerun that assessed outcomes without proposing new recommendations', () => {
+  // The real shape a rerun takes when nothing has been implemented yet: no
+  // new recommendations, but the run is not empty. See ADR 0012.
+  const rerunView = buildView(
+    makeValidReview({
+      recommendations: [],
+      actions: [],
+      outcome_assessments: [
+        makeOutcomeAssessment({ verdict: 'not_implemented' }),
+        makeOutcomeAssessment({ id: 'OA-0002', verdict: 'failed', falsifier_held: true }),
+      ],
+    }),
+  );
+
+  it('leads the brief with outcome assessments, before the empty priorities section', () => {
+    const brief = renderBrief(rerunView);
+    expect(brief.indexOf('## Outcome assessments')).toBeGreaterThan(-1);
+    expect(brief.indexOf('## Outcome assessments')).toBeLessThan(
+      brief.indexOf('## Top priorities'),
+    );
+  });
+
+  it('does not claim no recommendations were produced without saying what was', () => {
+    const brief = renderBrief(rerunView);
+    expect(brief).toContain('No recommendations were produced.');
+    expect(brief).toContain('not_implemented');
+  });
+
+  it('leads the plan body with outcome assessments, before the to-do list', () => {
+    const plan = renderPlan(rerunView);
+    const bodyStart = plan.indexOf('---');
+    const outcomeIndex = plan.indexOf('## Outcome assessments', bodyStart);
+    const todoIndex = plan.indexOf('## To-do list');
+    expect(outcomeIndex).toBeGreaterThan(-1);
+    expect(outcomeIndex).toBeLessThan(todoIndex);
+  });
+
+  it('leads the HTML hero with what the run assessed, not a bare empty state', () => {
+    const html = renderHtml(rerunView);
+    expect(html).toContain('prior recommendation');
+    expect(html).not.toContain('No recommendations have been produced yet.');
+  });
+
+  it('places the outcomes section before context in both nav and body', () => {
+    const html = renderHtml(rerunView);
+    expect(html.indexOf('href="#outcomes"')).toBeLessThan(html.indexOf('href="#context"'));
+    expect(html.indexOf('id="outcomes"')).toBeLessThan(html.indexOf('id="context"'));
+  });
+
+  // Not covered by assertNoInventedIds here: OA-0001's recommendation_id
+  // deliberately names an id from a different run (recommendation_run_id),
+  // which this run's own allIds() correctly does not know about. That is the
+  // point, not a bug the completeness guard should catch. See ADR 0012.
 });

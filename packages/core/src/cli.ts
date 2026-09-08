@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { existsSync } from 'node:fs';
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { buildChangeTree, renderChangeTreeAscii } from './change-tree.ts';
 import { computeCoverage } from './coverage.ts';
@@ -16,6 +16,7 @@ import { renderHtml } from './render/html/index.ts';
 import { renderJson } from './render/json.ts';
 import { renderPlan } from './render/plan.ts';
 import { buildView } from './render/view.ts';
+import { rerunSummary } from './rerun.ts';
 import {
   carryForwardFeedback,
   initRun,
@@ -42,7 +43,9 @@ const USAGE = [
   '',
   'Usage:',
   '  clearfelt-review init <slug> [--depth quick|standard|deep] [--root <dir>] [--previous <run>]',
+  '  clearfelt-review rerun <previous-run> [--depth <depth>] [--root <dir>]  a rerun, first class',
   '  clearfelt-review stage <run> <stage>          advance a non-gate transition',
+  '                                                 (-> complete also renders output/)',
   '  clearfelt-review approve <run> <gate>         scope | research-plan | findings',
   '  clearfelt-review validate <run>               schema, integrity and lifecycle',
   '  clearfelt-review quality <run>                output contract and quality checks',
@@ -117,6 +120,53 @@ async function initCommand(args: string[]): Promise<void> {
   console.log('Next: the review-onboard skill drafts scope.json, then approve the scope gate.');
 }
 
+/**
+ * `init --previous` with one addition: a printed summary of what the previous
+ * run's recommendations need this time. Same underlying primitives as init's
+ * --previous path (newRun, initRun, carryForwardFeedback), no forked logic, so
+ * the two never drift apart on what "inherited" means.
+ *
+ * Deliberately does not pre-populate entities, scope or comparisons, and does
+ * not auto-invoke diff: both would blur the line lifecycle.ts enforces and
+ * skills reason across. `diff` stays an explicit step for review-recommend to
+ * run once this run reaches complete, same as for any other pair of runs. See
+ * docs/decisions/0012-outcome-assessment.md.
+ */
+async function rerunCommand(args: string[]): Promise<void> {
+  const previousDir = requireRunDir(args[0]);
+  const depth = (flagValue(args, '--depth') ?? 'standard') as ReviewDepth;
+  if (!REVIEW_DEPTHS.includes(depth)) {
+    fail(`--depth must be one of: ${REVIEW_DEPTHS.join(', ')}`);
+  }
+  const previousReview = await loadReview(previousDir);
+  if (previousReview.run.stage !== 'complete') {
+    fail(
+      `${previousDir} is in stage '${previousReview.run.stage}', not 'complete'. rerun expects a finished run to look back at.`,
+    );
+  }
+  const root = resolve(flagValue(args, '--root') ?? 'reviews');
+  const slug = previousReview.run.slug;
+  const slugDir = join(root, slug);
+  const runId = makeRunId(await listRuns(slugDir));
+  const dir = join(slugDir, runId);
+  const run = newRun(slug, runId, nowIso(), previousReview.run.id);
+  await initRun(dir, run);
+  console.log(dir);
+  console.log(`Stage: ${run.stage}. Depth: ${depth}. Previous: ${previousDir}.`);
+  const carried = await carryForwardFeedback(previousDir, dir);
+  console.log(
+    carried > 0
+      ? `Carried ${carried} feedback entr${carried === 1 ? 'y' : 'ies'} forward. Read feedback.json before re-proposing anything it corrected.`
+      : 'The previous run had no feedback to carry forward.',
+  );
+  console.log('');
+  console.log(rerunSummary(previousReview));
+  console.log('');
+  console.log(
+    `Next: the review-onboard skill drafts scope.json, then approve the scope gate. When this run reaches complete, run: clearfelt-review diff ${previousDir} ${dir}`,
+  );
+}
+
 async function stageCommand(args: string[]): Promise<void> {
   const dir = requireRunDir(args[0]);
   const target = args[1] as RunStage | undefined;
@@ -134,6 +184,7 @@ async function stageCommand(args: string[]): Promise<void> {
   assertTransition(run.stage, target);
   await writeRun(dir, { ...run, stage: target }, nowIso());
   console.log(`Stage: ${run.stage} -> ${target}`);
+  if (target === 'complete') await renderAllOutputs(dir);
 }
 
 async function approveCommand(args: string[]): Promise<void> {
@@ -308,6 +359,46 @@ const RENDERERS = {
 
 type Format = keyof typeof RENDERERS;
 
+/** Filenames `stage <run> complete` writes into `<run>/output/`, matching review-recommend/SKILL.md's "Render" step. */
+const OUTPUT_FILES: Record<Format, string> = {
+  brief: 'brief.md',
+  plan: 'plan.md',
+  json: 'review.json',
+  html: 'report.html',
+};
+
+/**
+ * Renders every format into `<run>/output/`, automatically, on reaching
+ * `complete`.
+ *
+ * This used to be a manual step documented in review-recommend/SKILL.md,
+ * which is exactly the "a skill agreeing in its prompt" pattern ADR 0005
+ * exists to replace with enforcement: a completed run with no output/ is a
+ * mistake nothing catches until a person notices the folder is missing.
+ * Does not block completion on a validation failure, since stage transitions
+ * and content validity are already separate concerns everywhere else in this
+ * codebase (a hand-edited or bypassed run can reach `complete` invalid;
+ * `validate`'s integrity check is what catches that, not the stage machine).
+ */
+async function renderAllOutputs(dir: string): Promise<void> {
+  const review = await loadReview(dir);
+  const validation = validateReview(review);
+  if (!validation.ok) {
+    console.error(formatIssues(validation.errors));
+    console.error(
+      `Not rendering output/: ${validation.errors.length} validation error(s). Fix them, then run: clearfelt-review render ${dir} --format <format> --out ...`,
+    );
+    return;
+  }
+  const view = buildView(review);
+  const outDir = join(dir, 'output');
+  await mkdir(outDir, { recursive: true });
+  for (const format of Object.keys(RENDERERS) as Format[]) {
+    await writeFile(join(outDir, OUTPUT_FILES[format]), RENDERERS[format](view), 'utf8');
+  }
+  console.log(`Rendered output/{${Object.values(OUTPUT_FILES).join(',')}}`);
+}
+
 async function renderCommand(args: string[]): Promise<void> {
   const dir = requireRunDir(args[0]);
   const format = (flagValue(args, '--format') ?? 'brief') as Format;
@@ -345,6 +436,9 @@ async function main(): Promise<void> {
   switch (command) {
     case 'init':
       await initCommand(rest);
+      break;
+    case 'rerun':
+      await rerunCommand(rest);
       break;
     case 'stage':
       await stageCommand(rest);

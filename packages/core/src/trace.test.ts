@@ -3,6 +3,7 @@ import {
   makeAssumption,
   makeEvidence,
   makeFinding,
+  makeOutcomeAssessment,
   makeRecommendation,
   makeValidReview,
 } from './testing/factory.ts';
@@ -94,6 +95,20 @@ describe('labels', () => {
     });
     const result = trace(review, 'OBS-0001', 'forward');
     expect(result.label).toContain('[absence]');
+  });
+});
+
+describe('outcome assessment trace', () => {
+  it('resolves forward to the evidence it cites', () => {
+    const review = makeValidReview({ outcome_assessments: [makeOutcomeAssessment()] });
+    const result = trace(review, 'OA-0001', 'forward');
+    expect(result.children.map((c) => c.id)).toEqual(['E-0001']);
+  });
+
+  it('surfaces the assessment on a reverse trace from its evidence', () => {
+    const review = makeValidReview({ outcome_assessments: [makeOutcomeAssessment()] });
+    const result = trace(review, 'E-0001', 'reverse');
+    expect(idsIn(result)).toContain('OA-0001');
   });
 });
 

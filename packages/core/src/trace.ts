@@ -76,6 +76,13 @@ const FORWARD: Record<string, Edge> = {
   },
   assumptions: () => [],
   sources: () => [],
+  // recommendation_id is deliberately not an edge here: it names an id in a
+  // different run (recommendation_run_id), which this review has no knowledge
+  // of. See docs/decisions/0012-outcome-assessment.md.
+  outcome_assessments: (id, review) => {
+    const assessment = review.outcome_assessments.find((oa) => oa.id === id);
+    return (assessment?.evidence_ids ?? []).map((e) => ({ id: e, collection: 'evidence' }));
+  },
 };
 
 /** Toward the action. "What did this lead to?" */
@@ -89,9 +96,16 @@ const REVERSE: Record<string, Edge> = {
       .filter((e) => (e.observation_ids ?? []).includes(id))
       .map((e) => ({ id: e.id, collection: 'evidence' })),
   evidence: (id, review) =>
-    review.findings
-      .filter((f) => (f.evidence_ids ?? []).includes(id) || (f.contradicted_by ?? []).includes(id))
-      .map((f) => ({ id: f.id, collection: 'findings' })),
+    unique([
+      ...review.findings
+        .filter(
+          (f) => (f.evidence_ids ?? []).includes(id) || (f.contradicted_by ?? []).includes(id),
+        )
+        .map((f) => ({ id: f.id, collection: 'findings' })),
+      ...review.outcome_assessments
+        .filter((oa) => (oa.evidence_ids ?? []).includes(id))
+        .map((oa) => ({ id: oa.id, collection: 'outcome_assessments' })),
+    ]),
   findings: (id, review) =>
     unique([
       ...review.opportunities
@@ -144,6 +158,12 @@ export function labelFor(id: string, collection: string, review: Review): string
       const assumption = find(review.assumptions);
       return assumption ? `[${assumption.status}] ${assumption.statement}` : id;
     }
+    case 'outcome_assessments': {
+      const assessment = find(review.outcome_assessments);
+      return assessment
+        ? `[${assessment.verdict}] ${assessment.recommendation_id} (run ${assessment.recommendation_run_id})`
+        : id;
+    }
     default:
       return id;
   }
@@ -161,6 +181,7 @@ export function collectionOf(id: string, review: Review): string | null {
     ['assumptions', review.assumptions],
     ['comparisons', review.comparisons],
     ['user_assertions', review.user_assertions],
+    ['outcome_assessments', review.outcome_assessments],
   ];
   for (const [collection, items] of table) {
     if (items.some((i) => i.id === id)) return collection;

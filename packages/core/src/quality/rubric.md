@@ -111,6 +111,15 @@ recommendation carrying its assumption ids correctly, written in language that
 gives no hint anything is unresolved, has satisfied the check and defeated its
 purpose.
 
+### outcome_unaddressed
+*Mechanical:* `outcome_assessment.failed_without_followup`.
+*Judged:* whether the absence of a follow-up recommendation is a genuine
+decision to leave a failed hypothesis alone, or an oversight. The mechanical
+check only sees that nothing in this run supersedes the assessed
+recommendation; it cannot tell the two apart, on purpose, the same restraint
+`feedback_still_open` already applies to a rejection nothing acknowledges. See
+docs/decisions/0012-outcome-assessment.md.
+
 ### decision_unserved
 *Judged only.* The single most important question, and the one nothing can
 automate. `scope.decision` says what someone has to decide. Read the brief and

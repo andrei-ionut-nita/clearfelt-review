@@ -1,0 +1,30 @@
+[
+  {
+    "id": "E-0001",
+    "observation_ids": ["OBS-0001"],
+    "source_ids": ["S-0001"],
+    "claim": "The monthly donation share rose by twelve percentage points across the review windows either side of the default change.",
+    "research_question_ids": [],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [],
+    "contradicts": [],
+    "temporal_scope": "current"
+  },
+  {
+    "id": "E-0002",
+    "observation_ids": ["OBS-0002"],
+    "source_ids": ["S-0001"],
+    "claim": "Donation form completion rate for visitors who saw the impact statement did not change across the review windows.",
+    "research_question_ids": [],
+    "user_assertion_ids": [],
+    "relevance": "high",
+    "reliability": "high",
+    "corroborated_by": [],
+    "supports": [],
+    "contradicts": [],
+    "temporal_scope": "current"
+  }
+]

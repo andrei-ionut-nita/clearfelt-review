@@ -1,0 +1,12 @@
+[
+  {
+    "id": "S-0001",
+    "title": "Donation platform analytics, monthly vs one-time share and form completion",
+    "source_type": "analytics_dashboard",
+    "accessed_at": "2026-09-08T09:00:00.000Z",
+    "retrieval_method": "manual",
+    "authority": "high",
+    "independence": { "type": "independent" },
+    "entity_id": "ENT-0001"
+  }
+]

@@ -6,6 +6,7 @@ import {
   makeFeedback,
   makeFinding,
   makeObservation,
+  makeOutcomeAssessment,
   makeRecommendation,
   makeSource,
   makeUserAssertion,
@@ -373,5 +374,78 @@ describe('research questions', () => {
       ],
     });
     expect(codes(validateReview(review).errors)).not.toContain('field.enum');
+  });
+});
+
+describe('outcome assessment', () => {
+  it('accepts a well-formed assessment', () => {
+    const review = makeValidReview({ outcome_assessments: [makeOutcomeAssessment()] });
+    expect(validateReview(review).errors).toEqual([]);
+  });
+
+  it('rejects a verdict outside the enum', () => {
+    const review = makeValidReview({
+      // biome-ignore lint/suspicious/noExplicitAny: deliberately invalid input
+      outcome_assessments: [makeOutcomeAssessment({ verdict: 'partially' as any })],
+    });
+    expect(codes(validateReview(review).errors)).toContain('field.enum');
+  });
+
+  it('rejects evidence_ids that do not resolve in this run', () => {
+    const review = makeValidReview({
+      outcome_assessments: [makeOutcomeAssessment({ evidence_ids: ['E-9999'] })],
+    });
+    expect(codes(validateReview(review).errors)).toContain('ref.missing');
+  });
+
+  it('does not resolve recommendation_id or recommendation_run_id against anything in this run', () => {
+    // Deliberate: the recommendation named belongs to a different run this
+    // run's own index has no knowledge of. See ADR 0012.
+    const review = makeValidReview({
+      outcome_assessments: [
+        makeOutcomeAssessment({ recommendation_id: 'R-9999', recommendation_run_id: 'r-999' }),
+      ],
+    });
+    expect(validateReview(review).errors).toEqual([]);
+  });
+
+  it("rejects falsifier_held on a 'not_implemented' verdict", () => {
+    const review = makeValidReview({
+      outcome_assessments: [
+        makeOutcomeAssessment({ verdict: 'not_implemented', falsifier_held: false }),
+      ],
+    });
+    expect(codes(validateReview(review).errors)).toContain(
+      'outcome_assessment.falsifier_on_not_implemented',
+    );
+  });
+
+  it('warns, but does not error, when recommendation_run_id does not match run.previous_run_id', () => {
+    const review = makeValidReview({
+      outcome_assessments: [makeOutcomeAssessment({ recommendation_run_id: 'r-999' })],
+    });
+    review.run.previous_run_id = 'r-001';
+    const result = validateReview(review);
+    expect(result.errors).toEqual([]);
+    expect(codes(result.issues)).toContain('outcome_assessment.recommendation_run_mismatch');
+  });
+
+  it('does not warn when recommendation_run_id matches run.previous_run_id', () => {
+    const review = makeValidReview({
+      outcome_assessments: [makeOutcomeAssessment({ recommendation_run_id: 'r-001' })],
+    });
+    review.run.previous_run_id = 'r-001';
+    expect(codes(validateReview(review).issues)).not.toContain(
+      'outcome_assessment.recommendation_run_mismatch',
+    );
+  });
+
+  it('does not warn when the run has no previous_run_id at all, since there is nothing to compare against', () => {
+    const review = makeValidReview({
+      outcome_assessments: [makeOutcomeAssessment({ recommendation_run_id: 'r-999' })],
+    });
+    expect(codes(validateReview(review).issues)).not.toContain(
+      'outcome_assessment.recommendation_run_mismatch',
+    );
   });
 });

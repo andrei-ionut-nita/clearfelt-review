@@ -230,6 +230,34 @@ function checkReferences(review: Review, index: Index, issues: Issue[]): void {
     });
   }
 
+  for (const assessment of review.outcome_assessments) {
+    const ctx = ctxFor('outcome_assessments', assessment.id, issues);
+    // recommendation_id deliberately goes unchecked here: it names an id in a
+    // different run, which this run's index has no knowledge of and, per ADR
+    // 0001, must not need to resolve to validate standalone. See
+    // docs/decisions/0012-outcome-assessment.md.
+    refs(ctx, index, assessment.evidence_ids, 'evidence_ids', 'evidence');
+    // recommendation_run_id is not a same-id resolution (ADR 0001 still
+    // applies), but this run does know its own run.previous_run_id, and a
+    // mismatch is almost always a copy-pasted id rather than a deliberate
+    // multi-generation assessment. Unlike a missing reference, a wrong one
+    // here would validate cleanly and silently misattribute a verdict, so it
+    // is worth a warning even though it cannot be an error: skipping a
+    // generation to assess a grandparent run's recommendation is unusual but
+    // not invalid.
+    if (
+      review.run.previous_run_id &&
+      assessment.recommendation_run_id !== review.run.previous_run_id
+    ) {
+      warn(
+        ctx,
+        'outcome_assessment.recommendation_run_mismatch',
+        'recommendation_run_id',
+        `names ${assessment.recommendation_run_id}, but this run's previous_run_id is ${review.run.previous_run_id}. Confirm this deliberately assesses an earlier generation, not a copy-pasted id.`,
+      );
+    }
+  }
+
   for (const item of review.feedback) {
     const ctx = ctxFor('feedback', item.id, issues);
     if (item.type === 'acknowledge') {

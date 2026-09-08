@@ -19,6 +19,7 @@ export * from './analysis.ts';
 export * from './recommendation.ts';
 export * from './change-tree.ts';
 export * from './feedback.ts';
+export * from './outcome-assessment.ts';
 export * from './plan.ts';
 
 import type { Assumption, Finding, Hypothesis, Opportunity, Unknown } from './analysis.ts';
@@ -27,6 +28,7 @@ import type { Comparison } from './comparison.ts';
 import type { Asset, Entity } from './entity.ts';
 import type { Evidence } from './evidence.ts';
 import type { Feedback } from './feedback.ts';
+import type { OutcomeAssessment } from './outcome-assessment.ts';
 import type { ResearchPlan } from './plan.ts';
 import type { Action, Recommendation } from './recommendation.ts';
 import type { ResearchLog, ResearchQuestion } from './research.ts';
@@ -55,6 +57,7 @@ export interface Review {
   unknowns: Unknown[];
   hypotheses: Hypothesis[];
   feedback: Feedback[];
+  outcome_assessments: OutcomeAssessment[];
   research_log: ResearchLog;
 }
 
@@ -96,6 +99,12 @@ export const COLLECTIONS: readonly CollectionSpec[] = [
   { key: 'unknowns', file: 'unknowns.json', shape: 'list', prefix: 'UNK' },
   { key: 'hypotheses', file: 'hypotheses.json', shape: 'list', prefix: 'HYP' },
   { key: 'feedback', file: 'feedback.json', shape: 'list', prefix: 'FB' },
+  {
+    key: 'outcome_assessments',
+    file: 'outcome-assessments.json',
+    shape: 'list',
+    prefix: 'OA',
+  },
   { key: 'research_log', file: 'research-log.json', shape: 'log' },
 ] as const;
 

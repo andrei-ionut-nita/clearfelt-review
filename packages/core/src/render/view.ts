@@ -137,10 +137,11 @@ export function allIds(review: Review): Set<string> {
   push(review.unknowns);
   push(review.hypotheses);
   push(review.feedback);
+  push(review.outcome_assessments);
   if (review.scope) ids.add(review.scope.id);
   if (review.plan) ids.add(review.plan.id);
   return ids;
 }
 
 /** Matches any canonical id, for scanning rendered output. */
-export const ID_IN_TEXT = /\b(ENT|AST|UA|RQ|S|OBS|E|COMP|F|O|R|A|ASM|UNK|HYP|FB)-\d{4,}\b/g;
+export const ID_IN_TEXT = /\b(ENT|AST|UA|RQ|S|OBS|E|COMP|F|O|R|A|ASM|UNK|HYP|FB|OA)-\d{4,}\b/g;

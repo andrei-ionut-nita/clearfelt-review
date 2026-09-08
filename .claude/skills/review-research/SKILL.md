@@ -32,6 +32,8 @@ Log failures with the same care as successes: paywalls, robots.txt blocks, dead 
 
 Every fetched source needs a snapshot and a content hash. Write the retrieved content to `snapshots/<source-id>.<ext>` and record `snapshot_path` and `content_hash`. Validation rejects a `fetch` source without them, because "this URL exists" and "this is what was there when we looked" are different claims and only the second is reproducible.
 
+Retrieve the actual bytes for a source you intend to call `fetch`. A tool that summarises or paraphrases a page on the way back to you is convenient and produces a plausible-sounding account, but you have nothing to hash and nothing a later run can compare against, and a hash of the summary is not a hash of the page. If only a summarising tool is available, say so honestly: use `retrieval_method: 'manual'` and no `snapshot_path` or `content_hash`, rather than claiming `fetch` with a fabricated or omitted hash. This matters most on a rerun: `clearfelt-review diff` compares `content_hash` by URL across runs to answer "did anything actually change" before any `review_period` has elapsed, and that check is only as honest as the retrieval underneath it.
+
 Set `independence` honestly. Two outlets reprinting one press release are `republished`, not two independent sources, and must name the source they derive from. Corroboration is counted over independent sources only, so getting this wrong inflates confidence exactly where the evidence is weakest.
 
 Set `authority` per specification section 66: primary and official sources above reputable secondary ones, weak sources labelled as weak rather than excluded.
@@ -84,6 +86,8 @@ clearfelt-review stage <run> findings_pending
 ```
 
 Read the coverage output before handing over. If a priority question is unresolved, say so rather than letting the analysis stage discover it.
+
+On a rerun, also run `clearfelt-review diff <previous-run> <this-run>` here, before findings. Its "Source content, matched by URL" section compares `content_hash` against the previous run's sources and tells you immediately which pages actually changed. A page reported `unchanged` needs no further research to conclude its outcome: nothing happened, so nothing can yet be measured, regardless of whether its `review_period` has elapsed.
 
 ## Rules
 

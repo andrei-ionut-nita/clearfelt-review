@@ -22,6 +22,7 @@ Not everything needs one. Bug fixes, refactors that change no external contract,
 - [0009: Saturation is computed from the comparison landscape, never authored](0009-computed-saturation.md)
 - [0010: Module activation is signal-based, never entity-type based](0010-signal-based-module-activation.md)
 - [0011: Cross-run identity is supersedes-only, never same-id](0011-cross-run-identity-is-supersedes-only.md)
+- [0012: Outcome assessment is a new collection, written into the newer run](0012-outcome-assessment.md)
 
 ## Notes
 

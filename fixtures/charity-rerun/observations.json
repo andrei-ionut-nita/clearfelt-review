@@ -1,0 +1,18 @@
+[
+  {
+    "id": "OBS-0001",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "The monthly share of completed donations rose from 22% in the six weeks before the default change to 34% in the six weeks after.",
+    "locator": "Monthly vs one-time share, two six-week windows either side of the default change",
+    "observed_at": "2026-09-08T09:00:00.000Z"
+  },
+  {
+    "id": "OBS-0002",
+    "source_id": "S-0001",
+    "observation_type": "positive",
+    "statement": "Donation form completion rate for visitors who scrolled past the impact statement was 41% in the four weeks before it shipped and 40% in the four weeks after.",
+    "locator": "Form completion rate, two four-week windows either side of the impact statement change",
+    "observed_at": "2026-09-08T09:00:00.000Z"
+  }
+]

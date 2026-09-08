@@ -1,0 +1,22 @@
+[
+  {
+    "id": "OA-0001",
+    "recommendation_id": "R-0001",
+    "recommendation_run_id": "r-20260907-001",
+    "verdict": "achieved",
+    "evidence_ids": ["E-0001"],
+    "measured": "The monthly donation share rose from 22% to 34% across the two six-week windows either side of the default change.",
+    "rationale": "A twelve-point rise in the monthly share, with no corresponding drop in total completed gifts, is consistent with the default change increasing recurring giving rather than merely reshuffling it.",
+    "falsifier_held": false
+  },
+  {
+    "id": "OA-0002",
+    "recommendation_id": "R-0002",
+    "recommendation_run_id": "r-20260907-001",
+    "verdict": "failed",
+    "evidence_ids": ["E-0002"],
+    "measured": "Form completion rate for visitors who scrolled past the impact statement was 41% before and 40% after, a one-point difference within normal variation.",
+    "rationale": "The falsifier for this recommendation, an unchanged completion rate, held: the impact statement above the form did not measurably increase completion.",
+    "falsifier_held": true
+  }
+]

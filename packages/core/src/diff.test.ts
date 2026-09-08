@@ -6,6 +6,7 @@ import {
   makeFeedback,
   makeFinding,
   makeOpportunity,
+  makeOutcomeAssessment,
   makeRecommendation,
   makeSource,
   makeValidReview,
@@ -14,8 +15,8 @@ import {
 const T = '2026-09-07T12:00:00.000Z';
 
 /** Runs are independent: same slug, different run ids, ids allocated fresh in each. */
-function runA() {
-  return makeValidReview({ run: newRun('acme', 'r-001', T) });
+function runA(over: Parameters<typeof makeValidReview>[0] = {}) {
+  return makeValidReview({ run: newRun('acme', 'r-001', T), ...over });
 }
 
 function runB(over: Parameters<typeof makeValidReview>[0] = {}) {
@@ -444,6 +445,43 @@ describe('diffReviews', () => {
       expect(report.benchmark_strengths).toEqual([]);
     });
   });
+
+  describe('outcome_assessments', () => {
+    it('surfaces B assessments whose recommendation_run_id names A, with a title looked up in A', () => {
+      const report = diffReviews(
+        runA(),
+        runB({
+          outcome_assessments: [
+            makeOutcomeAssessment({
+              recommendation_id: 'R-0001',
+              recommendation_run_id: 'r-001',
+              verdict: 'failed',
+              falsifier_held: true,
+            }),
+          ],
+        }),
+      );
+      expect(report.outcome_assessments).toEqual([
+        {
+          id: 'OA-0001',
+          recommendation_id: 'R-0001',
+          recommendation_title: 'Lead the homepage with the economics framing',
+          verdict: 'failed',
+          falsifier_held: true,
+        },
+      ]);
+    });
+
+    it('omits an assessment whose recommendation_run_id does not name A', () => {
+      const report = diffReviews(
+        runA(),
+        runB({
+          outcome_assessments: [makeOutcomeAssessment({ recommendation_run_id: 'r-999' })],
+        }),
+      );
+      expect(report.outcome_assessments).toEqual([]);
+    });
+  });
 });
 
 describe('renderDiffAscii', () => {
@@ -514,5 +552,120 @@ describe('renderDiffAscii', () => {
     same.assumptions = [];
     const ascii = renderDiffAscii(diffReviews(a, same));
     expect(ascii).toContain('acme/r-001');
+  });
+
+  it('annotates a dropped recommendation that this run has assessed, instead of leaving it reading as abandoned', () => {
+    const report = diffReviews(
+      runA(),
+      runB({
+        outcome_assessments: [
+          makeOutcomeAssessment({
+            recommendation_id: 'R-0001',
+            recommendation_run_id: 'r-001',
+            verdict: 'not_implemented',
+          }),
+        ],
+      }),
+    );
+    const ascii = renderDiffAscii(report);
+    expect(ascii).toMatch(/dropped\s+R-0001.*\(assessed in r-002: not_implemented, OA-0001\)/);
+  });
+
+  it('does not annotate a dropped recommendation nothing has assessed', () => {
+    const ascii = renderDiffAscii(diffReviews(runA(), runB()));
+    expect(ascii).toMatch(/dropped\s+R-0001\s+Lead the homepage/);
+    expect(ascii).not.toContain('assessed in');
+  });
+
+  it('reports source content changes, matched by URL and compared by content_hash', () => {
+    const report = diffReviews(
+      runA({
+        sources: [
+          makeSource({ id: 'S-0001', url: 'https://example.com/', content_hash: 'a'.repeat(64) }),
+          makeSource({
+            id: 'S-0002',
+            url: 'https://example.com/other',
+            content_hash: 'b'.repeat(64),
+          }),
+        ],
+      }),
+      runB({
+        sources: [
+          // Unchanged: same url, same hash.
+          makeSource({ id: 'S-0001', url: 'https://example.com/', content_hash: 'a'.repeat(64) }),
+          // Changed: same url, different hash.
+          makeSource({
+            id: 'S-0002',
+            url: 'https://example.com/other',
+            content_hash: 'c'.repeat(64),
+          }),
+        ],
+      }),
+    );
+    expect(report.source_changes).toEqual([
+      {
+        url: 'https://example.com/',
+        a_id: 'S-0001',
+        b_id: 'S-0001',
+        status: 'unchanged',
+        a_content_hash: 'a'.repeat(64),
+        b_content_hash: 'a'.repeat(64),
+      },
+      {
+        url: 'https://example.com/other',
+        a_id: 'S-0002',
+        b_id: 'S-0002',
+        status: 'changed',
+        a_content_hash: 'b'.repeat(64),
+        b_content_hash: 'c'.repeat(64),
+      },
+    ]);
+    const ascii = renderDiffAscii(report);
+    expect(ascii).toContain('CHANGED    https://example.com/other');
+    expect(ascii).toContain('unchanged  https://example.com/');
+  });
+
+  it('reports unknown, not changed, when a shared URL is missing a content_hash on either side', () => {
+    const report = diffReviews(
+      runA({
+        sources: [
+          makeSource({
+            id: 'S-0001',
+            url: 'https://example.com/',
+            retrieval_method: 'manual',
+            content_hash: undefined,
+          }),
+        ],
+      }),
+      runB({
+        sources: [
+          makeSource({ id: 'S-0001', url: 'https://example.com/', content_hash: 'a'.repeat(64) }),
+        ],
+      }),
+    );
+    expect(report.source_changes).toEqual([
+      expect.objectContaining({ url: 'https://example.com/', status: 'unknown' }),
+    ]);
+  });
+
+  it('does not compare sources by url across unrelated runs, since a match still means whatever it means', () => {
+    // Not gated by unrelated_runs, unlike the trend fields: a shared URL's
+    // content either matches or it does not, regardless of run succession.
+    const a = runA({
+      sources: [
+        makeSource({ id: 'S-0001', url: 'https://example.com/', content_hash: 'a'.repeat(64) }),
+      ],
+    });
+    const unrelatedB = makeValidReview({
+      run: newRun('acme', 'r-777', T),
+      sources: [
+        makeSource({ id: 'S-0001', url: 'https://example.com/', content_hash: 'a'.repeat(64) }),
+      ],
+    });
+    const report = diffReviews(a, unrelatedB);
+    expect(report.unrelated_runs).toBe(true);
+    expect(report.source_changes).toEqual([
+      expect.objectContaining({ url: 'https://example.com/', status: 'unchanged' }),
+    ]);
   });
 });

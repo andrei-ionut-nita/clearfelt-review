@@ -37,7 +37,8 @@ export type QualityCategory =
   | 'recommendation_circular'
   | 'recommendation_untestable'
   | 'recommendation_duplicated'
-  | 'uncertainty_dropped';
+  | 'uncertainty_dropped'
+  | 'outcome_unaddressed';
 
 /**
  * 'defect' means the output is not fit to ship. 'caution' means the finding is
@@ -398,6 +399,36 @@ function checkResearchDiscipline(review: Review, out: QualityFinding[]): void {
   }
 }
 
+/**
+ * A failed hypothesis with no recorded follow-up decision.
+ *
+ * Deliberately a caution, never a defect, and never anything that mutates or
+ * supersedes the assessed recommendation itself: ADR 0011 Phase 7 rejected
+ * making 'acknowledge' feedback mandatory for exactly this reason, a required
+ * field a reasoning layer fills in reflexively degrades to the boolean the
+ * design exists to avoid. This surfaces the gap for a human to close, it does
+ * not close it. See docs/decisions/0012-outcome-assessment.md.
+ */
+function checkOutcomeAssessments(review: Review, out: QualityFinding[]): void {
+  const supersededIds = new Set(
+    review.recommendations.map((r) => r.supersedes).filter((id): id is string => Boolean(id)),
+  );
+  for (const assessment of review.outcome_assessments) {
+    if (assessment.verdict !== 'failed' || assessment.falsifier_held !== true) continue;
+    if (supersededIds.has(assessment.recommendation_id)) continue;
+    add(out, {
+      code: 'outcome_assessment.failed_without_followup',
+      category: 'outcome_unaddressed',
+      severity: 'caution',
+      collection: 'outcome_assessments',
+      id: assessment.id,
+      message: `${assessment.recommendation_id} is assessed as failed, and its falsifier held, but no recommendation in this run supersedes it`,
+      remedy:
+        'Decide whether this needs a new recommendation, or state on the assessment why none follows.',
+    });
+  }
+}
+
 export function runChecks(review: Review): QualityFinding[] {
   const out: QualityFinding[] = [];
   checkRestatement(review, out);
@@ -409,5 +440,6 @@ export function runChecks(review: Review): QualityFinding[] {
   checkDerivedFindings(review, out);
   checkTemporal(review, out);
   checkResearchDiscipline(review, out);
+  checkOutcomeAssessments(review, out);
   return out;
 }

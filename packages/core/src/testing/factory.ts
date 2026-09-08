@@ -9,6 +9,7 @@ import type {
   Finding,
   Observation,
   Opportunity,
+  OutcomeAssessment,
   Recommendation,
   Review,
   ReviewScope,
@@ -224,6 +225,20 @@ export function makeAction(over: Partial<Action> = {}): Action {
     status: 'todo',
     validation: 'A reader can state the proposition after one screen.',
     horizon: 'now',
+    ...over,
+  };
+}
+
+export function makeOutcomeAssessment(over: Partial<OutcomeAssessment> = {}): OutcomeAssessment {
+  return {
+    id: 'OA-0001',
+    recommendation_id: 'R-0001',
+    recommendation_run_id: 'r-001',
+    verdict: 'achieved',
+    evidence_ids: ['E-0001'],
+    measured: 'Qualified enquiries per 100 sessions rose from the recorded baseline.',
+    rationale: 'The rise is consistent with the outcome-led framing hypothesis.',
+    falsifier_held: false,
     ...over,
   };
 }

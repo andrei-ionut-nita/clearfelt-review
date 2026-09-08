@@ -136,6 +136,37 @@ describe('fixtures/charity', () => {
   });
 });
 
+describe('fixtures/charity-rerun', () => {
+  // The first genuinely sequential two-run fixture in the repository, built by
+  // clearfelt-review rerun against fixtures/charity. See
+  // docs/decisions/0012-outcome-assessment.md and fixtures/charity-rerun/README.md.
+  it('exists as a real run directory', () => {
+    expect(existsSync(join(FIXTURES, 'charity-rerun', 'run.json'))).toBe(true);
+  });
+
+  it('validates standalone, without fixtures/charity present, per ADR 0001', () => {
+    expect(formatIssues(validateReview(loadFixture('charity-rerun')).errors)).toBe('');
+  });
+
+  it('names fixtures/charity as its previous run', () => {
+    expect(loadFixture('charity-rerun').run.previous_run_id).toBe(loadFixture('charity').run.id);
+  });
+
+  it('assesses an outcome as achieved and one as failed, unresolved', () => {
+    const review = loadFixture('charity-rerun');
+    const verdicts = review.outcome_assessments.map((oa) => oa.verdict);
+    expect(verdicts.sort()).toEqual(['achieved', 'failed']);
+  });
+
+  it('surfaces the failed, unaddressed verdict as a quality caution, not a defect', () => {
+    const report = evaluateQuality(loadFixture('charity-rerun'));
+    expect(report.defects).toEqual([]);
+    expect(report.cautions.map((c) => c.code)).toContain(
+      'outcome_assessment.failed_without_followup',
+    );
+  });
+});
+
 describe('fixtures/ngo', () => {
   it('exists as a real run directory', () => {
     expect(existsSync(join(FIXTURES, 'ngo', 'run.json'))).toBe(true);

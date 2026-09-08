@@ -1,0 +1,33 @@
+{
+  "id": "SCOPE-0001",
+  "objective": "Assess whether the previous run's recommendations increased recurring individual donations.",
+  "entity_ids": ["ENT-0001"],
+  "asset_ids": ["AST-0001"],
+  "decision": {
+    "statement": "Did defaulting the donation form to monthly, and stating what a gift funds, increase recurring giving, and what follows from the answer?",
+    "decision_maker": "Head of fundraising",
+    "horizon": "One quarter",
+    "evidence_required": [
+      "Whether the monthly donation share changed after the previous run's recommendations shipped",
+      "Whether donation form completion changed after the impact statement shipped"
+    ]
+  },
+  "audiences": [
+    { "name": "Prospective monthly donors researching before their first gift", "priority": 1, "decision_role": "Giver" }
+  ],
+  "geography": ["United Kingdom"],
+  "languages": ["en"],
+  "channels": ["website"],
+  "exclusions": ["Major gifts and corporate partnerships, which are relationship-managed off-page"],
+  "depth": "standard",
+  "comparison_applicable": false,
+  "comparison_not_applicable_reason": "This run's objective is assessing the previous run's own recommendations, not the comparison landscape, which the previous run already qualified.",
+  "budget": {
+    "max_sources": 5,
+    "max_search_iterations": 3,
+    "max_depth": 1,
+    "min_evidence_per_question": 1,
+    "min_independent_corroboration": 1,
+    "priority_question_ids": []
+  }
+}

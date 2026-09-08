@@ -12,6 +12,7 @@ import {
   LEVELS,
   MEASUREMENT_KINDS,
   OBSERVATION_TYPES,
+  OUTCOME_VERDICTS,
   QUESTION_STATES,
   RESEARCH_ACTION_KINDS,
   RESEARCH_OUTCOMES,
@@ -536,6 +537,35 @@ export function validateFeedback(value: unknown, issues: Issue[]): void {
   // 'acknowledge'.
   if (feedback.type === 'acknowledge') {
     requireString(ctx, feedback, 'reason');
+  }
+}
+
+export function validateOutcomeAssessment(value: unknown, issues: Issue[]): void {
+  const pair = asEntity('outcome_assessments', value, issues);
+  if (!pair) return;
+  const [ctx, assessment] = pair;
+  requireString(ctx, assessment, 'recommendation_id');
+  // Not resolved against anything in this run, deliberately: the run it names
+  // may not be the one being validated, and this run must validate standalone
+  // per ADR 0001. See docs/decisions/0012-outcome-assessment.md.
+  requireString(ctx, assessment, 'recommendation_run_id');
+  requireEnum(ctx, assessment, 'verdict', OUTCOME_VERDICTS);
+  requireStringArray(ctx, assessment, 'evidence_ids');
+  requireString(ctx, assessment, 'measured');
+  requireString(ctx, assessment, 'rationale');
+  if ('falsifier_held' in assessment && assessment.falsifier_held !== undefined) {
+    requireBoolean(ctx, assessment, 'falsifier_held');
+  }
+  // A verdict with nothing to falsify, or a falsifier verdict with nothing
+  // implemented, is the same collapsed-layer failure requireNonEmptyIdArray
+  // exists elsewhere to prevent: the field would look complete and mean nothing.
+  if (assessment.verdict === 'not_implemented' && 'falsifier_held' in assessment) {
+    error(
+      ctx,
+      'outcome_assessment.falsifier_on_not_implemented',
+      'falsifier_held',
+      "verdict 'not_implemented' has nothing to falsify, so falsifier_held must be absent",
+    );
   }
 }
 

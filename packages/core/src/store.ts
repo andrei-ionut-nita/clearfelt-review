@@ -49,6 +49,7 @@ export function emptyReview(run: ReviewRun): Review {
     unknowns: [],
     hypotheses: [],
     feedback: [],
+    outcome_assessments: [],
     research_log: { actions: [], events: [] },
   };
 }

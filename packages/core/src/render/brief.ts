@@ -58,6 +58,23 @@ export function renderBrief(view: ReviewView): string {
   }
   out.push('');
 
+  if (review.outcome_assessments.length > 0) {
+    // Leads, not trails: what a rerun established about the previous run's
+    // recommendations is not a footnote, it can be the entire point of the
+    // run. See ADR 0012.
+    out.push('## Outcome assessments');
+    out.push('');
+    out.push(
+      bullet(
+        review.outcome_assessments.map(
+          (oa) =>
+            `${oa.recommendation_id} (run ${oa.recommendation_run_id}): ${oa.verdict}. ${oa.rationale} [${oa.id}]`,
+        ),
+      ),
+    );
+    out.push('');
+  }
+
   out.push('## Primary opportunity');
   out.push('');
   const topOpportunity = [...review.opportunities].sort(

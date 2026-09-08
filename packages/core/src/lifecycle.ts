@@ -53,7 +53,12 @@ const WRITABLE_BY_STAGE: Record<RunStage, readonly (keyof Review)[]> = {
     'assets',
   ],
   findings_pending: ['findings', 'opportunities', 'assumptions', 'unknowns', 'hypotheses'],
-  recommending: ['recommendations', 'actions'],
+  // outcome_assessments lives here, not findings_pending: review-recommend is
+  // the skill with whole-run visibility (ADR 0011 Phase 7 made the same call
+  // for 'acknowledge' feedback, for the same reason), and evidence written
+  // during researching is still readable regardless of which later stage the
+  // run is in.
+  recommending: ['recommendations', 'actions', 'outcome_assessments'],
   complete: [],
   blocked: [],
 };

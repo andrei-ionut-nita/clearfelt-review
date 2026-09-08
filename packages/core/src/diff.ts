@@ -155,6 +155,43 @@ export interface BenchmarkStrength {
   };
 }
 
+/**
+ * B's verdicts on A's recommendations. Not a 6th diffable collection: an
+ * OutcomeAssessment doesn't supersede anything, it points at a specific prior
+ * run's recommendation by a different, already-resolved pointer
+ * (recommendation_run_id), so it follows the additive-field precedent Phase
+ * 6/7/9 established instead. See docs/decisions/0012-outcome-assessment.md.
+ */
+export interface OutcomeAssessmentSummary {
+  id: string;
+  recommendation_id: string;
+  /** Looked up in A, for a readable report; absent if A has no such recommendation. */
+  recommendation_title?: string;
+  verdict: string;
+  falsifier_held?: boolean;
+}
+
+/**
+ * Whether a source's content actually changed, matched by URL rather than id
+ * (ids are not stable across runs, per ADR 0011; a URL is the natural key two
+ * independent retrievals of the same page share). Distinct from
+ * EvidenceBaseCount: that reports whether the evidence base moved at all;
+ * this reports, for the sources both runs actually share a URL with, whether
+ * the bytes retrieved differ. Computed from content_hash alone, so it is only
+ * as honest as retrieval was: a source with no content_hash reports 'unknown'
+ * rather than guessing. See docs/decisions/0012-outcome-assessment.md.
+ */
+export type SourceChangeStatus = 'unchanged' | 'changed' | 'unknown';
+
+export interface SourceChange {
+  url: string;
+  a_id: string;
+  b_id: string;
+  status: SourceChangeStatus;
+  a_content_hash?: string;
+  b_content_hash?: string;
+}
+
 export interface DiffReport {
   a: { run_id: string; slug: string };
   b: { run_id: string; slug: string };
@@ -208,6 +245,23 @@ export interface DiffReport {
    * Empty when unrelated_runs. Added in Phase 9.
    */
   benchmark_strengths: BenchmarkStrength[];
+  /**
+   * B's OutcomeAssessments whose recommendation_run_id names A specifically.
+   * Empty when the pair isn't actually sequential, the same care unrelated_runs
+   * and the trend fields already take: an outcome verdict about a run that
+   * isn't A would be a fabricated claim about this pair, not a smaller one.
+   */
+  outcome_assessments: OutcomeAssessmentSummary[];
+  /**
+   * Sources present in both runs under the same URL, with their content_hash
+   * compared. The point: whether anything a rerun would need to assess an
+   * outcome for actually changed is answerable immediately from retrieval
+   * alone, before any review_period has elapsed and before any reasoning
+   * happens. Not gated by unrelated_runs, unlike the trend fields below: a
+   * shared URL's content either matches or it does not, regardless of
+   * whether B claims A as its previous run.
+   */
+  source_changes: SourceChange[];
 }
 
 function diffCollection(collection: DiffableCollection, a: Review, b: Review): CollectionDiff {
@@ -396,6 +450,43 @@ function findBenchmarkStrengths(
   return strengths;
 }
 
+function findSourceChanges(a: Review, b: Review): SourceChange[] {
+  const aByUrl = new Map(a.sources.filter((s) => s.url).map((s) => [s.url as string, s]));
+  const changes: SourceChange[] = [];
+  for (const bSource of b.sources) {
+    if (!bSource.url) continue;
+    const aSource = aByUrl.get(bSource.url);
+    if (!aSource) continue;
+    const status: SourceChangeStatus =
+      !aSource.content_hash || !bSource.content_hash
+        ? 'unknown'
+        : aSource.content_hash === bSource.content_hash
+          ? 'unchanged'
+          : 'changed';
+    changes.push({
+      url: bSource.url,
+      a_id: aSource.id,
+      b_id: bSource.id,
+      status,
+      a_content_hash: aSource.content_hash,
+      b_content_hash: bSource.content_hash,
+    });
+  }
+  return changes;
+}
+
+function findOutcomeAssessments(a: Review, b: Review): OutcomeAssessmentSummary[] {
+  return b.outcome_assessments
+    .filter((oa) => oa.recommendation_run_id === a.run.id)
+    .map((oa) => ({
+      id: oa.id,
+      recommendation_id: oa.recommendation_id,
+      recommendation_title: a.recommendations.find((r) => r.id === oa.recommendation_id)?.title,
+      verdict: oa.verdict,
+      falsifier_held: oa.falsifier_held,
+    }));
+}
+
 export function diffReviews(a: Review, b: Review): DiffReport {
   const collections = DIFFABLE_COLLECTIONS.map((c) => diffCollection(c, a, b));
 
@@ -448,6 +539,8 @@ export function diffReviews(a: Review, b: Review): DiffReport {
     emerging_threats: unrelatedRuns ? [] : findEmergingThreats(a, b),
     benchmark_strengths:
       unrelatedRuns || !comparisonsDiff ? [] : findBenchmarkStrengths(a, b, comparisonsDiff),
+    outcome_assessments: findOutcomeAssessments(a, b),
+    source_changes: findSourceChanges(a, b),
   };
 }
 
@@ -470,8 +563,21 @@ export function renderDiffAscii(report: DiffReport): string {
     for (const item of c.carried) {
       out.push(`  carried    ${item.from} -> ${item.to}  ${item.label}`);
     }
+    // A recommendation nothing in B supersedes is honestly 'dropped' by
+    // diffCollection's own rule, but 'dropped' reads as abandoned, and the
+    // most common rerun shape is a recommendation nobody has touched yet
+    // because nothing has been implemented. Where B has assessed it, say so
+    // right here rather than leaving that fact three sections down. See
+    // docs/decisions/0012-outcome-assessment.md.
     for (const item of c.dropped_from_a) {
-      out.push(`  dropped    ${item.id}  ${item.label}`);
+      const assessment =
+        c.collection === 'recommendations'
+          ? report.outcome_assessments.find((oa) => oa.recommendation_id === item.id)
+          : undefined;
+      const annotation = assessment
+        ? `  (assessed in ${report.b.run_id}: ${assessment.verdict}, ${assessment.id})`
+        : '';
+      out.push(`  dropped    ${item.id}  ${item.label}${annotation}`);
     }
     for (const item of c.new_in_b) {
       out.push(`  new        ${item.id}  ${item.label}`);
@@ -492,6 +598,23 @@ export function renderDiffAscii(report: DiffReport): string {
     out.push(`  ${e.collection}  ${e.a_count} -> ${e.b_count}`);
   }
   out.push('');
+
+  if (report.source_changes.length > 0) {
+    const unchanged = report.source_changes.filter((s) => s.status === 'unchanged');
+    const changed = report.source_changes.filter((s) => s.status === 'changed');
+    const unknown = report.source_changes.filter((s) => s.status === 'unknown');
+    out.push(
+      'Source content, matched by URL and compared by content_hash (answers "did anything actually change" before any review_period math):',
+    );
+    for (const s of changed) out.push(`  CHANGED    ${s.url}  (${s.a_id} -> ${s.b_id})`);
+    for (const s of unchanged) out.push(`  unchanged  ${s.url}  (${s.a_id} -> ${s.b_id})`);
+    for (const s of unknown) {
+      out.push(
+        `  unknown    ${s.url}  (${s.a_id} -> ${s.b_id}, missing a content_hash on one or both sides)`,
+      );
+    }
+    out.push('');
+  }
 
   if (report.feedback_still_open.length > 0) {
     out.push('Feedback from run A not visibly acted on in run B:');
@@ -517,6 +640,20 @@ export function renderDiffAscii(report: DiffReport): string {
     for (const m of report.feedback_possible_matches) {
       out.push(
         `  ${m.feedback_id} on ${m.target_id}  ~  ${m.candidate_id}  ${m.candidate_label}  (similarity ${m.similarity.toFixed(2)})`,
+      );
+    }
+    out.push('');
+  }
+
+  if (report.outcome_assessments.length > 0) {
+    out.push("Outcome assessments (this run's verdicts on run A's recommendations):");
+    for (const oa of report.outcome_assessments) {
+      const falsifier =
+        oa.falsifier_held === undefined
+          ? ''
+          : `, falsifier ${oa.falsifier_held ? 'held' : 'did not hold'}`;
+      out.push(
+        `  ${oa.id}  ${oa.recommendation_id}  ${oa.recommendation_title ?? '(not found in run A)'}  ->  ${oa.verdict}${falsifier}`,
       );
     }
     out.push('');

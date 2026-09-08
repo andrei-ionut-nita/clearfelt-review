@@ -15,7 +15,7 @@ clearfelt-review init <slug> [--depth quick|standard|deep] [--previous <run>]
 
 This prints the run directory. Every path below is relative to it. Stage is `initialized`.
 
-If this subject has been reviewed before, pass `--previous <run>` naming the earlier run directory. It stamps `previous_run_id` and copies that run's `feedback.json` into the new one. **Read it before writing anything else.** A correction like "COMP-004 is not actually a competitor" only survives a rerun if you actually check candidates against it; carrying the file forward does not enforce that on its own, since a fresh comparison gets a fresh id and no mechanical check can catch you proposing the same name again under a new one. Match by name, not by id: the ids in the carried file belong to the old run and mean nothing in this one.
+If this subject has been reviewed before, use `clearfelt-review rerun <previous-run> [--depth <depth>]` instead of `init --previous`: it does everything `--previous` does (stamps `previous_run_id`, copies `feedback.json`) and also prints the previous run's recommendations with their falsifiers, so review-recommend has what it needs later to write outcome assessments. **Read what it prints before writing anything else.** A correction like "COMP-004 is not actually a competitor" only survives a rerun if you actually check candidates against it; carrying the file forward does not enforce that on its own, since a fresh comparison gets a fresh id and no mechanical check can catch you proposing the same name again under a new one. Match by name, not by id: the ids in the carried file belong to the old run and mean nothing in this one.
 
 ## What you must establish
 

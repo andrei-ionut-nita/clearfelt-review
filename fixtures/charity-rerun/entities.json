@@ -1,0 +1,12 @@
+[
+  {
+    "id": "ENT-0001",
+    "type": "charity",
+    "role": "subject",
+    "name": "Riverbank Relief",
+    "description": "A regional charity funding emergency food and shelter support.",
+    "canonical_url": "https://riverbank-relief.example",
+    "industry": "Charity",
+    "asset_ids": ["AST-0001"]
+  }
+]

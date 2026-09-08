@@ -11,6 +11,7 @@ import {
   validateHypothesis,
   validateObservation,
   validateOpportunity,
+  validateOutcomeAssessment,
   validatePlan,
   validateRecommendation,
   validateResearchLog,
@@ -46,6 +47,7 @@ const LIST_VALIDATORS: [keyof Review, (value: unknown, issues: Issue[]) => void]
   ['unknowns', validateUnknown],
   ['hypotheses', validateHypothesis],
   ['feedback', validateFeedback],
+  ['outcome_assessments', validateOutcomeAssessment],
 ];
 
 export interface ValidationResult {

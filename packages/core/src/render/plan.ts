@@ -36,6 +36,7 @@ export function renderPlan(view: ReviewView): string {
   out.push('---');
   out.push('');
 
+  out.push(...outcomeAssessments(view));
   out.push(...todoList(view));
   out.push(...roadmap(view));
   out.push(...changeTree(view));
@@ -127,6 +128,34 @@ function changeTree(view: ReviewView): string[] {
   };
   walk(view.changeTree.roots);
   out.push('');
+  return out;
+}
+
+/**
+ * Verdicts this run reached about a prior run's recommendations. Rendered as
+ * its own section, not nested under a Recommendation block, because the
+ * recommendation being assessed belongs to a different run and has no entry
+ * in this one's view.recommendationOf. See
+ * docs/decisions/0012-outcome-assessment.md.
+ */
+function outcomeAssessments(view: ReviewView): string[] {
+  const { outcome_assessments } = view.review;
+  if (outcome_assessments.length === 0) return [];
+  const out = ['## Outcome assessments', ''];
+  for (const oa of outcome_assessments) {
+    out.push(`### ${oa.id}: ${oa.recommendation_id} (run ${oa.recommendation_run_id})`);
+    out.push('');
+    out.push(
+      `**Verdict.** ${oa.verdict}${oa.falsifier_held === undefined ? '' : `. Falsifier ${oa.falsifier_held ? 'held' : 'did not hold'}.`}`,
+    );
+    out.push('');
+    out.push(`**Measured.** ${oa.measured}`);
+    out.push('');
+    out.push(`**Rationale.** ${oa.rationale}`);
+    out.push('');
+    out.push(`**Evidence.** ${oa.evidence_ids.join(', ') || 'None recorded.'}`);
+    out.push('');
+  }
   return out;
 }
 

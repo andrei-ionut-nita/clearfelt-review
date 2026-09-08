@@ -19,7 +19,19 @@ The four dimensions are independent. `confidence` here is confidence that this a
 
 `assumption_ids` must list any unvalidated assumption the recommendation depends on. Every renderer surfaces these, so a reader can see that a confident-looking recommendation rests on something nobody checked.
 
-On a rerun, set `supersedes` naming the previous run's recommendation id whenever this one continues, revises or closes it out, including when the honest content is "this was implemented, here is what the evidence in this run says about whether it worked." `clearfelt-review diff` cannot tell a genuinely closed loop from a silently dropped recommendation any other way: without `supersedes`, the earlier recommendation just reads as abandoned.
+On a rerun, set `supersedes` naming the previous run's recommendation id whenever this one continues, revises or closes it out. `clearfelt-review diff` cannot tell a genuinely closed loop from a silently dropped recommendation any other way: without `supersedes`, the earlier recommendation just reads as abandoned.
+
+## If this is a rerun: outcome assessment
+
+Before writing any new recommendation, read the summary `clearfelt-review rerun` printed when this run started: it lists the previous run's recommendations, each with its `falsifier`.
+
+For every one of those whose `review_period` has plausibly elapsed, write an `OutcomeAssessment` (prefix `OA`) naming `recommendation_id` and `recommendation_run_id` (the previous run's own id, from the summary), a `verdict` (`achieved`, `failed`, `inconclusive` or `not_implemented`), and `evidence_ids` from this run's own evidence, not the previous run's.
+
+Keep `measured` and `rationale` separate. `measured` is what this run's evidence actually shows; `rationale` is the conclusion you draw from it about whether the recommendation worked. Collapsing the two into one sentence is the exact failure this field split exists to prevent: it lets a conclusion pass for an observation.
+
+Set `falsifier_held` (true or false) whenever the verdict is `achieved` or `failed`; leave it unset for `inconclusive` or `not_implemented`, since there is nothing to falsify if nothing happened.
+
+Writing an assessment does not by itself change anything about the recommendation it assesses. If a `failed` verdict means the underlying hypothesis should be abandoned or revised, say so with a new recommendation whose `supersedes` names the old one. `quality` will flag a failed, falsifier-held assessment with no such follow-up as a caution, not a defect: sometimes the honest answer really is "no follow-up, and here is why," stated on the assessment itself, not silence.
 
 ## Measurement, and the falsifier
 
@@ -82,14 +94,10 @@ Nothing here says the analysis is good. `packages/core/src/quality/rubric.md` na
 ## Render
 
 ```bash
-clearfelt-review stage  <run> complete
-clearfelt-review render <run> --format brief --out brief.md
-clearfelt-review render <run> --format plan  --out plan.md
-clearfelt-review render <run> --format html  --out report.html
-clearfelt-review render <run> --format json  --out review.json
+clearfelt-review stage <run> complete
 ```
 
-Rendering refuses to run on an invalid run, so fix validation errors first.
+This alone writes `output/{brief.md,plan.md,report.html,review.json}` into the run directory: reaching `complete` renders every format automatically, so there is nothing further to remember here. If it prints validation errors instead of a rendered-output line, output was not written; fix what it reports and run `clearfelt-review render <run> --format <format> --out <path>` for whichever formats you need in the meantime.
 
 Open the HTML and look at it. Check that the drill-down resolves, that inferred findings read as inferences, and that the unknowns section is not empty when the research had gaps.
 

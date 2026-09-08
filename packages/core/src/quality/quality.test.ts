@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ADVERSARIAL_CASES, makeQualityCleanReview } from '../testing/adversarial.ts';
-import { makeRecommendation, makeValidReview } from '../testing/factory.ts';
+import { makeOutcomeAssessment, makeRecommendation, makeValidReview } from '../testing/factory.ts';
 import { makeWorkedExample } from '../testing/worked-example.ts';
 import { formatIssues, validateReview } from '../validate/index.ts';
 import { checkContract } from './contract.ts';
@@ -185,6 +185,43 @@ describe('text primitives', () => {
         ),
       ).toEqual([]);
     });
+  });
+});
+
+describe('checkOutcomeAssessments', () => {
+  it('cautions on a failed, falsifier-held assessment with no superseding recommendation', () => {
+    const review = makeValidReview({
+      outcome_assessments: [makeOutcomeAssessment({ verdict: 'failed', falsifier_held: true })],
+    });
+    const report = evaluateQuality(review);
+    expect(report.defects).toEqual([]);
+    expect(report.cautions.map((c) => c.code)).toContain(
+      'outcome_assessment.failed_without_followup',
+    );
+  });
+
+  it('does not fire when a recommendation in this run supersedes the assessed one', () => {
+    const review = makeValidReview({
+      recommendations: [
+        makeRecommendation(),
+        makeRecommendation({ id: 'R-0002', supersedes: 'R-0001' }),
+      ],
+      outcome_assessments: [makeOutcomeAssessment({ verdict: 'failed', falsifier_held: true })],
+    });
+    const report = evaluateQuality(review);
+    expect(report.findings.map((f) => f.code)).not.toContain(
+      'outcome_assessment.failed_without_followup',
+    );
+  });
+
+  it('does not fire on an achieved verdict', () => {
+    const review = makeValidReview({
+      outcome_assessments: [makeOutcomeAssessment({ verdict: 'achieved', falsifier_held: false })],
+    });
+    const report = evaluateQuality(review);
+    expect(report.findings.map((f) => f.code)).not.toContain(
+      'outcome_assessment.failed_without_followup',
+    );
   });
 });
 

@@ -98,6 +98,7 @@ function priorityDistribution(priorities: readonly { priority: string }[]): stri
 
 const NAV = [
   ['overview', 'Overview'],
+  ['outcomes', 'Outcome assessments'],
   ['context', 'Context'],
   ['comparison', 'Comparison'],
   ['findings', 'Findings'],
@@ -145,6 +146,7 @@ export function renderHtml(view: ReviewView): string {
     entities: review.entities,
     assets: review.assets,
     research_questions: review.research_questions,
+    outcome_assessments: review.outcome_assessments,
     priorities: view.priorities,
   };
 
@@ -199,6 +201,7 @@ ${p0Count > 0 ? `<a href="#recommendations" id="jump-p0" class="jump-p0 js-only"
     .join(' &nbsp;&middot;&nbsp; ')}</p>
 </header>
 ${overview(view)}
+${outcomes(view)}
 ${context(view)}
 ${comparison(view)}
 ${findings(view)}
@@ -232,10 +235,24 @@ ${quality(view)}
  * read start to finish. The sentences a reader might want to quote verbatim
  * still exist (as .meta lines under each cell); the numbers are additive.
  */
+function outcomeHero(view: ReviewView): string {
+  const counts = new Map<string, number>();
+  for (const oa of view.review.outcome_assessments) {
+    counts.set(oa.verdict, (counts.get(oa.verdict) ?? 0) + 1);
+  }
+  const total = view.review.outcome_assessments.length;
+  const parts = [...counts.entries()].map(([verdict, n]) => `${n} ${verdict.replace('_', ' ')}`);
+  return `<div class="hero"><p>No new recommendations this run. ${total} prior recommendation${total === 1 ? '' : 's'} assessed: ${parts.join(', ')}. See <a href="#outcomes">Outcome assessments</a>.</p></div>`;
+}
+
 function overviewHero(view: ReviewView): string {
   const { review, coverage, quality: qualityReport } = view;
   const total = review.recommendations.length;
   if (total === 0) {
+    // A rerun that assessed prior recommendations without proposing new ones
+    // is not an empty run, and "no recommendations" reads like one. Lead with
+    // what the run actually established instead. See ADR 0012.
+    if (review.outcome_assessments.length > 0) return outcomeHero(view);
     return `<div class="hero"><p>No recommendations have been produced yet.</p></div>`;
   }
   const p0Count = view.priorities.filter((p) => p.priority === 'P0').length;
@@ -688,6 +705,32 @@ function changes(view: ReviewView): string {
 <div class="scroll-x"><table>
 <tr><th>Where</th><th>Operation</th><th>Action</th><th>Recommendation</th><th>Finding</th></tr>
 ${rows.join('')}
+</table></div>
+</section>`;
+}
+
+/**
+ * Verdicts this run reached about a prior run's recommendations. The assessed
+ * recommendation belongs to a different run, so it is labelled rather than
+ * linked into this page's own recommendation panel. See
+ * docs/decisions/0012-outcome-assessment.md.
+ */
+function outcomes(view: ReviewView): string {
+  const { outcome_assessments } = view.review;
+  if (outcome_assessments.length === 0) return '';
+  const rows = outcome_assessments
+    .map((oa) => {
+      const falsifier =
+        oa.falsifier_held === undefined ? '' : oa.falsifier_held ? 'held' : 'did not hold';
+      return `<tr><td>${esc(oa.id)}</td><td>${esc(oa.recommendation_id)}</td><td>${esc(oa.recommendation_run_id)}</td><td>${tag(esc(oa.verdict))}</td><td>${esc(falsifier)}</td><td>${esc(oa.measured)}</td><td>${esc(oa.rationale)}</td></tr>`;
+    })
+    .join('');
+  return `<section id="outcomes">
+<h2>Outcome assessments</h2>
+<p class="lede">This run's verdicts on a prior run's recommendations: what was measured, kept apart from what it means.</p>
+<div class="scroll-x"><table>
+<tr><th>ID</th><th>Recommendation</th><th>From run</th><th>Verdict</th><th>Falsifier</th><th>Measured</th><th>Rationale</th></tr>
+${rows}
 </table></div>
 </section>`;
 }
