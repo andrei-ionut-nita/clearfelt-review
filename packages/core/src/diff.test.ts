@@ -5,6 +5,7 @@ import {
   makeComparison,
   makeFeedback,
   makeFinding,
+  makeOpportunity,
   makeRecommendation,
   makeSource,
   makeValidReview,
@@ -98,6 +99,104 @@ describe('diffReviews', () => {
     });
   });
 
+  describe('feedback_acknowledged', () => {
+    it('moves an item from feedback_still_open into feedback_acknowledged when B explicitly acknowledges it', () => {
+      const a = runA();
+      a.feedback = [
+        makeFeedback({
+          id: 'FB-0001',
+          target_id: 'COMP-0001',
+          type: 'reject',
+          reason: 'Not actually a competitor for this decision.',
+        }),
+      ];
+      const b = runB({
+        feedback: [
+          // Carried forward verbatim by carryForwardFeedback: same id, same content.
+          makeFeedback({
+            id: 'FB-0001',
+            target_id: 'COMP-0001',
+            type: 'reject',
+            reason: 'Not actually a competitor for this decision.',
+          }),
+          makeFeedback({
+            id: 'FB-0002',
+            target_id: 'FB-0001',
+            type: 'acknowledge',
+            reason:
+              'Still not a competitor; nothing changed since last run, so nothing was re-proposed.',
+          }),
+        ],
+      });
+      const report = diffReviews(a, b);
+      expect(report.feedback_still_open).toEqual([]);
+      expect(report.feedback_acknowledged).toEqual([
+        {
+          id: 'FB-0001',
+          target_id: 'COMP-0001',
+          type: 'reject',
+          reason: 'Not actually a competitor for this decision.',
+          acknowledgment: {
+            id: 'FB-0002',
+            reason:
+              'Still not a competitor; nothing changed since last run, so nothing was re-proposed.',
+            at: expect.any(String),
+          },
+        },
+      ]);
+    });
+
+    it('leaves an item open when an acknowledge entry targets something else', () => {
+      const a = runA();
+      a.feedback = [makeFeedback({ id: 'FB-0001', target_id: 'COMP-0001' })];
+      const b = runB({
+        feedback: [
+          makeFeedback({
+            id: 'FB-0002',
+            target_id: 'FB-9999',
+            type: 'acknowledge',
+            reason: 'Unrelated to FB-0001.',
+          }),
+        ],
+      });
+      const report = diffReviews(a, b);
+      expect(report.feedback_still_open.map((f) => f.id)).toEqual(['FB-0001']);
+      expect(report.feedback_acknowledged).toEqual([]);
+    });
+
+    it('scopes feedback_possible_matches to the unacknowledged remainder', () => {
+      const a = runA();
+      a.feedback = [
+        makeFeedback({
+          id: 'FB-0001',
+          type: 'reject',
+          target_id: 'F-0001',
+          reason: 'Not actually a competitor for this decision.',
+        }),
+      ];
+      const report = diffReviews(
+        a,
+        runB({
+          // Close wording to A's default finding F-0001, which without an
+          // acknowledgment would trip feedback_possible_matches (see that
+          // describe block below).
+          findings: [makeFinding({ id: 'F-0009', title: 'Proposition still leads on outcomes' })],
+          feedback: [
+            makeFeedback({
+              id: 'FB-0002',
+              target_id: 'FB-0001',
+              type: 'acknowledge',
+              reason:
+                'The reworded finding is coincidental wording, not the same claim; leaving as is.',
+            }),
+          ],
+        }),
+      );
+      expect(report.feedback_acknowledged.map((f) => f.id)).toEqual(['FB-0001']);
+      expect(report.feedback_possible_matches).toEqual([]);
+    });
+  });
+
   describe('evidence_base', () => {
     it('counts the excluded evidentiary collections without diffing them item by item', () => {
       const report = diffReviews(
@@ -150,6 +249,201 @@ describe('diffReviews', () => {
       expect(report.feedback_possible_matches).toEqual([]);
     });
   });
+
+  describe('emerging_threats', () => {
+    it('flags a territory whose saturation rose with no matching improvement in position', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ relevance: 'low' })];
+      a.opportunities = [
+        makeOpportunity({
+          white_space: { territory: 'Technical leadership', current_position: 'low' },
+        }),
+      ];
+      const b = runB({
+        comparisons: [
+          makeComparison({ id: 'COMP-0009', supersedes: 'COMP-0001', relevance: 'high' }),
+        ],
+        opportunities: [
+          makeOpportunity({
+            white_space: { territory: 'Technical leadership', current_position: 'low' },
+          }),
+        ],
+      });
+      const report = diffReviews(a, b);
+      expect(report.emerging_threats).toEqual([
+        {
+          territory: 'Technical leadership',
+          a_saturation: 'medium',
+          b_saturation: 'high',
+          a_current_position: 'low',
+          b_current_position: 'low',
+        },
+      ]);
+    });
+
+    it('does not flag a territory whose position improved to match the rising saturation', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ relevance: 'low' })];
+      a.opportunities = [
+        makeOpportunity({
+          white_space: { territory: 'Technical leadership', current_position: 'low' },
+        }),
+      ];
+      const b = runB({
+        comparisons: [
+          makeComparison({ id: 'COMP-0009', supersedes: 'COMP-0001', relevance: 'high' }),
+        ],
+        opportunities: [
+          makeOpportunity({
+            white_space: { territory: 'Technical leadership', current_position: 'high' },
+          }),
+        ],
+      });
+      expect(diffReviews(a, b).emerging_threats).toEqual([]);
+    });
+
+    it('does not flag a territory whose saturation did not rise', () => {
+      const a = runA();
+      a.comparisons = [makeComparison()];
+      const b = runB({
+        comparisons: [makeComparison({ id: 'COMP-0009', supersedes: 'COMP-0001' })],
+      });
+      expect(diffReviews(a, b).emerging_threats).toEqual([]);
+    });
+
+    it('does not flag a territory that only exists in run B', () => {
+      const a = runA();
+      a.comparisons = [];
+      a.opportunities = [];
+      const b = runB({
+        comparisons: [makeComparison({ relevance: 'high' })],
+      });
+      expect(diffReviews(a, b).emerging_threats).toEqual([]);
+    });
+  });
+
+  describe('benchmark_strengths', () => {
+    it('flags a carried benchmark comparison whose relevance rose', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ type: 'benchmark', relevance: 'medium' })];
+      const b = runB({
+        comparisons: [
+          makeComparison({
+            id: 'COMP-0009',
+            supersedes: 'COMP-0001',
+            type: 'benchmark',
+            relevance: 'high',
+          }),
+        ],
+      });
+      const report = diffReviews(a, b);
+      expect(report.benchmark_strengths).toEqual([
+        {
+          comparison_id: 'COMP-0009',
+          name: expect.any(String),
+          improved_dimensions: ['relevance'],
+          a: {
+            relevance: 'medium',
+            audience_overlap: 'high',
+            objective_overlap: 'high',
+            decision_overlap: 'medium',
+          },
+          b: {
+            relevance: 'high',
+            audience_overlap: 'high',
+            objective_overlap: 'high',
+            decision_overlap: 'medium',
+          },
+        },
+      ]);
+    });
+
+    it('flags an overlap rating rising even when relevance is unchanged', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ type: 'benchmark', decision_overlap: 'low' })];
+      const b = runB({
+        comparisons: [
+          makeComparison({
+            id: 'COMP-0009',
+            supersedes: 'COMP-0001',
+            type: 'benchmark',
+            decision_overlap: 'high',
+          }),
+        ],
+      });
+      expect(diffReviews(a, b).benchmark_strengths.map((s) => s.improved_dimensions)).toEqual([
+        ['decision_overlap'],
+      ]);
+    });
+
+    it('does not flag a carried comparison that is not a benchmark', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ type: 'direct_competitor', relevance: 'low' })];
+      const b = runB({
+        comparisons: [
+          makeComparison({
+            id: 'COMP-0009',
+            supersedes: 'COMP-0001',
+            type: 'direct_competitor',
+            relevance: 'high',
+          }),
+        ],
+      });
+      expect(diffReviews(a, b).benchmark_strengths).toEqual([]);
+    });
+
+    it('does not flag a carried benchmark whose ratings did not improve', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ type: 'benchmark' })];
+      const b = runB({
+        comparisons: [
+          makeComparison({ id: 'COMP-0009', supersedes: 'COMP-0001', type: 'benchmark' }),
+        ],
+      });
+      expect(diffReviews(a, b).benchmark_strengths).toEqual([]);
+    });
+
+    it('does not flag a benchmark that was not carried forward', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ type: 'benchmark', relevance: 'low' })];
+      const b = runB({
+        comparisons: [makeComparison({ id: 'COMP-0009', type: 'benchmark', relevance: 'high' })],
+      });
+      expect(diffReviews(a, b).benchmark_strengths).toEqual([]);
+    });
+  });
+
+  describe('emerging_threats and benchmark_strengths under unrelated_runs', () => {
+    it('withholds both entirely rather than compute a false trend', () => {
+      const a = runA();
+      a.comparisons = [makeComparison({ type: 'benchmark', relevance: 'low' })];
+      a.opportunities = [
+        makeOpportunity({
+          white_space: { territory: 'Technical leadership', current_position: 'low' },
+        }),
+      ];
+      const unrelatedB = makeValidReview({
+        run: newRun('acme', 'r-777', T),
+        comparisons: [
+          makeComparison({
+            id: 'COMP-0009',
+            supersedes: 'COMP-0001',
+            type: 'benchmark',
+            relevance: 'high',
+          }),
+        ],
+        opportunities: [
+          makeOpportunity({
+            white_space: { territory: 'Technical leadership', current_position: 'low' },
+          }),
+        ],
+      });
+      const report = diffReviews(a, unrelatedB);
+      expect(report.unrelated_runs).toBe(true);
+      expect(report.emerging_threats).toEqual([]);
+      expect(report.benchmark_strengths).toEqual([]);
+    });
+  });
 });
 
 describe('renderDiffAscii', () => {
@@ -164,6 +458,43 @@ describe('renderDiffAscii', () => {
       }),
     );
     const ascii = renderDiffAscii(report);
+    expect(ascii).not.toMatch(/[\u2192\u2014]/);
+  });
+
+  it('prints acknowledged feedback in its own section, distinct from still-open feedback', () => {
+    const a = runA();
+    a.feedback = [
+      makeFeedback({
+        id: 'FB-0001',
+        target_id: 'COMP-0001',
+        type: 'reject',
+        reason: 'Not actually a competitor for this decision.',
+      }),
+    ];
+    const b = runB({
+      feedback: [
+        makeFeedback({
+          id: 'FB-0001',
+          target_id: 'COMP-0001',
+          type: 'reject',
+          reason: 'Not actually a competitor for this decision.',
+        }),
+        makeFeedback({
+          id: 'FB-0002',
+          target_id: 'FB-0001',
+          type: 'acknowledge',
+          reason: 'Still not a competitor; nothing changed since last run.',
+        }),
+      ],
+    });
+    const ascii = renderDiffAscii(diffReviews(a, b));
+    expect(ascii).toContain(
+      'Feedback from run A explicitly acknowledged as deliberately unaddressed in run B:',
+    );
+    expect(ascii).toContain(
+      'acknowledged by FB-0002: Still not a competitor; nothing changed since last run.',
+    );
+    expect(ascii).not.toContain('Feedback from run A not visibly acted on in run B:');
     expect(ascii).not.toMatch(/[\u2192\u2014]/);
   });
 

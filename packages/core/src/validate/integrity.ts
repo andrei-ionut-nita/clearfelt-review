@@ -232,8 +232,14 @@ function checkReferences(review: Review, index: Index, issues: Issue[]): void {
 
   for (const item of review.feedback) {
     const ctx = ctxFor('feedback', item.id, issues);
-    // Feedback may target anything, so only existence is checked.
-    if (typeof item.target_id === 'string' && !index.owner.has(item.target_id)) {
+    if (item.type === 'acknowledge') {
+      // An acknowledgment targets an earlier feedback entry specifically, not
+      // "anything": it is feedback about feedback, so the wrong-collection
+      // check applies here even though it does not for every other type.
+      ref(ctx, index, item.target_id, 'target_id', 'feedback');
+    } else if (typeof item.target_id === 'string' && !index.owner.has(item.target_id)) {
+      // Every other type of feedback may target anything, so only existence
+      // is checked.
       error(ctx, 'ref.missing', 'target_id', `targets ${item.target_id}, which does not exist`);
     }
   }

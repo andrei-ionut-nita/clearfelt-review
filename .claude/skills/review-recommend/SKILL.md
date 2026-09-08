@@ -110,6 +110,8 @@ clearfelt-review diff <previous-run> <this-run>
 
 Read the "dropped" section of every collection before handing over. Anything there either genuinely disappeared and that is worth a sentence in the brief, or it should have carried a `supersedes` link and does not yet. Read "Feedback from run A not visibly acted on" too: it names corrections the previous run recorded that this run has not visibly addressed.
 
+For each item in that list, decide honestly: did this run leave it alone on purpose, or did it just not come up? If on purpose, record it. Append a `feedback.json` entry with `type: 'acknowledge'`, `target_id` set to that feedback item's own id (not the id it originally targeted), and a `reason` that says why leaving it unaddressed is the right call now, not a restatement of the original feedback and not a placeholder. `diff.ts` reads this back: without it, a rejection this run genuinely honoured and a rejection nobody looked at render identically, forever. If you cannot honestly say why, do not write the entry: that means it is still genuinely open, which is the correct thing for the report to say.
+
 ## Rules
 
 - Never author a priority.

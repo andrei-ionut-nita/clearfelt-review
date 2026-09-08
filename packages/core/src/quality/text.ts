@@ -248,8 +248,66 @@ export const GENERIC_PHRASES: readonly string[] = [
   'take it to the next level',
 ] as const;
 
-/** Generic phrases present in a piece of text, normalised for matching. */
+/**
+ * Similarity at or above which a window of the target text counts as saying a
+ * generic phrase, not merely brushing past one of its words.
+ *
+ * Every phrase in GENERIC_PHRASES has at most 3 content terms, so a window
+ * missing one of them scores at most 0.5 (2 of 3 shared) and a window sharing
+ * only one term scores at most 0.5 as well for the shortest, 2-term phrases;
+ * 0.6 sits above both, so only a window whose content terms are the phrase's
+ * own (in any order, any inflection the crude stemmer normalises together,
+ * with at most one unrelated word admitted alongside them) ever qualifies.
+ * That headroom is deliberate: this check produces a 'defect', not a caution,
+ * so a false positive costs more here than the same score would in a
+ * cross-run possible-duplicate hint.
+ */
+const GENERIC_PHRASE_THRESHOLD = 0.6;
+
+/**
+ * Content terms in original order, duplicates kept. `contentTerms` returns a
+ * deduplicating Set because its callers do set arithmetic; windowing needs
+ * the sequence a phrase's words could actually appear in.
+ */
+function contentTermSequence(text: string): string[] {
+  return normalise(text)
+    .split(' ')
+    .filter((word) => word.length >= 3 && !STOPWORDS.has(word))
+    .map(stem);
+}
+
+/**
+ * Whether `phrase` appears in `textTerms` as a contiguous run, order and
+ * inflection aside, with room for at most one word that isn't the phrase's.
+ *
+ * A phrase with fewer than two content terms (only `leverage ai`: "ai" is
+ * two letters and is filtered out as noise-length by `contentTerms` itself)
+ * has nothing to window against without matching on a single word so common
+ * it would flag unrelated writing; those rely on the literal check only.
+ */
+function fuzzyPhraseMatch(phrase: string, textTerms: readonly string[]): boolean {
+  const phraseSize = contentTerms(phrase).size;
+  if (phraseSize < 2) return false;
+  for (const windowSize of [phraseSize, phraseSize + 1]) {
+    if (textTerms.length < windowSize) continue;
+    for (let i = 0; i + windowSize <= textTerms.length; i += 1) {
+      const window = textTerms.slice(i, i + windowSize).join(' ');
+      if (similarity(phrase, window) >= GENERIC_PHRASE_THRESHOLD) return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Generic phrases present in a piece of text: an exact substring, the cheap
+ * case a literal list always catches, or a fuzzy match, the paraphrase,
+ * reordering or inflection a literal list is structurally always one phrase
+ * behind (docs/decisions/0008-validation-is-not-evaluation.md, Phase 3/4).
+ */
 export function genericPhrasesIn(text: string): string[] {
   const haystack = normalise(text);
-  return GENERIC_PHRASES.filter((phrase) => haystack.includes(phrase));
+  const textTerms = contentTermSequence(text);
+  return GENERIC_PHRASES.filter(
+    (phrase) => haystack.includes(phrase) || fuzzyPhraseMatch(phrase, textTerms),
+  );
 }

@@ -372,6 +372,19 @@ function saturationTable(view: ReviewView): string[] {
     out.push(`- **${row.territory}.** ${row.saturation_rationale}`);
   }
   out.push('');
+  const { possible_duplicate_territories: duplicates } = view.saturation;
+  if (duplicates.length > 0) {
+    out.push(
+      '**Possibly the same territory (a caution, not a merge: reconcile the names by hand if so):**',
+    );
+    out.push('');
+    for (const d of duplicates) {
+      out.push(
+        `- "${d.territory_a}" (${d.comparison_ids_a.join(', ')})  ~  "${d.territory_b}" (${d.comparison_ids_b.join(', ')})  (similarity ${d.similarity.toFixed(2)})`,
+      );
+    }
+    out.push('');
+  }
   return out;
 }
 

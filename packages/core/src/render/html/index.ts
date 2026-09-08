@@ -275,7 +275,17 @@ ${rows
     (row) =>
       `<div class="card"><h4>${esc(row.territory)}</h4><p class="meta">${esc(row.saturation_rationale)}</p>${row.occupants.length > 0 ? `<p class="meta">${chips(row.occupants.map((o) => o.comparison_id))}</p>` : ''}${row.opportunity_ids.length > 0 ? `<p class="meta">Named as white space by ${chips(row.opportunity_ids)}</p>` : ''}</div>`,
   )
-  .join('')}`;
+  .join('')}
+${
+  view.saturation.possible_duplicate_territories.length > 0
+    ? `<div class="callout"><strong>Possibly the same territory</strong> (a caution, not a merge: reconcile the names by hand if so).<ul>${view.saturation.possible_duplicate_territories
+        .map(
+          (d) =>
+            `<li>"${esc(d.territory_a)}" ${chips(d.comparison_ids_a)} ~ "${esc(d.territory_b)}" ${chips(d.comparison_ids_b)} (similarity ${d.similarity.toFixed(2)})</li>`,
+        )
+        .join('')}</ul></div>`
+    : ''
+}`;
 }
 
 function findings(view: ReviewView): string {

@@ -3,6 +3,7 @@ import {
   makeAction,
   makeComparison,
   makeEvidence,
+  makeFeedback,
   makeFinding,
   makeObservation,
   makeRecommendation,
@@ -214,6 +215,55 @@ describe('user assertions are not evidence', () => {
       comparisons: [makeComparison({ proposed_by: 'user', entity_id: 'ENT-0001' })],
     });
     expect(codes(validateReview(review).errors)).toContain('field.string');
+  });
+});
+
+describe('feedback acknowledgment', () => {
+  it('requires a reason on an acknowledge entry', () => {
+    // A boolean-shaped acknowledgment defeats the point: see feedback.ts.
+    const review = makeValidReview({
+      feedback: [
+        makeFeedback({ id: 'FB-0001', target_id: 'F-0001' }),
+        makeFeedback({
+          id: 'FB-0002',
+          target_id: 'FB-0001',
+          type: 'acknowledge',
+          reason: undefined,
+        }),
+      ],
+    });
+    expect(codes(validateReview(review).errors)).toContain('field.string');
+  });
+
+  it('rejects an acknowledge entry that targets something other than a feedback entry', () => {
+    // F-0001 exists in the baseline fixture, but an acknowledgment is feedback
+    // about feedback: it must name another Feedback entry, not any entity.
+    const review = makeValidReview({
+      feedback: [
+        makeFeedback({
+          id: 'FB-0001',
+          target_id: 'F-0001',
+          type: 'acknowledge',
+          reason: 'Still stands.',
+        }),
+      ],
+    });
+    expect(codes(validateReview(review).errors)).toContain('ref.wrong_collection');
+  });
+
+  it('accepts an acknowledge entry naming a real feedback id with a real reason', () => {
+    const review = makeValidReview({
+      feedback: [
+        makeFeedback({ id: 'FB-0001', target_id: 'F-0001' }),
+        makeFeedback({
+          id: 'FB-0002',
+          target_id: 'FB-0001',
+          type: 'acknowledge',
+          reason: 'Still not a competitor; nothing changed since last run.',
+        }),
+      ],
+    });
+    expect(validateReview(review).errors).toEqual([]);
   });
 });
 

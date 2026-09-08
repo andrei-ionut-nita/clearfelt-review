@@ -5,7 +5,7 @@ import { makeWorkedExample } from '../testing/worked-example.ts';
 import { formatIssues, validateReview } from '../validate/index.ts';
 import { checkContract } from './contract.ts';
 import { evaluateQuality, formatQualityReport } from './index.ts';
-import { similarity, statesAFailureCondition } from './text.ts';
+import { genericPhrasesIn, similarity, statesAFailureCondition } from './text.ts';
 
 describe('the clean base', () => {
   it('validates', () => {
@@ -138,6 +138,53 @@ describe('text primitives', () => {
     expect(statesAFailureCondition('No change in qualified enquiries after eight weeks.')).toBe(
       true,
     );
+  });
+
+  describe('generic phrase detection', () => {
+    it('still catches the phrase verbatim', () => {
+      // The cheap case a literal list always caught, unaffected by adding a
+      // fuzzy path alongside it.
+      expect(genericPhrasesIn('We will improve messaging across the site.')).toContain(
+        'improve messaging',
+      );
+    });
+
+    it('catches a paraphrase a literal substring match would miss', () => {
+      // "strengthen the client's brand" is not a substring of "strengthen
+      // the brand": the possessive breaks contiguity, and no entry in
+      // GENERIC_PHRASES matches literally. It is the same generic advice
+      // in different words, which is exactly what Phase 3 found the
+      // literal list structurally cannot see.
+      expect(
+        genericPhrasesIn("We should strengthen the client's brand across every channel."),
+      ).toContain('strengthen the brand');
+    });
+
+    it('catches reordering and inflection, not just insertion', () => {
+      expect(
+        genericPhrasesIn('The brand has been strengthened considerably this quarter.'),
+      ).toContain('strengthen the brand');
+    });
+
+    it('does not flag a specific recommendation that merely shares a word', () => {
+      // "optimise" and "improve" are different words to the stemmer, and
+      // sharing only one of a phrase's two content terms scores well below
+      // GENERIC_PHRASE_THRESHOLD. A false positive here would be worse than
+      // a missed one: it reports as a defect, not a caution.
+      expect(
+        genericPhrasesIn(
+          'Optimise the checkout flow by removing the account-creation step before payment.',
+        ),
+      ).toEqual([]);
+    });
+
+    it('does not flag an unrelated recommendation that names no generic advice at all', () => {
+      expect(
+        genericPhrasesIn(
+          'Add two named client case studies to the work page, each with a measured result.',
+        ),
+      ).toEqual([]);
+    });
   });
 });
 

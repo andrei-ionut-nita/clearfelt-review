@@ -522,8 +522,21 @@ export function validateFeedback(value: unknown, issues: Issue[]): void {
   if (!pair) return;
   const [ctx, feedback] = pair;
   requireString(ctx, feedback, 'target_id');
-  requireEnum(ctx, feedback, 'type', ['accept', 'reject', 'correct', 'amend', 'add'] as const);
+  requireEnum(ctx, feedback, 'type', [
+    'accept',
+    'reject',
+    'correct',
+    'amend',
+    'add',
+    'acknowledge',
+  ] as const);
   requireIsoDate(ctx, feedback, 'at');
+  // An acknowledgment without a stated reason is indistinguishable from a
+  // boolean, which defeats the point: see feedback.ts's doc comment on
+  // 'acknowledge'.
+  if (feedback.type === 'acknowledge') {
+    requireString(ctx, feedback, 'reason');
+  }
 }
 
 export function validateResearchLog(value: unknown, issues: Issue[]): void {

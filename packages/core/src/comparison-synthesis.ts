@@ -1,4 +1,5 @@
 import type { Comparison, ComparisonType, Level, Review } from './model/index.ts';
+import { similarity } from './quality/text.ts';
 
 /**
  * Cross-landscape synthesis over the comparison set: specification section 19's
@@ -20,8 +21,12 @@ export const INTENSITIES: readonly Intensity[] = ['very_high', 'high', 'medium',
  * spec section 19's bullet list are deliberately not modelled here: both need
  * trend or benchmark-relationship evidence the model does not yet carry, and
  * a classification pretending to detect them from two static axes would be
- * manufacturing a signal rather than computing one. Recorded as a known
- * limitation in docs/ROADMAP.md rather than faked.
+ * manufacturing a signal rather than computing one. A cross-run cousin of
+ * both now exists as DiffReport.emerging_threats and
+ * DiffReport.benchmark_strengths in diff.ts, computed only when a previous
+ * run is available; that is a caution on a diff, not a value this type can
+ * take, per docs/decisions/0011-cross-run-identity-is-supersedes-only.md,
+ * Update, Phase 9.
  */
 export type TerritoryClassification =
   | 'white_space'
@@ -36,6 +41,21 @@ export interface TerritoryOccupant {
   name: string;
   type: ComparisonType;
   relevance: Level;
+}
+
+/**
+ * A caution, not a claim: two territory names scoring high on text similarity,
+ * each with at least one qualified comparison naming it. Mirrors
+ * `FeedbackPossibleMatch` in diff.ts (ADR 0011, Phase 6): it never merges the
+ * rows it flags, it only points a human at a pair worth reconciling by hand.
+ * See docs/decisions/0009-computed-saturation.md, Update, Phase 8.
+ */
+export interface TerritoryPossibleDuplicate {
+  territory_a: string;
+  territory_b: string;
+  comparison_ids_a: string[];
+  comparison_ids_b: string[];
+  similarity: number;
 }
 
 export interface TerritoryRow {
@@ -59,6 +79,8 @@ export interface TerritoryRow {
 
 export interface SaturationTable {
   rows: TerritoryRow[];
+  /** Near-duplicate territory names among occupied rows; see TerritoryPossibleDuplicate. */
+  possible_duplicate_territories: TerritoryPossibleDuplicate[];
 }
 
 const LEVEL_WEIGHT: Record<Level, number> = { high: 3, medium: 2, low: 1 };
@@ -144,6 +166,43 @@ function collectTerritories(review: Review): string[] {
   return ordered;
 }
 
+/**
+ * A caution threshold, not an identity threshold: territories are never
+ * auto-merged, per docs/decisions/0009-computed-saturation.md. Same value as
+ * diff.ts's POSSIBLE_MATCH_THRESHOLD for consistency across the two uses of
+ * similarity() as a caution signal.
+ */
+const POSSIBLE_DUPLICATE_TERRITORY_THRESHOLD = 0.4;
+
+/**
+ * Flags pairs of rows whose territory names read as the same claim in
+ * different words. Restricted to rows with at least one qualified occupant:
+ * a row named only by an opportunity's white_space has no comparison id to
+ * point a reader at, and a caution naming only one real side is not the
+ * actionable pointer this exists to give.
+ */
+function findTerritoryPossibleDuplicates(
+  rows: readonly TerritoryRow[],
+): TerritoryPossibleDuplicate[] {
+  const occupied = rows.filter((row) => row.occupants.length > 0);
+  const duplicates: TerritoryPossibleDuplicate[] = [];
+  for (const [i, a] of occupied.entries()) {
+    for (const b of occupied.slice(i + 1)) {
+      const score = similarity(a.territory, b.territory);
+      if (score >= POSSIBLE_DUPLICATE_TERRITORY_THRESHOLD) {
+        duplicates.push({
+          territory_a: a.territory,
+          territory_b: b.territory,
+          comparison_ids_a: a.occupants.map((o) => o.comparison_id),
+          comparison_ids_b: b.occupants.map((o) => o.comparison_id),
+          similarity: score,
+        });
+      }
+    }
+  }
+  return duplicates;
+}
+
 export function buildSaturationTable(review: Review): SaturationTable {
   const territories = collectTerritories(review);
 
@@ -176,7 +235,7 @@ export function buildSaturationTable(review: Review): SaturationTable {
     };
   });
 
-  return { rows };
+  return { rows, possible_duplicate_territories: findTerritoryPossibleDuplicates(rows) };
 }
 
 /** Territories with no qualified occupant at all: open by construction. */

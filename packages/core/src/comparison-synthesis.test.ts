@@ -209,6 +209,59 @@ describe('crowdedTerritories and underoccupiedTerritories', () => {
   });
 });
 
+describe('possible_duplicate_territories', () => {
+  it('flags two qualified comparisons naming near-duplicate territory names', () => {
+    const review = makeValidReview({
+      comparisons: [
+        makeComparison({ id: 'COMP-0001', positioning_territories: ['Technical leadership'] }),
+        makeComparison({
+          id: 'COMP-0002',
+          positioning_territories: ['Technical thought leadership'],
+        }),
+      ],
+    });
+    const { possible_duplicate_territories: duplicates } = buildSaturationTable(review);
+    expect(duplicates).toHaveLength(1);
+    expect(duplicates[0]).toMatchObject({
+      territory_a: 'Technical leadership',
+      territory_b: 'Technical thought leadership',
+      comparison_ids_a: ['COMP-0001'],
+      comparison_ids_b: ['COMP-0002'],
+    });
+    expect(duplicates[0]?.similarity).toBeGreaterThanOrEqual(0.4);
+  });
+
+  it('does not flag two unrelated territory names', () => {
+    const review = makeValidReview({
+      comparisons: [
+        makeComparison({ id: 'COMP-0001', positioning_territories: ['Technical leadership'] }),
+        makeComparison({ id: 'COMP-0002', positioning_territories: ['Pricing transparency'] }),
+      ],
+    });
+    expect(buildSaturationTable(review).possible_duplicate_territories).toEqual([]);
+  });
+
+  it('excludes a territory named only by an opportunity, with no qualified occupant', () => {
+    const review = makeValidReview({
+      comparisons: [
+        makeComparison({ id: 'COMP-0001', positioning_territories: ['Technical leadership'] }),
+      ],
+      opportunities: [
+        makeOpportunity({
+          white_space: { territory: 'Technical thought leadership', current_position: 'high' },
+        }),
+      ],
+    });
+    // A territory named only by an opportunity's white_space has no comparison
+    // id to point at, so it must never appear on either side of a caution.
+    expect(buildSaturationTable(review).possible_duplicate_territories).toEqual([]);
+  });
+
+  it('is empty when nothing names more than one territory', () => {
+    expect(buildSaturationTable(makeValidReview()).possible_duplicate_territories).toEqual([]);
+  });
+});
+
 describe('the worked example', () => {
   it('produces a saturation table that validates and demonstrates every classification', () => {
     const table = buildSaturationTable(makeWorkedExample());
