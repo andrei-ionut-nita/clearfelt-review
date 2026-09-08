@@ -44,8 +44,26 @@ node packages/core/dist/cli.js validate fixtures/adversarial/restates-finding
 node packages/core/dist/cli.js quality  fixtures/adversarial/restates-finding
 ```
 
-## Planned
+## charity
 
-`charity`, `ngo`, `government`, `product`, `professional-services` are still open. Two archetypes already prove the registry adapts rather than defaulting to one shape; the remaining five would mostly add breadth to that same claim rather than test something new, so they are recorded as future work rather than built for their own sake. See `docs/ROADMAP.md`.
+A complete run for an invented relief charity deciding how to increase recurring donations, generated from `packages/core/src/testing/worked-example-charity.ts`. The one fixture besides `government` to activate `trust`, since a recurring financial commitment to a cause is weighed differently than a SaaS subscription.
+
+## ngo
+
+A complete run for an invented NGO deciding which of two field programmes to scale, generated from `packages/core/src/testing/worked-example-ngo.ts`. The one fixture in the repository where `scope.comparison_applicable` is false: the decision is an internal allocation choice, not a comparison against other organisations, and this is the only place that explicit no-comparison path (specification section 51) is exercised end to end rather than left untested.
+
+## government
+
+A complete run for an invented council grant service deciding how to increase completed applications, generated from `packages/core/src/testing/worked-example-government.ts`. The one fixture to pair `accessibility` with `discoverability`: a public service has to be usable by residents on assistive technology and findable by residents who do not already know it exists, in a way no commercial fixture needs to be.
+
+## product
+
+A complete run for an invented direct-to-consumer hiking-pack brand deciding how to increase purchase conversion, generated from `packages/core/src/testing/worked-example-product.ts`. The one fixture to activate `operations`: a physical product sold online has a shipping and fulfilment reality none of the other subjects carry.
+
+## professional-services
+
+A complete run for an invented boutique advisory firm deciding how to increase qualified inbound enquiries, generated from `packages/core/src/testing/worked-example-professional-services.ts`. Activates `credibility` and `reputation` together while leaving `pricing` dormant, unlike `product` or `commercial-saas`: engagement rates are quoted per client rather than published.
+
+Each of these five, checked directly by `fixtures.test.ts`, activates at least one module combination none of the other six fixtures do. That is the actual claim a seventh, eighth or ninth archetype would have to earn its place by extending, not merely broadening.
 
 The subject of every fixture is invented. No fixture is allowed to become the product ontology.
